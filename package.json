@@ -1,0 +1,19 @@
+{
+  "name": "bot",
+  "version": "1.0.0",
+  "description": "",
+  "scripts": {
+    "deploy": "NODE_OPTIONS='-r dotenv/config' serverless deploy",
+    "invoke": "NODE_OPTIONS='-r dotenv/config' serverless invoke local -f bot",
+    "serverless": "NODE_OPTIONS='-r dotenv/config' serverless"
+  },
+  "dependencies": {
+    "@slack/web-api": "5.11.0",
+    "axios": "0.20.0",
+    "moment": "2.27.0",
+    "serverless": "1.81.1"
+  },
+  "devDependencies": {
+    "dotenv": "8.2.0"
+  }
+}
