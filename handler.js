@@ -32,7 +32,7 @@ module.exports.bot = async (event) => {
     const channelName = `Berta congratulates: ${birthday.firstname}!`;
     const channelResponse = await slack.conversations.create({
       name: channelName,
-      is_private: false,
+      is_private: true,
     });
     console.debug(`Created channel ${JSON.stringify(channelResponse)}`);
 
