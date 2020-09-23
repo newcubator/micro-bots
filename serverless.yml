@@ -1,22 +1,38 @@
 service: birthday-bot
 
-frameworkVersion: '1'
+frameworkVersion: '2'
 
 provider:
   name: aws
   runtime: nodejs12.x
   region: eu-central-1
+  stage: production
   profile: newcubator-dev
+  environment:
+    MOCO_TOKEN: ${env:MOCO_TOKEN}
+    SLACK_TOKEN: ${env:SLACK_TOKEN}
+
+plugins:
+  - serverless-webpack
+
+custom:
+  webpack:
+    includeModules: true
 
 functions:
-  bot:
-    handler: handler.bot
-    memorySize: 128
-    environment:
-      MOCO_TOKEN: ${env:MOCO_TOKEN}
-      SLACK_TOKEN: ${env:SLACK_TOKEN}
-      LEAD_TIME: 14
-    events:
-      - schedule:
-          rate: cron(5 8 * * ? *)
-          enabled: true
+   bot:
+     handler: src/birthday.bot
+     memorySize: 128
+     environment:
+       LEAD_TIME: 14
+     events:
+       - schedule:
+           rate: cron(5 8 * * ? *)
+           enabled: true
+   workload:
+     handler: src/workload.handler
+     memorySize: 128
+     events:
+       - http:
+           path: workload
+           method: post
