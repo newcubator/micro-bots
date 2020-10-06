@@ -6,11 +6,8 @@ import { getUserEmployments } from './moco/employments';
 import { getUserSchedules } from './moco/schedules';
 import { findUserBySlackCommand, getUsers } from './moco/users';
 import { SlackCommandTypes } from './types/slack-command-types';
-import {
-  MocoActivityResponse,
-  MocoEmploymentsResponse,
-  MocoSchedulesResponse, MocoUserType
-} from "./types/moco-types";
+import {MocoUserType} from "./types/moco-types";
+import {calculateWorkload} from "./calculate-workload";
 // import AWSXRay from 'aws-xray-sdk';
 // import http from 'http';
 // import https from 'https';
@@ -101,7 +98,7 @@ export async function handler(event: APIGatewayEvent) {
             },
             {
               "type": "plain_text",
-              "text": `Urlaubstage: ${workload.holidays}`,
+              "text": `Urlaubstage/Feiertage: ${workload.holidays}`,
               "emoji": true
             }
           ]
@@ -109,78 +106,4 @@ export async function handler(event: APIGatewayEvent) {
       ]
     })
   };
-}
-
-/**
- * Checks for each day if it was a workday and if so adds up the users planned
- * hours of that day.
- */
-export function calculateWorkload(duration: number) {
-  return (input: [MocoSchedulesResponse,MocoEmploymentsResponse,MocoActivityResponse]) => {
-    const [schedules, employments, activities] = input;
-    const activitiesMap = activities.data.map(activity => {return {id: activity.id, date:activity.date, hours:activity.hours}})
-
-    const pattern = employments.data[0].pattern;
-
-    let expectedSum = 0;
-    let workedSum = 0;
-    let holidays = 0;
-    let days: DayObjectProps[] = []
-
-    interface DayObjectProps{
-      day: string;
-      expectedHours: number;
-      worked: number;
-      holiday?: boolean;
-      weekend?: boolean;
-    }
-
-    for (let step = 1; step <= duration; step++) {
-      const day = dayjs().subtract(step, 'day');
-      const dayString = day.format('YYYY-MM-DD');
-      let dayObject: DayObjectProps = {
-        day: dayString,
-        expectedHours: 0,
-        worked: 0
-      }
-
-      // don't expect people to work on weekends
-      if (day.get('day') == 0 || day.get('day') == 6) {
-        dayObject.weekend = true
-      }
-
-      // ignore scheduled absence days
-      const scheduled = schedules.data.find(schedule => schedule.date == dayString);
-      if (scheduled) {
-        if(scheduled.assignment.name == "Urlaub") {
-          dayObject.holiday = true
-          holidays++
-        }
-      }
-
-      if(!dayObject.weekend && !dayObject.holiday){
-        let expected = pattern.am[day.get('day') - 1] + pattern.pm[day.get('day') - 1]
-        dayObject.expectedHours = expected;
-        expectedSum += expected
-      }
-
-      let workedActivities = activitiesMap.filter(activity => activity.date == dayString)
-      if(workedActivities){
-        let workedHours = 0
-        workedActivities.forEach((activity) => {
-          workedHours += activity.hours
-        })
-        dayObject.worked = workedHours
-        workedSum += workedHours
-      }
-      days.push(dayObject)
-    }
-
-    return {
-      expectedHours: expectedSum,
-      holidays: holidays,
-      workedHours: workedSum,
-      days: days
-    };
-  }
 }
