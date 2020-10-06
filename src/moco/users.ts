@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { Command } from '../slack/command';
+import { SlackCommandTypes } from '../types/slack-command-types';
 import { MOCO_TOKEN } from './token';
 
 /*
@@ -14,7 +14,7 @@ export function getUsers(): Promise<Array<User>> {
   }).then((response: AxiosResponse<Array<User>>) => response.data);
 }
 
-export function findUserBySlackCommand(command: Command): (users: Array<User>) => User {
+export function findUserBySlackCommand(command: SlackCommandTypes): (users: Array<User>) => User {
   return (users: Array<User>): User => {
     let user: User;
     user = findUserBySlackId(users, command.user_id);

@@ -1,6 +1,6 @@
 import { ParsedUrlQuery } from "querystring";
 
-export interface Command extends ParsedUrlQuery {
+export interface SlackCommandTypes extends ParsedUrlQuery {
   token: string;
   team_id: string;
   team_domain: string;
