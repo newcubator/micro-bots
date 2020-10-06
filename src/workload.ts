@@ -1,9 +1,9 @@
 import { APIGatewayEvent } from 'aws-lambda';
 import dayjs from 'dayjs';
 import { decode } from 'querystring';
-import {  getActivities } from './moco/activities';
+import {  getUserActivities } from './moco/activities';
 import { getUserEmployments } from './moco/employments';
-import { getSchedules } from './moco/schedules';
+import { getUserSchedules } from './moco/schedules';
 import { findUserBySlackCommand, getUsers, User } from './moco/users';
 import { Command } from './slack/command';
 import {
@@ -11,12 +11,12 @@ import {
   MocoEmploymentsResponse,
   MocoSchedulesResponse
 } from "./types/moco-types";
-import AWSXRay from 'aws-xray-sdk';
-import http from 'http';
-import https from 'https';
-
-AWSXRay.captureHTTPsGlobal(http, true);
-AWSXRay.captureHTTPsGlobal(https, true);
+// import AWSXRay from 'aws-xray-sdk';
+// import http from 'http';
+// import https from 'https';
+//
+// AWSXRay.captureHTTPsGlobal(http, true);
+// AWSXRay.captureHTTPsGlobal(https, true);
 
 
 const DEFAULT_DURATION = 21;
@@ -44,9 +44,9 @@ export async function handler(event: APIGatewayEvent) {
   }
 
   const workloadPromise = Promise.all([
-      getSchedules(from, to, user.id),
+      getUserSchedules(from, to, user.id),
       getUserEmployments(from, to, user.id),
-      getActivities(from, to, user.id)
+      getUserActivities(from, to, user.id)
   ]).then(calculateWorkload(duration))
 
 
