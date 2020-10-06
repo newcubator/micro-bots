@@ -56,6 +56,7 @@ export async function handler(event: APIGatewayEvent) {
   const percentage = 100 / workload.expectedHours * workload.workedHours;
   console.info(`percentage: ${percentage}`);
 
+  console.log(workload)
 
   // -75 Überprüfe
   // 75-80 Go on
