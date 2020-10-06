@@ -1,6 +1,24 @@
 import {AxiosResponse} from "axios";
 
-interface MocoUser { id: number; firstname: string; lastname: string; }
+export interface MocoUserType {
+    id: string;
+    firstname: string;
+    lastname: string;
+    active: boolean;
+    external: boolean;
+    email: string;
+    mobile_phone: string;
+    work_phone: string;
+    home_address: string;
+    info: string;
+    birthday: string;
+    avatar_url: string;
+    custom_properties: any;
+    unit: any;
+    created_at: string;
+    updated_at: string;
+}
+
 
 export interface MocoSchedulesResponse extends AxiosResponse {
     data: MocoSchedule[];
@@ -20,7 +38,7 @@ export interface MocoSchedule {
         color: string;
         type: string;
     },
-    user: MocoUser;
+    user: MocoUserType;
     created_at: string;
     updated_at: string;
 }
@@ -35,7 +53,7 @@ export interface MocoEmployment {
     pattern: { am: number[], pm: number[] },
     from: string,
     to: string,
-    user: MocoUser,
+    user: MocoUserType,
     created_at: string,
     updated_at: string
 }
@@ -62,7 +80,7 @@ export interface MocoActivity {
     },
     task: { id: number, name: string, billable: boolean },
     customer: { id: number, name: string },
-    user: MocoUser,
+    user: MocoUserType,
     timer_started_at: string,
     created_at: string,
     updated_at: string,
