@@ -1,6 +1,6 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { MOCO_TOKEN } from './token';
-import { User } from './users';
+import {MocoActivity, MocoActivityResponse} from "../types/moco-types";
 
 /*
  * @See https://github.com/hundertzehn/mocoapp-api-docs/blob/master/sections/activities.md
@@ -16,47 +16,11 @@ export function getActivities(from: string, to: string, user_id: string) {
       to,
       user_id
     },
-  }).then((response: AxiosResponse<Array<Activity>>) => response.data);
+  }) as Promise<MocoActivityResponse>
 }
 
-export function countHours(activities: Array<Activity>): number {
+export function countHours(activities: MocoActivity[]): number {
   return activities
     .map(activity => activity.hours)
     .reduce((total: number, hours: number) => { return total + hours; });
-}
-
-export interface Activity {
-  id: string;
-  date: string;
-  hours: number;
-  description: string;
-  billed: boolean;
-  billable: boolean;
-  tag: string;
-  remote_service: string;
-  remote_id: string;
-  remote_url: string;
-  project: {
-    id: string;
-    name: string;
-    billable: boolean;
-  },
-  task: {
-    id: string;
-    name: string;
-    billable: boolean
-  },
-  customer: {
-    id: string;
-    name: string;
-  },
-  user: {
-    id: string;
-    firstname: string;
-    lastname: string;
-  },
-  hourly_rate: number;
-  timer_started_at: string;
-  created_at: string;
-  updated_at: string;
 }

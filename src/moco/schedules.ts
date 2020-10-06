@@ -1,5 +1,6 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { MOCO_TOKEN } from './token';
+import {MocoSchedulesResponse} from "../types/moco-types";
 
 /*
  * @See https://github.com/hundertzehn/mocoapp-api-docs/blob/master/sections/schedules.md
@@ -15,5 +16,5 @@ export function getSchedules(from: string, to: string, user_id: string) {
       to,
       user_id
     },
-  });
+  }) as Promise<MocoSchedulesResponse>;
 }

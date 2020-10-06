@@ -1,11 +1,16 @@
-import { APIGatewayEvent, Context } from 'aws-lambda';
+import { APIGatewayEvent } from 'aws-lambda';
 import dayjs from 'dayjs';
 import { decode } from 'querystring';
 import {  getActivities } from './moco/activities';
-import { getUserEmployments } from './moco/planningEntries';
+import { getUserEmployments } from './moco/employments';
 import { getSchedules } from './moco/schedules';
 import { findUserBySlackCommand, getUsers, User } from './moco/users';
 import { Command } from './slack/command';
+import {
+  MocoActivityResponse,
+  MocoEmploymentsResponse,
+  MocoSchedulesResponse
+} from "./types/moco-types";
 import AWSXRay from 'aws-xray-sdk';
 import http from 'http';
 import https from 'https';
@@ -16,7 +21,7 @@ AWSXRay.captureHTTPsGlobal(https, true);
 
 const DEFAULT_DURATION = 21;
 
-export async function handler(event: APIGatewayEvent, context: Context) {
+export async function handler(event: APIGatewayEvent) {
   const command: Command = decode(event.body) as Command;
   const userPromise: Promise<User> = getUsers()
     .then(findUserBySlackCommand(command))
@@ -110,15 +115,11 @@ export async function handler(event: APIGatewayEvent, context: Context) {
  * hours of that day.
  */
 export function calculateWorkload(duration: number) {
-  return (input) => {
+  return (input: [MocoSchedulesResponse,MocoEmploymentsResponse,MocoActivityResponse]) => {
     const [schedules, employments, activities] = input;
-    const activitiesMap = activities.map(activity => {return {id: activity.id, date:activity.date, hours:activity.hours}})
-    console.debug('schedules',schedules.data);
-    console.debug('employments',employments.data);
-    console.debug('activities',activitiesMap);
+    const activitiesMap = activities.data.map(activity => {return {id: activity.id, date:activity.date, hours:activity.hours}})
 
     const pattern = employments.data[0].pattern;
-    console.info(`Working pattern: ${JSON.stringify(pattern)}`);
 
     let expectedSum = 0;
     let workedSum = 0;
@@ -153,7 +154,7 @@ export function calculateWorkload(duration: number) {
         if(scheduled.assignment.name == "Urlaub") {
           dayObject.holiday = true
           holidays++
-        };
+        }
       }
 
       if(!dayObject.weekend && !dayObject.holiday){
@@ -174,7 +175,6 @@ export function calculateWorkload(duration: number) {
       days.push(dayObject)
     }
 
-    console.log(days)
     return {
       expectedHours: expectedSum,
       holidays: holidays,
