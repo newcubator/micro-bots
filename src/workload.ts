@@ -4,12 +4,12 @@ import { decode } from 'querystring';
 import {  getUserActivities } from './moco/activities';
 import { getUserEmployments } from './moco/employments';
 import { getUserSchedules } from './moco/schedules';
-import { findUserBySlackCommand, getUsers, User } from './moco/users';
+import { findUserBySlackCommand, getUsers } from './moco/users';
 import { SlackCommandTypes } from './types/slack-command-types';
 import {
   MocoActivityResponse,
   MocoEmploymentsResponse,
-  MocoSchedulesResponse
+  MocoSchedulesResponse, MocoUserType
 } from "./types/moco-types";
 // import AWSXRay from 'aws-xray-sdk';
 // import http from 'http';
@@ -23,7 +23,7 @@ const DEFAULT_DURATION = 21;
 
 export async function handler(event: APIGatewayEvent) {
   const command: SlackCommandTypes = decode(event.body) as SlackCommandTypes;
-  const userPromise: Promise<User> = getUsers()
+  const userPromise: Promise<MocoUserType> = getUsers()
     .then(findUserBySlackCommand(command))
 
   let duration = parseInt(command.text.trim());
