@@ -5,7 +5,7 @@ export function calculateWorkload(duration: number) {
   return (input: [MocoSchedulesResponse, MocoEmploymentsResponse, MocoActivityResponse]) => {
     const [schedules, employments, activities] = input;
 
-    if (schedules.data.length == 0 || employments.data.length == 0 || activities.data.length == 0) return;
+    if (employments.data.length == 0) return;
 
     const activitiesMap = activities.data.map(activity => {
       return {id: activity.id, date: activity.date, hours: activity.hours}
