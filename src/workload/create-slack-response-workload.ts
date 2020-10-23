@@ -59,6 +59,17 @@ export const createSlackResponseWorkloadAll = (workload: WorkloadType[]) => {
     } else {
       percentage = 100 / workloadElement.expectedHours * workloadElement.workedHours;
     }
+
+    let percentageText: string
+    if (percentage != null && percentage >= 75) {
+      percentageText = ":+1:"
+    } else if (percentage != null) {
+      percentageText = ":-1:"
+    } else if (workloadElement.holidays >= 5) {
+      percentageText = ":palm_tree:"
+    } else {
+      percentageText = ":man-shrugging:"
+    }
     responseEmployeeArray.push({
       type: "section",
       fields: [
@@ -68,7 +79,7 @@ export const createSlackResponseWorkloadAll = (workload: WorkloadType[]) => {
         },
         {
           type: "plain_text",
-          text: `${percentage != null ? percentage >= 75 ? ":+1:" : ":-1:" : ":man-shrugging:"}`,
+          text: `${percentageText}`,
           emoji: true
         }
       ]
