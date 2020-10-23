@@ -1,5 +1,6 @@
 import {MocoActivityResponse, MocoEmploymentsResponse, MocoSchedulesResponse} from "./types/moco-types";
 import dayjs from "dayjs";
+import {DayObjectProps} from "./types/workload-types";
 
 export function calculateWorkload(duration: number) {
   return (input: [MocoSchedulesResponse, MocoEmploymentsResponse, MocoActivityResponse]) => {
@@ -17,14 +18,6 @@ export function calculateWorkload(duration: number) {
     let workedSum = 0;
     let holidays = 0;
     let days: DayObjectProps[] = []
-
-    interface DayObjectProps {
-      day: string;
-      expectedHours: number;
-      worked: number;
-      holiday?: boolean;
-      weekend?: boolean;
-    }
 
     for (let step = 1; step <= duration; step++) {
       const day = dayjs().subtract(step, 'day');
