@@ -1,13 +1,14 @@
-import { APIGatewayEvent } from 'aws-lambda';
+import {APIGatewayEvent} from 'aws-lambda';
 import dayjs from 'dayjs';
-import { decode } from 'querystring';
-import {  getUserActivities } from './moco/activities';
-import { getUserEmployments } from './moco/employments';
-import { getUserSchedules } from './moco/schedules';
-import { findUserBySlackCommand, getUsers } from './moco/users';
-import { SlackCommandTypes } from './types/slack-command-types';
+import {decode} from 'querystring';
+import {getUserActivities} from './moco/activities';
+import {getUserEmployments} from './moco/employments';
+import {getUserSchedules} from './moco/schedules';
+import {findUserBySlackCommand, getUsers} from './moco/users';
+import {SlackCommandTypes} from './types/slack-command-types';
 import {MocoUserType} from "./types/moco-types";
 import {calculateWorkload} from "./calculate-workload";
+import {WorkloadType} from "./types/workload-types";
 // import AWSXRay from 'aws-xray-sdk';
 // import http from 'http';
 // import https from 'https';
@@ -40,10 +41,10 @@ export async function handler(event: APIGatewayEvent) {
     };
   }
 
-  const workloadPromise = Promise.all([
-      getUserSchedules(from, to, user.id),
-      getUserEmployments(from, to, user.id),
-      getUserActivities(from, to, user.id)
+  const workloadPromise: Promise<WorkloadType> = Promise.all([
+    getUserSchedules(from, to, user.id),
+    getUserEmployments(from, to, user.id),
+    getUserActivities(from, to, user.id)
   ]).then(calculateWorkload(duration))
 
 
@@ -67,13 +68,13 @@ export async function handler(event: APIGatewayEvent) {
   let response
   if (percentage < 75) {
     response = `*Du hast insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung von ` +
-        `${percentage.toFixed(0)}%*\nHast du deine Zeiten alle richtig erfasst? Guck mal hier nach <https://newcubator.mocoapp.com/activities|Moco>`;
+      `${percentage.toFixed(0)}%*\nHast du deine Zeiten alle richtig erfasst? Guck mal hier nach <https://newcubator.mocoapp.com/activities|Moco>`;
   } else if (percentage > 80) {
     response = `*Du hast insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung ` +
-        `von ${percentage.toFixed(0)}%*\nDu hast eine hohe Auslastung, schau doch mal ob du deine Zeit für etwas anderes nutzen kannst.\n` +
-        `<https://gitlab.com/newcubator/book/-/issues|Book>, <https://gitlab.com/newcubator/newcubator-homepage/homepage|Homepage>, ` +
-        `<https://newcubator.com/blog|Blog>, <https://gitlab.com/newcubator/devsquad/-/issues|DevSquad>`;
-  }else{
+      `von ${percentage.toFixed(0)}%*\nDu hast eine hohe Auslastung, schau doch mal ob du deine Zeit für etwas anderes nutzen kannst.\n` +
+      `<https://gitlab.com/newcubator/book/-/issues|Book>, <https://gitlab.com/newcubator/newcubator-homepage/homepage|Homepage>, ` +
+      `<https://newcubator.com/blog|Blog>, <https://gitlab.com/newcubator/devsquad/-/issues|DevSquad>`;
+  } else {
     response = `Du hast in den letzten ${duration} Tagen insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung von ${percentage.toFixed(0)}%.`;
   }
 

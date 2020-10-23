@@ -1,3 +1,5 @@
+import {MocoUserType} from "./moco-types";
+
 export interface DayObjectType {
   day: string;
   expectedHours: number;
@@ -6,4 +8,12 @@ export interface DayObjectType {
   weekend?: boolean;
 }
 
+
+export interface WorkloadType {
+  user: MocoUserType,
+  expectedHours: number,
+  holidays: number,
+  workedHours: number,
+  days: DayObjectType[]
+}
 

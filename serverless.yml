@@ -20,19 +20,26 @@ custom:
     includeModules: true
 
 functions:
-   bot:
-     handler: src/birthday.bot
-     memorySize: 128
-     environment:
-       LEAD_TIME: 14
-     events:
-       - schedule:
-           rate: cron(5 8 * * ? *)
-           enabled: true
-   workload:
-     handler: src/workload.handler
-     memorySize: 128
-     events:
-       - http:
-           path: workload
-           method: post
+  bot:
+    handler: src/birthday.bot
+    memorySize: 128
+    environment:
+      LEAD_TIME: 14
+    events:
+      - schedule:
+          rate: cron(5 8 * * ? *)
+          enabled: true
+  workload:
+    handler: src/workload.handler
+    memorySize: 128
+    events:
+      - http:
+          path: workload
+          method: post
+  workloadAll:
+    handler: src/workload-all.handler
+    memorySize: 128
+    events:
+      - http:
+          path: workloadAll
+          method: post
