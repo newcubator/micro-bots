@@ -17,6 +17,7 @@ export function calculateWorkload(duration: number) {
     let expectedSum = 0;
     let workedSum = 0;
     let holidays = 0;
+    let notPlanned = 0;
     let days: DayObjectType[] = []
 
     for (let step = 1; step <= duration; step++) {
@@ -36,13 +37,17 @@ export function calculateWorkload(duration: number) {
       // ignore scheduled absence days
       const scheduled = schedules.data.find(schedule => schedule.date == dayString);
       if (scheduled) {
+        if (scheduled.assignment.name == "Nicht planbar") {
+          dayObject.notPlanned = true
+          notPlanned++
+        }
         if ((scheduled.assignment.name == "Urlaub" && !dayObject.weekend) || (scheduled.assignment.name == "Feiertag" && !dayObject.weekend)) {
           dayObject.holiday = true
           holidays++
         }
       }
 
-      if (!dayObject.weekend && !dayObject.holiday) {
+      if (!dayObject.weekend && !dayObject.holiday && !dayObject.notPlanned) {
         let expected = pattern.am[day.get('day') - 1] + pattern.pm[day.get('day') - 1]
         dayObject.expectedHours = expected;
         expectedSum += expected
@@ -65,6 +70,7 @@ export function calculateWorkload(duration: number) {
       expectedHours: expectedSum,
       holidays: holidays,
       workedHours: workedSum,
+      notPlanned: notPlanned,
       days: days
     };
   }

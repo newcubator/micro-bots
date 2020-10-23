@@ -6,6 +6,7 @@ export interface DayObjectType {
   worked: number;
   holiday?: boolean;
   weekend?: boolean;
+  notPlanned?: boolean;
 }
 
 
@@ -14,6 +15,7 @@ export interface WorkloadType {
   expectedHours: number,
   holidays: number,
   workedHours: number,
+  notPlanned: number,
   days: DayObjectType[]
 }
 
