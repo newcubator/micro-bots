@@ -1,4 +1,4 @@
-export interface DayObjectProps {
+export interface DayObjectType {
   day: string;
   expectedHours: number;
   worked: number;
