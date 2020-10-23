@@ -6,11 +6,24 @@ import {getUserActivities} from "./moco/activities";
 import {calculateWorkload} from "./workload/calculate-workload";
 import {getUsers} from "./moco/users";
 import {createSlackResponseWorkloadAll} from "./workload/create-slack-response-workload";
+import {SlackCommandTypes} from "./types/slack-command-types";
+import {decode} from "querystring";
+import {WebClient} from "@slack/web-api";
 
-const DEFAULT_DURATION = 21;
+const DEFAULT_DURATION = 7;
 
-export const handler = async (event) => {
-  const duration = DEFAULT_DURATION;
+export const handler = async (event: APIGatewayEvent | ScheduledEvent) => {
+  let duration = DEFAULT_DURATION;
+  let slack: WebClient = null
+  if (eventIsApiGatewayEvent(event)) {
+    let command: SlackCommandTypes = decode(event.body) as SlackCommandTypes
+    let dur = parseInt(command.text.trim())
+    if (Number.isInteger(dur)) {
+      duration = dur;
+    }
+  } else {
+    slack = new WebClient(process.env.SLACK_TOKEN)
+  }
 
   const from = dayjs().subtract(duration, 'day').format('YYYY-MM-DD');
   const to = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
@@ -28,13 +41,25 @@ export const handler = async (event) => {
 
   const workload = await Promise.all(userPromiseArray)
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify(createSlackResponseWorkloadAll(workload))
+  if (eventIsApiGatewayEvent(event)) {
+    return {
+      statusCode: 200,
+      body: JSON.stringify(createSlackResponseWorkloadAll(workload))
+    }
+  } else if (eventIsScheduledEvent(event)) {
+    await slack?.chat.postMessage({
+      text: "Wöchentliche Auslastung",
+      channel: process.env.WORKLOAD_CHANNEL,
+      username: "Moco Bot",
+      ...createSlackResponseWorkloadAll(workload)
+    })
   }
 }
 
-
 function eventIsApiGatewayEvent(event: APIGatewayEvent | ScheduledEvent): event is APIGatewayEvent {
   return (event as APIGatewayEvent).httpMethod !== undefined;
+}
+
+function eventIsScheduledEvent(event: APIGatewayEvent | ScheduledEvent): event is ScheduledEvent {
+  return (event as ScheduledEvent).detail !== undefined;
 }

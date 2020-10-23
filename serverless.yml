@@ -11,6 +11,7 @@ provider:
   environment:
     MOCO_TOKEN: ${env:MOCO_TOKEN}
     SLACK_TOKEN: ${env:SLACK_TOKEN}
+    WORKLOAD_CHANNEL: ${env:WORKLOAD_CHANNEL}
 
 plugins:
   - serverless-webpack
@@ -43,3 +44,6 @@ functions:
       - http:
           path: workloadAll
           method: post
+      - schedule:
+          rate: cron(0 16 ? * FRI *)
+          enabled: true
