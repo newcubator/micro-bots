@@ -4,7 +4,9 @@
   "description": "",
   "scripts": {
     "deploy": "NODE_OPTIONS='-r dotenv/config' serverless deploy",
-    "invoke": "NODE_OPTIONS='-r dotenv/config' serverless invoke local -f bot",
+    "invokeBot": "NODE_OPTIONS='-r dotenv/config' serverless invoke local -f bot",
+    "invokeWorkload": "NODE_OPTIONS='-r dotenv/config' serverless invoke local -f workload",
+    "invokeWorkloadAll": "NODE_OPTIONS='-r dotenv/config' serverless invoke local -f workloadAll",
     "serverless": "NODE_OPTIONS='-r dotenv/config' serverless"
   },
   "dependencies": {
