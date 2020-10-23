@@ -5,7 +5,7 @@ import {getUserEmployments} from "./moco/employments";
 import {getUserActivities} from "./moco/activities";
 import {calculateWorkload} from "./workload/calculate-workload";
 import {getUsers} from "./moco/users";
-import {createSlackResponseWorkloadAll} from "./workload/create-slack-response-workload-all";
+import {createSlackResponseWorkloadAll} from "./workload/create-slack-response-workload";
 
 const DEFAULT_DURATION = 21;
 

@@ -9,13 +9,7 @@ import {SlackCommandTypes} from './types/slack-command-types';
 import {MocoUserType} from "./types/moco-types";
 import {calculateWorkload} from "./workload/calculate-workload";
 import {WorkloadType} from "./types/workload-types";
-// import AWSXRay from 'aws-xray-sdk';
-// import http from 'http';
-// import https from 'https';
-//
-// AWSXRay.captureHTTPsGlobal(http, true);
-// AWSXRay.captureHTTPsGlobal(https, true);
-
+import {createSlackResponseWorkload} from "./workload/create-slack-response-workload";
 
 const DEFAULT_DURATION = 21;
 
@@ -49,62 +43,10 @@ export async function handler(event: APIGatewayEvent) {
 
 
   const workload = await workloadPromise;
-  console.info(`worked: ${workload.workedHours}, expected: ${workload.expectedHours}`);
 
-  const percentage = 100 / workload.expectedHours * workload.workedHours;
-  console.info(`percentage: ${percentage}`);
-
-  console.log(workload)
-
-  // -75 Überprüfe
-  // 75-80 Go on
-  // 80+ Seh mal
-  //
-  // * Book / Okr https://gitlab.com/newcubator/book/-/issues
-  // * Homepage https://gitlab.com/newcubator/newcubator-homepage/homepage
-  // * Blog Post https://newcubator.com/blog
-  // * Was kleineres im DevSqaud vorbereiten https://gitlab.com/newcubator/devsquad/-/issues
-
-  let response
-  if (percentage < 75) {
-    response = `*Du hast insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung von ` +
-      `${percentage.toFixed(0)}%*\nHast du deine Zeiten alle richtig erfasst? Guck mal hier nach <https://newcubator.mocoapp.com/activities|Moco>`;
-  } else if (percentage > 80) {
-    response = `*Du hast insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung ` +
-      `von ${percentage.toFixed(0)}%*\nDu hast eine hohe Auslastung, schau doch mal ob du deine Zeit für etwas anderes nutzen kannst.\n` +
-      `<https://gitlab.com/newcubator/book/-/issues|Book>, <https://gitlab.com/newcubator/newcubator-homepage/homepage|Homepage>, ` +
-      `<https://newcubator.com/blog|Blog>, <https://gitlab.com/newcubator/devsquad/-/issues|DevSquad>`;
-  } else {
-    response = `Du hast in den letzten ${duration} Tagen insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung von ${percentage.toFixed(0)}%.`;
-  }
 
   return {
     statusCode: 200,
-    body: JSON.stringify({
-      "blocks": [
-        {
-          "type": "section",
-          "text": {
-            "type": "mrkdwn",
-            "text": response
-          }
-        },
-        {
-          "type": "context",
-          "elements": [
-            {
-              "type": "plain_text",
-              "text": `Zeitraum: ${dayjs(from).format('DD.MM.YYYY')} bis ${dayjs(to).format('DD.MM.YYYY')}`,
-              "emoji": true
-            },
-            {
-              "type": "plain_text",
-              "text": `Urlaubstage/Feiertage: ${workload.holidays}`,
-              "emoji": true
-            }
-          ]
-        }
-      ]
-    })
+    body: JSON.stringify(createSlackResponseWorkload(workload, duration, from, to))
   };
 }
