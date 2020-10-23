@@ -1,6 +1,6 @@
-import {MocoActivityResponse, MocoEmploymentsResponse, MocoSchedulesResponse} from "./types/moco-types";
+import {MocoActivityResponse, MocoEmploymentsResponse, MocoSchedulesResponse} from "../types/moco-types";
 import dayjs from "dayjs";
-import {DayObjectType, WorkloadType} from "./types/workload-types";
+import {DayObjectType, WorkloadType} from "../types/workload-types";
 
 export function calculateWorkload(duration: number) {
   return (input: [MocoSchedulesResponse, MocoEmploymentsResponse, MocoActivityResponse]): WorkloadType => {

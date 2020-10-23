@@ -7,7 +7,7 @@ import {getUserSchedules} from './moco/schedules';
 import {findUserBySlackCommand, getUsers} from './moco/users';
 import {SlackCommandTypes} from './types/slack-command-types';
 import {MocoUserType} from "./types/moco-types";
-import {calculateWorkload} from "./calculate-workload";
+import {calculateWorkload} from "./workload/calculate-workload";
 import {WorkloadType} from "./types/workload-types";
 // import AWSXRay from 'aws-xray-sdk';
 // import http from 'http';

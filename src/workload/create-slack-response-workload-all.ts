@@ -1,4 +1,4 @@
-import {WorkloadType} from "./types/workload-types";
+import {WorkloadType} from "../types/workload-types";
 
 export const createSlackResponseWorkloadAll = (workload: WorkloadType[]) => {
   let responseEmployeeArray = []

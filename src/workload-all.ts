@@ -3,9 +3,9 @@ import dayjs from "dayjs";
 import {getUserSchedules} from "./moco/schedules";
 import {getUserEmployments} from "./moco/employments";
 import {getUserActivities} from "./moco/activities";
-import {calculateWorkload} from "./calculate-workload";
+import {calculateWorkload} from "./workload/calculate-workload";
 import {getUsers} from "./moco/users";
-import {createSlackResponseWorkloadAll} from "./create-slack-response-workload-all";
+import {createSlackResponseWorkloadAll} from "./workload/create-slack-response-workload-all";
 
 const DEFAULT_DURATION = 21;
 
