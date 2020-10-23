@@ -44,14 +44,14 @@ export const handler = async (event: APIGatewayEvent | ScheduledEvent) => {
   if (eventIsApiGatewayEvent(event)) {
     return {
       statusCode: 200,
-      body: JSON.stringify(createSlackResponseWorkloadAll(workload))
+      body: JSON.stringify(createSlackResponseWorkloadAll(workload, duration))
     }
   } else if (eventIsScheduledEvent(event)) {
     await slack?.chat.postMessage({
       text: "Wöchentliche Auslastung",
       channel: process.env.WORKLOAD_CHANNEL,
       username: "Moco Bot",
-      ...createSlackResponseWorkloadAll(workload)
+      ...createSlackResponseWorkloadAll(workload, duration)
     })
   }
 }

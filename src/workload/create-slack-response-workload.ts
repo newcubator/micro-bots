@@ -46,7 +46,7 @@ export const createSlackResponseWorkload = (workload: WorkloadType, duration: nu
   }
 }
 
-export const createSlackResponseWorkloadAll = (workload: WorkloadType[]) => {
+export const createSlackResponseWorkloadAll = (workload: WorkloadType[], duration: number) => {
   let responseEmployeeArray = []
 
   workload.sort((firstElement, secondElement) => firstElement.user.lastname.localeCompare(secondElement.user.lastname))
@@ -102,7 +102,7 @@ export const createSlackResponseWorkloadAll = (workload: WorkloadType[]) => {
         "type": "section",
         "text": {
           "type": "mrkdwn",
-          "text": "Hallo <!channel>, hier ist eure wöchentliche Auslastung. Schaut doch bitte mal ob ihr alle eure Stunden richtig erfasst habt."
+          "text": `Hallo <!channel>, hier ist eure Auslastung der letzten ${duration} Tage. Schaut doch bitte mal ob ihr alle eure Stunden richtig erfasst habt.`
         }
       },
       {
