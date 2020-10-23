@@ -3,11 +3,11 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "deploy": "NODE_OPTIONS='-r dotenv/config' serverless deploy",
+    "deploy": "NODE_OPTIONS='-r dotenv/config' serverless deploy --stage dev",
+    "production": "NODE_OPTIONS='-r dotenv/config' serverless deploy",
     "invokeBot": "NODE_OPTIONS='-r dotenv/config' serverless invoke local -f bot",
     "invokeWorkload": "NODE_OPTIONS='-r dotenv/config' serverless invoke local -f workload",
-    "invokeWorkloadAll": "NODE_OPTIONS='-r dotenv/config' serverless invoke local -f workloadAll",
-    "serverless": "NODE_OPTIONS='-r dotenv/config' serverless"
+    "invokeWorkloadAll": "NODE_OPTIONS='-r dotenv/config' serverless invoke local -f workloadAll"
   },
   "dependencies": {
     "@slack/web-api": "5.11.0",
