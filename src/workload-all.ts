@@ -26,7 +26,7 @@ export const handler = async (event: APIGatewayEvent | ScheduledEvent) => {
   }
 
   const from = dayjs().subtract(duration, 'day').format('YYYY-MM-DD');
-  const to = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
+  const to = dayjs().subtract(0, 'day').format('YYYY-MM-DD');
   console.log(`Analysing from ${from} to ${to}`);
 
   const users = await getUsers()
@@ -36,10 +36,12 @@ export const handler = async (event: APIGatewayEvent | ScheduledEvent) => {
       getUserSchedules(from, to, user.id),
       getUserEmployments(from, to, user.id),
       getUserActivities(from, to, user.id)
-    ]).then(calculateWorkload(duration))
+    ]).then(calculateWorkload(duration, to))
   })
 
   const workload = await Promise.all(userPromiseArray)
+
+  console.log(JSON.stringify(createSlackResponseWorkloadAll(workload, duration).blocks, null, 4))
 
   if (eventIsApiGatewayEvent(event)) {
     return {

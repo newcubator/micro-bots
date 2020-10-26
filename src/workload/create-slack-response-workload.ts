@@ -1,21 +1,21 @@
 import {WorkloadType} from "../types/workload-types";
 import dayjs from "dayjs";
 
+const project_employees = ["Simon", "Hendrik", "Lucas", "Sven", "Tim", "Jan", "Umut", "Rahmi", "Adrian"]
+
 export const createSlackResponseWorkload = (workload: WorkloadType, duration: number, from: string, to: string) => {
 
-  const percentage = 100 / workload.expectedHours * workload.workedHours;
-
   let response
-  if (percentage < 75) {
+  if (workload.percentage < 75) {
     response = `*Du hast insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung von ` +
-      `${percentage.toFixed(0)}%*\nHast du deine Zeiten alle richtig erfasst? Guck mal hier nach <https://newcubator.mocoapp.com/activities|Moco>`;
-  } else if (percentage > 80) {
+      `${workload.percentage.toFixed(0)}%*\nHast du deine Zeiten alle richtig erfasst? Guck mal hier nach <https://newcubator.mocoapp.com/activities|Moco>`;
+  } else if (workload.percentage > 80) {
     response = `*Du hast insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung ` +
-      `von ${percentage.toFixed(0)}%*\nDu hast eine hohe Auslastung, schau doch mal ob du deine Zeit für etwas anderes nutzen kannst.\n` +
+      `von ${workload.percentage.toFixed(0)}%*\nDu hast eine hohe Auslastung, schau doch mal ob du deine Zeit für etwas anderes nutzen kannst.\n` +
       `<https://gitlab.com/newcubator/book/-/issues|Book>, <https://gitlab.com/newcubator/newcubator-homepage/homepage|Homepage>, ` +
       `<https://newcubator.com/blog|Blog>, <https://gitlab.com/newcubator/devsquad/-/issues|DevSquad>`;
   } else {
-    response = `Du hast in den letzten ${duration} Tagen insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung von ${percentage.toFixed(0)}%.`;
+    response = `Du hast in den letzten ${duration} Tagen insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung von ${workload.percentage.toFixed(0)}%.`;
   }
 
   return {
@@ -51,43 +51,25 @@ export const createSlackResponseWorkloadAll = (workload: WorkloadType[], duratio
 
   workload.sort((firstElement, secondElement) => firstElement.user.lastname.localeCompare(secondElement.user.lastname))
 
-  for (const workloadElement of workload) {
-    if (!workloadElement) continue;
-    let percentage: number
-    if (workloadElement.expectedHours == 0 && workloadElement.workedHours == 0) {
-      percentage = null;
-    } else {
-      percentage = 100 / workloadElement.expectedHours * workloadElement.workedHours;
-    }
+  const projectEmployeesArray = workload.filter((workloadElement) => project_employees.find(s => s === workloadElement?.user.firstname))
+  const nonProjectEmployeesArray = workload.filter((workloadElement) => !project_employees.find(s => s === workloadElement?.user.firstname))
 
-    let percentageText: string
-    if (percentage != null && percentage >= 75) {
-      percentageText = ":+1:"
-    } else if (percentage != null) {
-      percentageText = ":-1:"
-    } else if (workloadElement.holidays >= 5) {
-      percentageText = ":palm_tree:"
-    } else {
-      percentageText = ":man-shrugging:"
-    }
-    responseEmployeeArray.push({
+  responseEmployeeArray.push({
       type: "section",
-      fields: [
-        {
-          type: "plain_text",
-          text: `${workloadElement.user.firstname} ${workloadElement.user.lastname}`
-        },
-        {
-          type: "plain_text",
-          text: `${percentageText}`,
-          emoji: true
-        }
-      ]
-    })
-    responseEmployeeArray.push({
-      type: "divider"
-    })
-  }
+      text: {
+        type: "plain_text",
+        text: "Projektmitarbeiter"
+      }
+    },
+    createFields(projectEmployeesArray, true),
+    {
+      type: "section",
+      text: {
+        type: "plain_text",
+        text: "nicht-Projektmitarbeiter"
+      }
+    },
+    createFields(nonProjectEmployeesArray, false))
 
   return {
     "blocks": [
@@ -138,4 +120,56 @@ export const createSlackResponseWorkloadAll = (workload: WorkloadType[], duratio
       }
     ]
   }
+}
+
+function createFields(employeeArray: WorkloadType[], projectEmployees: boolean) {
+  let responseEmployeeArray = []
+  let employeesOverSeventyFive = 0
+  let employeesWorked = employeeArray.length
+
+  for (const workloadElement of employeeArray) {
+    if (!workloadElement) continue;
+
+    let percentageText: string
+    if (workloadElement.percentage != null && workloadElement.percentage >= 75) {
+      employeesOverSeventyFive++
+      percentageText = ":+1:"
+    } else if (workloadElement.percentage != null) {
+      percentageText = ":-1:"
+    } else if (workloadElement.holidays >= 5) {
+      employeesWorked--
+      percentageText = ":palm_tree:"
+    } else {
+      employeesWorked--
+      percentageText = ":man-shrugging:"
+    }
+    responseEmployeeArray.push({
+      type: "section",
+      fields: [
+        {
+          type: "plain_text",
+          text: `${workloadElement.user.firstname} ${workloadElement.user.lastname}`
+        },
+        {
+          type: "plain_text",
+          text: `${percentageText}`,
+          emoji: true
+        }
+      ]
+    }, {
+      type: "divider"
+    })
+  }
+  if (projectEmployees) {
+    responseEmployeeArray.unshift({
+      type: "section",
+      text: {
+        type: "plain_text",
+        text: `Mitarbeiter über 75%: ${employeesOverSeventyFive}/${employeesWorked}`
+      }
+    }, {
+      type: "divider"
+    })
+  }
+  return responseEmployeeArray;
 }

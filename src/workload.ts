@@ -24,7 +24,7 @@ export async function handler(event: APIGatewayEvent) {
   }
 
   const from = dayjs().subtract(duration, 'day').format('YYYY-MM-DD');
-  const to = dayjs().subtract(1, 'day').format('YYYY-MM-DD');
+  const to = dayjs().subtract(0, 'day').format('YYYY-MM-DD');
   console.log(`Analysing from ${from} to ${to}`);
 
   const user = await userPromise;
@@ -39,7 +39,7 @@ export async function handler(event: APIGatewayEvent) {
     getUserSchedules(from, to, user.id),
     getUserEmployments(from, to, user.id),
     getUserActivities(from, to, user.id)
-  ]).then(calculateWorkload(duration))
+  ]).then(calculateWorkload(duration, to))
 
 
   const workload = await workloadPromise;
