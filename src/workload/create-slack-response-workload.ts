@@ -1,5 +1,5 @@
 import {WorkloadType} from "../types/workload-types";
-import dayjs from "dayjs";
+import dayjs, {Dayjs} from "dayjs";
 
 const project_employees = ["Simon", "Hendrik", "Lucas", "Sven", "Tim", "Jan", "Umut", "Rahmi", "Adrian"]
 
@@ -46,7 +46,7 @@ export const createSlackResponseWorkload = (workload: WorkloadType, duration: nu
   }
 }
 
-export const createSlackResponseWorkloadAll = (workload: WorkloadType[], duration: number) => {
+export const createSlackResponseWorkloadAll = (workload: WorkloadType[], from: Dayjs, to: Dayjs) => {
   let responseEmployeeArray = []
 
   workload.sort((firstElement, secondElement) => firstElement.user.lastname.localeCompare(secondElement.user.lastname))
@@ -54,22 +54,32 @@ export const createSlackResponseWorkloadAll = (workload: WorkloadType[], duratio
   const projectEmployeesArray = workload.filter((workloadElement) => project_employees.find(s => s === workloadElement?.user.firstname))
   const nonProjectEmployeesArray = workload.filter((workloadElement) => !project_employees.find(s => s === workloadElement?.user.firstname))
 
-  responseEmployeeArray.push({
-      type: "section",
-      text: {
-        type: "plain_text",
-        text: "Projektmitarbeiter"
-      }
-    },
-    createFields(projectEmployeesArray, true),
+  let projectEmployeesArrayBlocks = createFields(projectEmployeesArray)
+  let nonProjectEmployeesArrayBlocks = createFields(nonProjectEmployeesArray)
+
+  responseEmployeeArray.push(
     {
       type: "section",
-      text: {
-        type: "plain_text",
-        text: "nicht-Projektmitarbeiter"
-      }
+      fields: [{
+        type: "mrkdwn",
+        text: "*Projektmitarbeiter*"
+      }]
     },
-    createFields(nonProjectEmployeesArray, false))
+    {
+      "type": "divider"
+    },
+    ...projectEmployeesArrayBlocks.content,
+    {
+      type: "section",
+      fields: [{
+        type: "mrkdwn",
+        text: "*nicht-Projektmitarbeiter*"
+      }]
+    },
+    {
+      "type": "divider"
+    },
+    ...nonProjectEmployeesArrayBlocks.content)
 
   return {
     "blocks": [
@@ -84,24 +94,21 @@ export const createSlackResponseWorkloadAll = (workload: WorkloadType[], duratio
         "type": "section",
         "text": {
           "type": "mrkdwn",
-          "text": `Hallo <!channel>, hier ist eure Auslastung der letzten ${duration} Tage. Schaut doch bitte mal ob ihr alle eure Stunden richtig erfasst habt.`
+          "text": `Hallo <!channel>, hier ist eure Auslastung vom ${from.format("DD.MM.YYYY")} bis zum ${to.format("DD.MM.YYYY")}. ` +
+            `Schaut doch bitte mal ob ihr alle eure Stunden richtig erfasst habt.`
         }
       },
-      {
-        "type": "divider"
-      },
+      ...projectEmployeesArrayBlocks.headline,
       {
         "type": "section",
         "fields": [
           {
-            "type": "plain_text",
-            "text": "Mitarbeiter*in",
-            "emoji": true
+            "type": "mrkdwn",
+            "text": "*Mitarbeitende*",
           },
           {
-            "type": "plain_text",
-            "text": "Auslastung >= 75%",
-            "emoji": true
+            "type": "mrkdwn",
+            "text": "*Auslastung >= 75%*",
           }
         ]
       },
@@ -122,7 +129,8 @@ export const createSlackResponseWorkloadAll = (workload: WorkloadType[], duratio
   }
 }
 
-function createFields(employeeArray: WorkloadType[], projectEmployees: boolean) {
+function createFields(employeeArray: WorkloadType[]) {
+  let headline
   let responseEmployeeArray = []
   let employeesOverSeventyFive = 0
   let employeesWorked = employeeArray.length
@@ -160,16 +168,27 @@ function createFields(employeeArray: WorkloadType[], projectEmployees: boolean) 
       type: "divider"
     })
   }
-  if (projectEmployees) {
-    responseEmployeeArray.unshift({
-      type: "section",
-      text: {
+
+  headline = [{
+    type: "section",
+    fields: [
+      {
         type: "plain_text",
-        text: `Mitarbeiter über 75%: ${employeesOverSeventyFive}/${employeesWorked}`
+        text: `Projektmitarbeiter über 75%: ${employeesOverSeventyFive}/${employeesWorked}`
       }
-    }, {
-      type: "divider"
-    })
-  }
-  return responseEmployeeArray;
+    ]
+  },
+    {
+      "type": "section",
+      "text": {
+        "type": "plain_text",
+        "text": " "
+      }
+    }
+  ]
+
+  return {
+    headline: headline,
+    content: responseEmployeeArray
+  };
 }

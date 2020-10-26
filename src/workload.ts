@@ -39,7 +39,7 @@ export async function handler(event: APIGatewayEvent) {
     getUserSchedules(from, to, user.id),
     getUserEmployments(from, to, user.id),
     getUserActivities(from, to, user.id)
-  ]).then(calculateWorkload(duration, to))
+  ]).then(calculateWorkload(from, to))
 
 
   const workload = await workloadPromise;
