@@ -1,5 +1,6 @@
-import axios, { AxiosResponse } from 'axios';
+import axios from 'axios';
 import { MOCO_TOKEN } from './token';
+import {MocoEmploymentsResponse} from "../types/moco-types";
 
 /*
  * @See https://github.com/hundertzehn/mocoapp-api-docs/blob/master/sections/planning_entries.md
@@ -15,5 +16,5 @@ export function getUserEmployments(from: string, to: string, user_id: string) {
       to,
       user_id
     },
-  });
+  }) as Promise<MocoEmploymentsResponse>
 }

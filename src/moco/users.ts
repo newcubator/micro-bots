@@ -1,22 +1,23 @@
 import axios, { AxiosResponse } from 'axios';
-import { Command } from '../slack/command';
+import { SlackCommandTypes } from '../types/slack-command-types';
 import { MOCO_TOKEN } from './token';
+import {MocoUserType} from "../types/moco-types";
 
 /*
  * @See https://github.com/hundertzehn/mocoapp-api-docs/blob/master/sections/users.md
  */
 
-export function getUsers(): Promise<Array<User>> {
+export function getUsers(): Promise<Array<MocoUserType>> {
   return axios.get('https://newcubator.mocoapp.com/api/v1/users', {
     headers: {
       'Authorization': "Token token=" + MOCO_TOKEN
     },
-  }).then((response: AxiosResponse<Array<User>>) => response.data);
+  }).then((response: AxiosResponse<Array<MocoUserType>>) => response.data);
 }
 
-export function findUserBySlackCommand(command: Command): (users: Array<User>) => User {
-  return (users: Array<User>): User => {
-    let user: User;
+export function findUserBySlackCommand(command: SlackCommandTypes): (users: Array<MocoUserType>) => MocoUserType {
+  return (users: Array<MocoUserType>): MocoUserType => {
+    let user: MocoUserType;
     user = findUserBySlackId(users, command.user_id);
     if (!user) {
       user = findUserByMailPrefix(users, command.user_name);
@@ -25,29 +26,11 @@ export function findUserBySlackCommand(command: Command): (users: Array<User>) =
   }
 }
 
-function findUserBySlackId(users: Array<User>, slackId: string): User {
+function findUserBySlackId(users: Array<MocoUserType>, slackId: string): MocoUserType {
   return users.find(user => user.custom_properties.SlackId == slackId);
 }
 
-function findUserByMailPrefix(users: Array<User>, prefix: string): User {
+function findUserByMailPrefix(users: Array<MocoUserType>, prefix: string): MocoUserType {
   return users.find(user => user.email.startsWith(prefix));
 }
 
-export interface User {
-  id: string;
-  firstname: string;
-  lastname: string;
-  active: boolean;
-  external: boolean;
-  email: string;
-  mobile_phone: string;
-  work_phone: string;
-  home_address: string;
-  info: string;
-  birthday: string;
-  avatar_url: string;
-  custom_properties: any;
-  unit: any;
-  created_at: string;
-  updated_at: string;
-}
