@@ -60,8 +60,6 @@ export const handler = async (event: APIGatewayEvent | ScheduledEvent) => {
 
   const workload = await Promise.all(userPromiseArray)
 
-  console.log(JSON.stringify(createSlackResponseWorkloadAll(workload, from, to).blocks, null, 4))
-
   if (eventIsApiGatewayEvent(event)) {
     return {
       statusCode: 200,
