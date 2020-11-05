@@ -17,10 +17,9 @@ dayjs.extend(weekOfYear)
 
 const DEFAULT_FROM = 6;
 
-let from = dayjs()
-let to = dayjs()
-
 export const handler = async (event: APIGatewayEvent | ScheduledEvent) => {
+  let from = dayjs()
+  let to = dayjs()
   let slack: WebClient = null
   if (eventIsApiGatewayEvent(event)) {
     let command: SlackCommandTypes = decode(event.body) as SlackCommandTypes
