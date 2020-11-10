@@ -1,7 +1,7 @@
 import {WorkloadType} from "../types/workload-types";
 import dayjs, {Dayjs} from "dayjs";
 
-const project_employees = ["Simon", "Hendrik", "Lucas", "Sven", "Tim", "Jan", "Umut", "Rahmi", "Adrian"]
+const project_employees = ["Simon", "Hendrik", "Lucas", "Sven", "Tim", "Jan", "Umut", "Rahmi", "Adrian", "Kerstin"]
 
 export const createSlackResponseWorkload = (workload: WorkloadType, duration: number, from: string, to: string) => {
 
