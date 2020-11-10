@@ -1,0 +1,7 @@
+deploy:
+  stage: deploy
+  image: node:latest
+  script:
+    - npm run production
+  only:
+    - master
