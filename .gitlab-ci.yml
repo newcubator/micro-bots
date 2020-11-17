@@ -2,7 +2,7 @@ deploy:
   stage: deploy
   image: node:latest
   script:
-    - npm install
+    - npm ci
     - serverless deploy
   only:
     - master
