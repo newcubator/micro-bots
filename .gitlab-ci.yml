@@ -3,6 +3,6 @@ deploy:
   image: node:latest
   script:
     - npm ci
-    - serverless deploy
+    - npm run production
   only:
     - master
