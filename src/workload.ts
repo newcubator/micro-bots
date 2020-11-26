@@ -36,10 +36,13 @@ export async function handler(event: APIGatewayEvent) {
   }
 
   const workloadPromise: Promise<WorkloadType> = Promise.all([
-    getUserSchedules(from, to, user.id),
+    getUserActivities(from, to, user.id),
     getUserEmployments(from, to, user.id),
-    getUserActivities(from, to, user.id)
-  ]).then(calculateWorkload(from, to))
+    getUserSchedules(from, to, user.id)
+  ]).then((input) => {
+    const [activitiesResponse, employmentsResponse, schedulesResponse,] = input;
+    return calculateWorkload(from, to, activitiesResponse.data, employmentsResponse.data, schedulesResponse.data)
+  })
 
 
   const workload = await workloadPromise;

@@ -2,20 +2,26 @@ import {APIGatewayEvent, ScheduledEvent} from "aws-lambda";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday"
 import weekOfYear from "dayjs/plugin/weekOfYear"
-import {getUserSchedules} from "./moco/schedules";
-import {getUserEmployments} from "./moco/employments";
-import {getUserActivities} from "./moco/activities";
+import {getSchedules} from "./moco/schedules";
+import {getEmployments} from "./moco/employments";
+import {getActivities} from "./moco/activities";
 import {calculateWorkload} from "./workload/calculate-workload";
 import {getUsers} from "./moco/users";
 import {createSlackResponseWorkloadAll} from "./workload/create-slack-response-workload";
 import {SlackCommandTypes} from "./types/slack-command-types";
 import {decode} from "querystring";
 import {WebClient} from "@slack/web-api";
+import {MocoActivityResponse, MocoEmploymentsResponse, MocoSchedulesResponse, MocoUserType} from "./types/moco-types";
 
 dayjs.extend(weekday)
 dayjs.extend(weekOfYear)
 
 const DEFAULT_FROM = 6;
+
+let users: MocoUserType[];
+let activities: MocoActivityResponse;
+let employments: MocoEmploymentsResponse;
+let schedules: MocoSchedulesResponse;
 
 export const handler = async (event: APIGatewayEvent | ScheduledEvent) => {
   let from = dayjs()
@@ -48,18 +54,28 @@ export const handler = async (event: APIGatewayEvent | ScheduledEvent) => {
   const toString = to.format('YYYY-MM-DD');
   console.log(`Analysing from ${fromString} to ${toString}`);
 
-  const users = await getUsers()
-
-  const userPromiseArray = users.map(user => {
-    return Promise.all([
-      getUserSchedules(fromString, toString, user.id),
-      getUserEmployments(fromString, toString, user.id),
-      getUserActivities(fromString, toString, user.id)
-    ]).then(calculateWorkload(fromString, toString))
+  await Promise.all([
+    getUsers(),
+    getActivities(fromString, toString),
+    getEmployments(fromString, toString),
+    getSchedules(fromString, toString)
+  ]).then((input) => {
+    const [usersResponse, activitiesResponse, employmentsResponse, schedulesResponse] = input;
+    users = usersResponse
+    activities = activitiesResponse
+    employments = employmentsResponse
+    schedules = schedulesResponse
   })
 
-  const workload = await Promise.all(userPromiseArray)
+  const workloadArray = users.map(user => {
+    let userActivity = activities.data.filter(activity => activity.user?.id == user.id)
+    let userEmployments = employments.data.filter(employment => employment.user?.id == user.id)
+    let userSchedules = schedules.data.filter(schedules => schedules.user?.id == user.id)
+    return calculateWorkload(fromString, toString, userActivity, userEmployments, userSchedules)
+  })
 
+  const workload = await Promise.all(workloadArray)
+  
   if (eventIsApiGatewayEvent(event)) {
     return {
       statusCode: 200,
