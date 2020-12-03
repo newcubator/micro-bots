@@ -1,5 +1,3 @@
-import {AxiosResponse} from "axios";
-
 export interface MocoUserType {
   id: string;
   firstname: string;
@@ -17,10 +15,6 @@ export interface MocoUserType {
   unit: any;
   created_at: string;
   updated_at: string;
-}
-
-export interface MocoSchedulesResponse extends AxiosResponse {
-  data: MocoSchedule[];
 }
 
 export interface MocoSchedule {
@@ -42,10 +36,6 @@ export interface MocoSchedule {
   updated_at: string;
 }
 
-export interface MocoEmploymentsResponse extends AxiosResponse {
-  data: MocoEmployment[];
-}
-
 export interface MocoEmployment {
   id: number,
   weekly_target_hours: number,
@@ -55,10 +45,6 @@ export interface MocoEmployment {
   user: MocoUserType,
   created_at: string,
   updated_at: string
-}
-
-export interface MocoActivityResponse extends AxiosResponse {
-  data: MocoActivity[];
 }
 
 export interface MocoActivity {

@@ -11,7 +11,7 @@ import {createSlackResponseWorkloadAll} from "./workload/create-slack-response-w
 import {SlackCommandTypes} from "./types/slack-command-types";
 import {decode} from "querystring";
 import {WebClient} from "@slack/web-api";
-import {MocoActivityResponse, MocoEmploymentsResponse, MocoSchedulesResponse, MocoUserType} from "./types/moco-types";
+import { MocoActivity, MocoEmployment, MocoSchedule, MocoUserType } from './types/moco-types';
 
 dayjs.extend(weekday)
 dayjs.extend(weekOfYear)
@@ -19,9 +19,9 @@ dayjs.extend(weekOfYear)
 const DEFAULT_FROM = 7;
 
 let users: MocoUserType[];
-let activities: MocoActivityResponse;
-let employments: MocoEmploymentsResponse;
-let schedules: MocoSchedulesResponse;
+let activities: MocoActivity[];
+let employments: MocoEmployment[];
+let schedules: MocoSchedule[];
 
 export const handler = async (event: APIGatewayEvent | ScheduledEvent) => {
   let from = dayjs()
@@ -68,14 +68,14 @@ export const handler = async (event: APIGatewayEvent | ScheduledEvent) => {
   })
 
   const workloadArray = users.map(user => {
-    let userActivity = activities.data.filter(activity => activity.user?.id == user.id)
-    let userEmployments = employments.data.filter(employment => employment.user?.id == user.id)
-    let userSchedules = schedules.data.filter(schedules => schedules.user?.id == user.id)
+    let userActivity = activities.filter(activity => activity.user?.id == user.id)
+    let userEmployments = employments.filter(employment => employment.user?.id == user.id)
+    let userSchedules = schedules.filter(schedules => schedules.user?.id == user.id)
     return calculateWorkload(fromString, toString, userActivity, userEmployments, userSchedules)
   })
 
   const workload = await Promise.all(workloadArray)
-  
+
   if (eventIsApiGatewayEvent(event)) {
     return {
       statusCode: 200,
