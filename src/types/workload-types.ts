@@ -16,6 +16,9 @@ export interface WorkloadType {
   holidays: number,
   workedHours: number,
   notPlanned: number,
+  absence: number,
+  sick: number,
+  vacations: number,
   percentage: number,
   days: DayObjectType[]
 }
