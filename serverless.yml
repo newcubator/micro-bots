@@ -24,7 +24,7 @@ functions:
     handler: src/birthday.bot
     memorySize: 128
     environment:
-      LEAD_TIME: 14
+      LEAD_TIME: 21
     events:
       - schedule:
           rate: cron(5 8 * * ? *)
