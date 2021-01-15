@@ -35,11 +35,12 @@ export function calculateWorkload(from: string, to: string, activities: MocoActi
             .find(({from, to}: MocoEmployment) => (!from || day.isSame(from) || day.isAfter(from)) && (!to || day.isSame(to) || day.isBefore(to)));
 
         const absenceHours = extractAbsenceHours(schedules, null, day);
-        const scheduledHours = extractExpectedHours(employment, day);
+        // not every time range has an employment; see Lucas Meurer from 28.12.20 - 03.01.21
+        const scheduledHours = employment ? extractExpectedHours(employment, day) : 0;
 
         return {
           day: day.format(DATE_FORMAT),
-          expectedHours: scheduledHours - absenceHours,
+          expectedHours: Math.max(scheduledHours - absenceHours, 0), // result can be below 0 for part time employees
           worked: workedHours,
           holidays: extractAbsenceHours(schedules, 'Feiertag', day),
           vacations: extractAbsenceHours(schedules, 'Urlaub', day),
