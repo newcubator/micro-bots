@@ -1,7 +1,7 @@
 import axios from 'axios';
 import { autoPage } from './auto-page';
 import {MOCO_TOKEN} from './token';
-import { MocoEmployment } from '../types/moco-types';
+import { MocoEmployment } from './types/moco-types';
 
 /*
  * @See https://github.com/hundertzehn/mocoapp-api-docs/blob/master/sections/planning_entries.md

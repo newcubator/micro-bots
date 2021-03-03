@@ -11,6 +11,7 @@ provider:
     MOCO_TOKEN: ${env:MOCO_TOKEN}
     SLACK_TOKEN: ${env:SLACK_TOKEN}
     WORKLOAD_CHANNEL: ${env:WORKLOAD_CHANNEL}
+    EMPLOYEE_NAMES: ${env:EMPLOYEE_NAMES}
 
 plugins:
   - serverless-webpack
@@ -21,7 +22,7 @@ custom:
 
 functions:
   bot:
-    handler: src/birthday.bot
+    handler: src/functions/birthday.bot
     memorySize: 128
     environment:
       LEAD_TIME: 21
@@ -30,14 +31,14 @@ functions:
           rate: cron(5 8 * * ? *)
           enabled: true
   workload:
-    handler: src/workload.handler
+    handler: src/functions/workload.handler
     memorySize: 128
     events:
       - http:
           path: workload
           method: post
   workloadAll:
-    handler: src/workload-all.handler
+    handler: src/functions/workload-all.handler
     memorySize: 128
     events:
       - http:

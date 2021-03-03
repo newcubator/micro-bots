@@ -1,15 +1,15 @@
 import {APIGatewayEvent} from 'aws-lambda';
 import dayjs from 'dayjs';
 import {decode} from 'querystring';
-import {getUserActivities} from './moco/activities';
-import {getUserEmployments} from './moco/employments';
-import {getUserSchedules} from './moco/schedules';
-import {findUserBySlackCommand, getUsers} from './moco/users';
-import {SlackCommandTypes} from './types/slack-command-types';
-import {MocoUserType} from "./types/moco-types";
-import {calculateWorkload} from "./workload/calculate-workload";
-import {WorkloadType} from "./types/workload-types";
-import {createSlackResponseWorkload} from "./workload/create-slack-response-workload";
+import {getUserActivities} from '../moco/activities';
+import {getUserEmployments} from '../moco/employments';
+import {getUserSchedules} from '../moco/schedules';
+import {findUserBySlackCommand, getUsers} from '../moco/users';
+import {SlackCommandTypes} from '../slack/types/slack-command-types';
+import {MocoUserType} from "../moco/types/moco-types";
+import {calculateWorkload} from "../workload/calculate-workload";
+import {WorkloadType} from "../moco/types/workload-types";
+import {createSlackResponseWorkload} from "../workload/create-slack-response-workload";
 
 const DEFAULT_DURATION = 21;
 

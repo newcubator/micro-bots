@@ -1,7 +1,7 @@
 import axios, { AxiosResponse } from 'axios';
-import { SlackCommandTypes } from '../types/slack-command-types';
+import { SlackCommandTypes } from '../slack/types/slack-command-types';
 import { MOCO_TOKEN } from './token';
-import {MocoUserType} from "../types/moco-types";
+import {MocoUserType} from "./types/moco-types";
 
 /*
  * @See https://github.com/hundertzehn/mocoapp-api-docs/blob/master/sections/users.md

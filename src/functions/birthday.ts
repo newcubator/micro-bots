@@ -1,8 +1,8 @@
 import axios from "axios";
 import moment from "moment";
-import { MOCO_TOKEN } from './moco/token';
+import { MOCO_TOKEN } from '../moco/token';
 import { WebClient } from "@slack/web-api";
-import {BirthdayType, ChannelResponeType, MessageResponseType, UserResponseType} from "./types/birthday-bot-types";
+import {BirthdayType, ChannelResponeType, MessageResponseType, UserResponseType} from "../birthday/types/birthday-bot-types";
 
 const MOCO_URL = "https://newcubator.mocoapp.com/api/v1/users";
 const SLACK_TOKEN = process.env.SLACK_TOKEN;
