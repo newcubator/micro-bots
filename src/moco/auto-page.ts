@@ -11,4 +11,4 @@ export const autoPage = async <T>(pageableRequestFactory: (page: number) => Prom
     } while (pagedResponse.headers.link?.includes('rel="next"'));
 
     return data;
-}
+};

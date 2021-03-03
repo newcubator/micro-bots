@@ -1,4 +1,4 @@
-import {WebAPICallResult} from "@slack/web-api";
+import { WebAPICallResult } from '@slack/web-api';
 
 export interface BirthdayType {
     id: number;
@@ -19,9 +19,9 @@ export interface BirthdayType {
     updated_at: string;
 }
 
-export interface UserResponseType extends WebAPICallResult{
+export interface UserResponseType extends WebAPICallResult {
     ok: boolean;
-    members: UserResponseMember[]
+    members: UserResponseMember[];
 }
 
 export interface UserResponseMember {
@@ -72,44 +72,44 @@ interface UserResponseMemberProfile {
     team: string;
 }
 
-export interface ChannelResponeType extends WebAPICallResult{
+export interface ChannelResponseType extends WebAPICallResult {
     ok: boolean,
     channel: {
-        id: string,
-        name: string,
-        is_channel: boolean,
-        is_group: boolean,
-        is_im: boolean,
-        created: number,
-        is_archived: boolean,
-        is_general: boolean,
-        unlinked: number,
-        name_normalized: string,
-        is_shared: boolean,
-        parent_conversation: null,
-        creator: string,
-        is_ext_shared: boolean,
-        is_org_shared: boolean,
-        shared_team_ids: string[],
-        pending_shared: any[],
-        pending_connected_team_ids: any[],
-        is_pending_ext_shared: boolean,
-        is_member: boolean,
-        is_private: boolean,
-        is_mpim: boolean,
-        last_read: string,
-        topic: { value: string, creator: string, last_set: number },
-        purpose: { value: string, creator: string, last_set: number },
-        previous_names: any[],
-        priority: number
-    },
+        id: string;
+        name: string;
+        is_channel: boolean;
+        is_group: boolean;
+        is_im: boolean;
+        created: number;
+        is_archived: boolean;
+        is_general: boolean;
+        unlinked: number;
+        name_normalized: string;
+        is_shared: boolean;
+        parent_conversation: null;
+        creator: string;
+        is_ext_shared: boolean;
+        is_org_shared: boolean;
+        shared_team_ids: string[];
+        pending_shared: any[];
+        pending_connected_team_ids: any[];
+        is_pending_ext_shared: boolean;
+        is_member: boolean;
+        is_private: boolean;
+        is_mpim: boolean;
+        last_read: string;
+        topic: { value: string, creator: string, last_set: number };
+        purpose: { value: string, creator: string, last_set: number };
+        previous_names: any[];
+        priority: number;
+    };
     response_metadata: {
-        scopes: string[],
-        acceptedScopes: string[]
-    }
+        scopes: string[];
+        acceptedScopes: string[];
+    };
 }
 
-export interface MessageResponseType extends WebAPICallResult{
+export interface MessageResponseType extends WebAPICallResult {
     ok: boolean;
     channel: string;
     ts: string;
@@ -121,9 +121,9 @@ export interface MessageResponseType extends WebAPICallResult{
         username: string;
         icons: { emoji: string };
         bot_id: string;
-    },
+    };
     response_metadata: {
         scopes: string[];
         acceptedScopes: string[];
-    }
+    };
 }
