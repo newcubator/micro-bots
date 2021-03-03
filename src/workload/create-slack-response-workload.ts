@@ -1,7 +1,11 @@
-import {WorkloadType} from "../types/workload-types";
+import {WorkloadType} from "../moco/types/workload-types";
 import dayjs, {Dayjs} from "dayjs";
 
-const project_employees = ["Simon", "Hendrik", "Lucas", "Sven", "Tim", "Jan", "Umut", "Rahmi", "Adrian", "Kerstin"]
+const employeeNames = process.env.EMPLOYEE_NAMES ?? '';
+
+const project_employees = employeeNames
+    .split(',')
+    .map((name: string) => name.trim());
 
 export const createSlackResponseWorkload = (workload: WorkloadType, duration: number, from: string, to: string) => {
 

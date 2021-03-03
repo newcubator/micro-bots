@@ -1,6 +1,6 @@
 import dayjs, { Dayjs } from 'dayjs';
-import { MocoActivity, MocoEmployment, MocoSchedule } from '../types/moco-types';
-import { DayObjectType, WorkloadType } from '../types/workload-types';
+import { MocoActivity, MocoEmployment, MocoSchedule } from '../moco/types/moco-types';
+import { DayObjectType, WorkloadType } from '../moco/types/workload-types';
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 

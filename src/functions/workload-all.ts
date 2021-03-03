@@ -2,16 +2,16 @@ import {APIGatewayEvent, ScheduledEvent} from "aws-lambda";
 import dayjs from "dayjs";
 import weekday from "dayjs/plugin/weekday"
 import weekOfYear from "dayjs/plugin/weekOfYear"
-import {getSchedules} from "./moco/schedules";
-import {getEmployments} from "./moco/employments";
-import {getActivities} from "./moco/activities";
-import {calculateWorkload} from "./workload/calculate-workload";
-import {getUsers} from "./moco/users";
-import {createSlackResponseWorkloadAll} from "./workload/create-slack-response-workload";
-import {SlackCommandTypes} from "./types/slack-command-types";
+import {getSchedules} from "../moco/schedules";
+import {getEmployments} from "../moco/employments";
+import {getActivities} from "../moco/activities";
+import {calculateWorkload} from "../workload/calculate-workload";
+import {getUsers} from "../moco/users";
+import {createSlackResponseWorkloadAll} from "../workload/create-slack-response-workload";
+import {SlackCommandTypes} from "../slack/types/slack-command-types";
 import {decode} from "querystring";
 import {WebClient} from "@slack/web-api";
-import { MocoActivity, MocoEmployment, MocoSchedule, MocoUserType } from './types/moco-types';
+import { MocoActivity, MocoEmployment, MocoSchedule, MocoUserType } from '../moco/types/moco-types';
 
 dayjs.extend(weekday)
 dayjs.extend(weekOfYear)
