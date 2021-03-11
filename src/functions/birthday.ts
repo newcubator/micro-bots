@@ -14,7 +14,7 @@ if (typeof SLACK_TOKEN === 'undefined') {
 
 const slack = new WebClient(SLACK_TOKEN);
 
-module.exports.bot = async () => {
+export const handler = async () => {
     const searchDate = dayjs().add(Number(LEAD_TIME), 'day').format('MM-DD');
     console.log(`Searching for birthdays on the ${searchDate}`);
 
