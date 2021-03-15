@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { SlackCommandTypes } from '../slack/types/slack-command-types';
+import { SlackCommandTypes } from '../slack/types/slack-types';
 import { MOCO_TOKEN } from './token';
 import { MocoUserType } from './types/moco-types';
 

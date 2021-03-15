@@ -7,7 +7,7 @@ import { getUserSchedules } from '../moco/schedules';
 import { MocoUserType } from '../moco/types/moco-types';
 import { WorkloadType } from '../moco/types/workload-types';
 import { findUserBySlackCommand, getUsers } from '../moco/users';
-import { SlackCommandTypes } from '../slack/types/slack-command-types';
+import { SlackCommandTypes } from '../slack/types/slack-types';
 import { calculateWorkload } from '../workload/calculate-workload';
 import { createSlackResponseWorkload } from '../workload/create-slack-response-workload';
 

@@ -9,7 +9,7 @@ import { getEmployments } from '../moco/employments';
 import { getSchedules } from '../moco/schedules';
 import { MocoActivity, MocoEmployment, MocoSchedule, MocoUserType } from '../moco/types/moco-types';
 import { getUsers } from '../moco/users';
-import { SlackCommandTypes } from '../slack/types/slack-command-types';
+import { SlackCommandTypes } from '../slack/types/slack-types';
 import { calculateWorkload } from '../workload/calculate-workload';
 import { createSlackResponseWorkloadAll } from '../workload/create-slack-response-workload';
 

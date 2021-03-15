@@ -1,4 +1,4 @@
-import { slack } from '../slack/slack';
+import { slackConversationsArchive } from '../slack/slack';
 import { getBirthdayChannels } from './get-channels';
 import { BirthdayType } from './types/birthday-bot-types';
 
@@ -11,9 +11,7 @@ export const closeBirthdayChannels = async (birthdays: BirthdayType[]) => {
     for (const birthday of birthdays) {
         const channel = channels.find((channel) => channel.name.endsWith(birthday.firstname.toLowerCase()));
         if (channel) {
-            const archiveResponse = await slack.conversations.archive({
-                channel: channel.id
-            });
+            const archiveResponse = await slackConversationsArchive(channel.id);
             console.debug(`Archived channel ${JSON.stringify(archiveResponse)}`);
         }
     }
