@@ -1,6 +1,6 @@
 import { WebClient } from '@slack/web-api';
 import axios from 'axios';
-import moment from 'moment';
+import dayjs from 'dayjs';
 import { BirthdayType, ChannelResponseType, MessageResponseType, UserResponseType } from '../birthday/types/birthday-bot-types';
 import { MOCO_TOKEN } from '../moco/token';
 
@@ -14,8 +14,8 @@ if (typeof SLACK_TOKEN === 'undefined') {
 
 const slack = new WebClient(SLACK_TOKEN);
 
-module.exports.bot = async () => {
-    const searchDate = moment().add(LEAD_TIME, 'days').format('MM-DD');
+export const handler = async () => {
+    const searchDate = dayjs().add(Number(LEAD_TIME), 'day').format('MM-DD');
     console.log(`Searching for birthdays on the ${searchDate}`);
 
     const response = await axios.get(MOCO_URL, {
@@ -51,7 +51,7 @@ module.exports.bot = async () => {
 
         console.debug(`Invited ${JSON.stringify(inviteResponse)}`);
 
-        const day = moment(birthday.birthday).format('DD MMM');
+        const day = dayjs(birthday.birthday).locale('de').format('DD MMM');
         const messageResonse: MessageResponseType = await slack.chat.postMessage({
             text: `Hey Leute ${birthday.firstname} hat in ${LEAD_TIME} Tagen am ${day} Geburtstag! Habt ihr euch bereits über eine kleine Überraschung Gedanken gemacht?`,
             channel: channelResponse.channel.id,

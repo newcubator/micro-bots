@@ -1,4 +1,4 @@
-service: birthday-bot
+service: micro-bots
 
 frameworkVersion: '2'
 
@@ -21,8 +21,8 @@ custom:
     includeModules: true
 
 functions:
-  bot:
-    handler: src/functions/birthday.bot
+  birthday:
+    handler: src/functions/birthday.handler
     memorySize: 128
     environment:
       LEAD_TIME: 21

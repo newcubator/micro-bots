@@ -5,17 +5,15 @@
   "scripts": {
     "deploy": "NODE_OPTIONS='-r dotenv/config' serverless deploy --stage dev",
     "production": "NODE_OPTIONS='-r dotenv/config' serverless deploy",
-    "invokeBot": "NODE_OPTIONS='-r dotenv/config' serverless invoke local -f bot",
+    "invokeBirthday": "NODE_OPTIONS='-r dotenv/config' serverless invoke local -f birthday",
     "invokeWorkload": "NODE_OPTIONS='-r dotenv/config' serverless invoke local -f workload",
     "invokeWorkloadAll": "NODE_OPTIONS='-r dotenv/config' serverless invoke local -f workloadAll"
   },
   "dependencies": {
     "@slack/web-api": "5.11.0",
-    "@types/aws-lambda": "^8.10.62",
-    "aws-xray-sdk": "^3.2.0",
+    "@types/aws-lambda": "8.10.62",
     "axios": "0.20.0",
-    "dayjs": "^1.8.36",
-    "moment": "2.28.0"
+    "dayjs": "1.8.36"
   },
   "devDependencies": {
     "@types/node": "12.7.5",

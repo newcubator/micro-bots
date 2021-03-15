@@ -13,7 +13,7 @@ import { createSlackResponseWorkload } from '../workload/create-slack-response-w
 
 const DEFAULT_DURATION = 21;
 
-export async function handler(event: APIGatewayEvent) {
+export const handler = async (event: APIGatewayEvent) => {
     const command: SlackCommandTypes = decode(event.body) as SlackCommandTypes;
     const userPromise: Promise<MocoUserType> = getUsers()
         .then(findUserBySlackCommand(command));
