@@ -9,7 +9,7 @@ import { getEmployments } from '../moco/employments';
 import { getSchedules } from '../moco/schedules';
 import { MocoActivity, MocoEmployment, MocoSchedule, MocoUserType } from '../moco/types/moco-types';
 import { getUsers } from '../moco/users';
-import { SlackCommandTypes } from '../slack/types/slack-types';
+import { SlackCommandType } from '../slack/types/slack-types';
 import { calculateWorkload } from '../workload/calculate-workload';
 import { createSlackResponseWorkloadAll } from '../workload/create-slack-response-workload';
 
@@ -28,7 +28,7 @@ export const handler = async (event: APIGatewayEvent | ScheduledEvent) => {
     let to = dayjs().subtract(1, 'day');
     let slack: WebClient = null;
     if (eventIsApiGatewayEvent(event)) {
-        let command: SlackCommandTypes = decode(event.body) as SlackCommandTypes;
+        let command: SlackCommandType = decode(event.body) as SlackCommandType;
         if (command.text) {
             command.text = command.text.replace(' ', '').toLowerCase();
             let kw = command.text.match(/^kw\s*(\d{1,2})$/);

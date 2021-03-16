@@ -1,7 +1,7 @@
 import { WebAPICallResult } from '@slack/web-api';
 import { ParsedUrlQuery } from 'querystring';
 
-export interface SlackCommandTypes extends ParsedUrlQuery {
+export interface SlackCommandType extends ParsedUrlQuery {
     token: string;
     team_id: string;
     team_domain: string;

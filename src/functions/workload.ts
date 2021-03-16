@@ -7,14 +7,14 @@ import { getUserSchedules } from '../moco/schedules';
 import { MocoUserType } from '../moco/types/moco-types';
 import { WorkloadType } from '../moco/types/workload-types';
 import { findUserBySlackCommand, getUsers } from '../moco/users';
-import { SlackCommandTypes } from '../slack/types/slack-types';
+import { SlackCommandType } from '../slack/types/slack-types';
 import { calculateWorkload } from '../workload/calculate-workload';
 import { createSlackResponseWorkload } from '../workload/create-slack-response-workload';
 
 const DEFAULT_DURATION = 21;
 
 export const handler = async (event: APIGatewayEvent) => {
-    const command: SlackCommandTypes = decode(event.body) as SlackCommandTypes;
+    const command: SlackCommandType = decode(event.body) as SlackCommandType;
     const userPromise: Promise<MocoUserType> = getUsers()
         .then(findUserBySlackCommand(command));
 
