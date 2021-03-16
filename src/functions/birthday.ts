@@ -1,65 +1,43 @@
-import { WebClient } from '@slack/web-api';
 import axios from 'axios';
 import dayjs from 'dayjs';
-import { BirthdayType, ChannelResponseType, MessageResponseType, UserResponseType } from '../birthday/types/birthday-bot-types';
+import { closeBirthdayChannels } from '../birthday/close-birthday-channels';
+import { createBirthdayChannels } from '../birthday/create-birthday-channels';
+import { filterBirthdays } from '../birthday/filter-birthdays';
+import { sendBirthdayReminder } from '../birthday/send-birthday-reminder';
+import { BirthdayType } from '../birthday/types/birthday-bot-types';
 import { MOCO_TOKEN } from '../moco/token';
 
 const MOCO_URL = 'https://newcubator.mocoapp.com/api/v1/users';
-const SLACK_TOKEN = process.env.SLACK_TOKEN;
 const LEAD_TIME = process.env.LEAD_TIME;
 
-if (typeof SLACK_TOKEN === 'undefined') {
-    throw new Error('Slack token missing');
-}
-
-const slack = new WebClient(SLACK_TOKEN);
-
 export const handler = async () => {
-    const searchDate = dayjs().add(Number(LEAD_TIME), 'day').format('MM-DD');
-    console.log(`Searching for birthdays on the ${searchDate}`);
+    const today = dayjs();
+    const yesterday = today.subtract(1, 'day');
+    const birthdayDate = today.add(Number(LEAD_TIME), 'day');
 
     const response = await axios.get(MOCO_URL, {
         headers: {
             Authorization: 'Token token=' + MOCO_TOKEN,
         },
     });
-    const users = response.data;
-    const birthdays: BirthdayType[] = users.filter(
-        (user) => !!user.birthday && user.birthday.endsWith(searchDate)
-    );
-    for (const birthday of birthdays) {
-        const channelName = `birthday-${birthday.firstname.toLowerCase()}`;
-        const channelResponse: ChannelResponseType = await slack.conversations.create({
-            name: channelName,
-            is_private: true,
-        }) as ChannelResponseType;
-        console.debug(`Created channel ${JSON.stringify(channelResponse)}`);
+    const users: BirthdayType[] = response.data;
 
-        const userResponse: UserResponseType = await slack.users.list() as UserResponseType;
-        const invites = userResponse.members
-            .filter((member) => member.id !== 'USLACKBOT')
-            .filter((member) => !member.deleted)
-            .filter((member) => !member.is_bot)
-            .filter((member) => member.profile.email != birthday.email)
-            .map((member) => member.id)
-            .join(',');
+    console.log(`Searching for birthdays on the ${birthdayDate.format('MM-DD')} to open channel`);
+    createBirthdayChannels(filterBirthdays(users, birthdayDate));
 
-        const inviteResponse: ChannelResponseType = await slack.conversations.invite({
-            channel: channelResponse.channel.id,
-            users: invites,
-        }) as ChannelResponseType;
+    console.log(`Searching for birthdays on the ${today.format('MM-DD')} to send reminder`);
+    sendBirthdayReminder(filterBirthdays(users, today));
 
-        console.debug(`Invited ${JSON.stringify(inviteResponse)}`);
-
-        const day = dayjs(birthday.birthday).locale('de').format('DD MMM');
-        const messageResonse: MessageResponseType = await slack.chat.postMessage({
-            text: `Hey Leute ${birthday.firstname} hat in ${LEAD_TIME} Tagen am ${day} Geburtstag! Habt ihr euch bereits über eine kleine Überraschung Gedanken gemacht?`,
-            channel: channelResponse.channel.id,
-            username: 'Birthday Bot',
-            icon_url:
-                'https://gitlab.com/uploads/-/system/project/avatar/20934853/Birthday_Bot.png?width=64',
-            icon_emoji: ':geburtstag:',
-        }) as MessageResponseType;
-        console.debug(`Wrote message ${JSON.stringify(messageResonse)}`);
+    if (today.day() >= 2 && today.day() <= 5) {
+        console.log(`Searching for birthdays on the ${yesterday.format('MM-DD')} to archive channel`);
+        closeBirthdayChannels(filterBirthdays(users, yesterday));
+    } else if (today.day() === 1) {
+        console.log(`Searching for birthdays on the ${yesterday.format('MM-DD')}, ${yesterday.subtract(1, 'day').format('MM-DD')}, ${yesterday.subtract(2, 'day').format('MM-DD')} to archive channel`);
+        closeBirthdayChannels(filterBirthdays(
+            users,
+            yesterday,
+            yesterday.subtract(1, 'day'),
+            yesterday.subtract(2, 'day')
+        ));
     }
 };
