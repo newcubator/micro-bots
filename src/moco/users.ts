@@ -1,5 +1,5 @@
 import axios, { AxiosResponse } from 'axios';
-import { SlackCommandTypes } from '../slack/types/slack-command-types';
+import { SlackCommandType } from '../slack/types/slack-types';
 import { MOCO_TOKEN } from './token';
 import { MocoUserType } from './types/moco-types';
 
@@ -15,7 +15,7 @@ export function getUsers(): Promise<Array<MocoUserType>> {
     }).then((response: AxiosResponse<Array<MocoUserType>>) => response.data);
 }
 
-export function findUserBySlackCommand(command: SlackCommandTypes): (users: Array<MocoUserType>) => MocoUserType {
+export function findUserBySlackCommand(command: SlackCommandType): (users: Array<MocoUserType>) => MocoUserType {
     return (users: Array<MocoUserType>): MocoUserType => {
         let user: MocoUserType;
         user = findUserBySlackId(users, command.user_id);
