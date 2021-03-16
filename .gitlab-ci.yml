@@ -1,3 +1,10 @@
+test:
+  stage: test
+  image: node:latest
+  script:
+    - npm ci
+    - npm run test
+
 deploy:
   stage: deploy
   image: node:latest

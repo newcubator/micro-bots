@@ -3,6 +3,7 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "test": "jest",
     "deploy": "NODE_OPTIONS='-r dotenv/config' serverless deploy --stage dev",
     "production": "NODE_OPTIONS='-r dotenv/config' serverless deploy",
     "invokeBirthday": "NODE_OPTIONS='-r dotenv/config' serverless invoke local -f birthday",
@@ -12,7 +13,7 @@
   "dependencies": {
     "@slack/web-api": "5.11.0",
     "@types/aws-lambda": "8.10.62",
-    "axios": "0.21.1",
+    "axios": "0.20.0",
     "dayjs": "1.8.36"
   },
   "devDependencies": {
