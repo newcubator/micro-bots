@@ -232,9 +232,9 @@ export const EXAMPLE_MEMBER_JANE: Member =
         'is_email_confirmed': true
     };
 
-export const EXAMPLE_CHANNEL_BIRTHDAY: Channel = {
+export const EXAMPLE_CHANNEL_BIRTHDAY_JANE: Channel = {
     'id': 'C012AB34CD',
-    'name': 'birthday-example',
+    'name': 'birthday-jane',
     'is_channel': true,
     'is_group': false,
     'is_im': false,
@@ -242,7 +242,7 @@ export const EXAMPLE_CHANNEL_BIRTHDAY: Channel = {
     'is_archived': true,
     'is_general': false,
     'unlinked': 0,
-    'name_normalized': 'birthday-example',
+    'name_normalized': 'birthday-jane',
     'is_shared': false,
     'parent_conversation': null,
     'creator': 'U012AB34CD',
@@ -324,7 +324,7 @@ export const EXAMPLE_MESSAGE: Message = {
 export const EXAMPLE_SLACK_CONVERSATIONS_LIST_RESPONSE: SlackConversationsListResponse = {
     ok: true,
     channels: [
-        EXAMPLE_CHANNEL_BIRTHDAY,
+        EXAMPLE_CHANNEL_BIRTHDAY_JANE,
         EXAMPLE_CHANNEL_NO_BIRTHDAY
     ]
 };
@@ -339,16 +339,16 @@ export const EXAMPLE_SLACK_CONVERSATIONS_MEMBERS_RESPONSE: SlackConversationsMem
 
 export const EXAMPLE_SLACK_CONVERSATIONS_INVITE_RESPONSE: SlackConversationsInviteResponse = {
     ok: true,
-    channel: EXAMPLE_CHANNEL_BIRTHDAY
+    channel: EXAMPLE_CHANNEL_BIRTHDAY_JANE
 };
 
 export const EXAMPLE_SLACK_CONVERSATIONS_CREATE_RESPONSE: SlackConversationsCreateResponse = {
     ok: true,
-    channel: EXAMPLE_CHANNEL_BIRTHDAY
+    channel: EXAMPLE_CHANNEL_BIRTHDAY_JANE
 };
 
 export const EXAMPLE_SLACK_USERS_LIST_RESPONSE: SlackUsersListResponse = {
-    ok: false,
+    ok: true,
     members: [
         EXAMPLE_MEMBER_JOHN,
         EXAMPLE_MEMBER_JANE,
@@ -358,5 +358,5 @@ export const EXAMPLE_SLACK_USERS_LIST_RESPONSE: SlackUsersListResponse = {
 export const EXAMPLE_SLACK_CHAT_POST_MESSAGE_RESPONSE: SlackChatPostMessageResponse = {
     ok: true,
     message: EXAMPLE_MESSAGE,
-    channel: EXAMPLE_CHANNEL_BIRTHDAY.id,
+    channel: EXAMPLE_CHANNEL_BIRTHDAY_JANE.id,
 };
