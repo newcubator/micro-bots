@@ -1,8 +1,24 @@
+image: node:latest
+
+cache:
+  paths:
+    - node_modules/
+
+stages:
+  - test
+  - deploy
+
+before_script:
+  - npm ci
+
+test:
+  stage: test
+  script:
+    - npm run test
+
 deploy:
   stage: deploy
-  image: node:latest
   script:
-    - npm ci
     - npm run production
   only:
     - master

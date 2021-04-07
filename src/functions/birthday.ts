@@ -23,17 +23,17 @@ export const handler = async () => {
     const users: BirthdayType[] = response.data;
 
     console.log(`Searching for birthdays on the ${birthdayDate.format('MM-DD')} to open channel`);
-    createBirthdayChannels(filterBirthdays(users, birthdayDate));
+    await createBirthdayChannels(filterBirthdays(users, birthdayDate));
 
     console.log(`Searching for birthdays on the ${today.format('MM-DD')} to send reminder`);
-    sendBirthdayReminder(filterBirthdays(users, today));
+    await sendBirthdayReminder(filterBirthdays(users, today));
 
     if (today.day() >= 2 && today.day() <= 5) {
         console.log(`Searching for birthdays on the ${yesterday.format('MM-DD')} to archive channel`);
-        closeBirthdayChannels(filterBirthdays(users, yesterday));
+        await closeBirthdayChannels(filterBirthdays(users, yesterday));
     } else if (today.day() === 1) {
         console.log(`Searching for birthdays on the ${yesterday.format('MM-DD')}, ${yesterday.subtract(1, 'day').format('MM-DD')}, ${yesterday.subtract(2, 'day').format('MM-DD')} to archive channel`);
-        closeBirthdayChannels(filterBirthdays(
+        await closeBirthdayChannels(filterBirthdays(
             users,
             yesterday,
             yesterday.subtract(1, 'day'),
