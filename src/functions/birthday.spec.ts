@@ -14,16 +14,15 @@ import {
     EXAMPLE_SLACK_USERS_LIST_RESPONSE
 } from '../slack/types/slack-types';
 
-const mockedSlackConversationsList = jest.spyOn(slack, 'slackConversationsList').mockResolvedValue(EXAMPLE_SLACK_CONVERSATIONS_LIST_RESPONSE);
-const mockedSlackConversationsCreate = jest.spyOn(slack, 'slackConversationsCreate').mockResolvedValue(EXAMPLE_SLACK_CONVERSATIONS_CREATE_RESPONSE);
-const mockedSlackConversationsArchive = jest.spyOn(slack, 'slackConversationsArchive').mockResolvedValue({ 'ok': true });
-const mockedSlackConversationsUnarchive = jest.spyOn(slack, 'slackConversationsUnarchive').mockResolvedValue({ 'ok': true });
-const mockedSlackConversationsMembers = jest.spyOn(slack, 'slackConversationsMembers').mockResolvedValue(EXAMPLE_SLACK_CONVERSATIONS_MEMBERS_RESPONSE);
-const mockedSlackConversationsInvite = jest.spyOn(slack, 'slackConversationsInvite').mockResolvedValue(EXAMPLE_SLACK_CONVERSATIONS_INVITE_RESPONSE);
-const mockedSlackUsersList = jest.spyOn(slack, 'slackUsersList').mockResolvedValue(EXAMPLE_SLACK_USERS_LIST_RESPONSE);
-const mockedSlackChatPostMessage = jest.spyOn(slack, 'slackChatPostMessage').mockResolvedValue(EXAMPLE_SLACK_CHAT_POST_MESSAGE_RESPONSE);
-
 describe('birthday', () => {
+    const mockedSlackConversationsList = jest.spyOn(slack, 'slackConversationsList').mockResolvedValue(EXAMPLE_SLACK_CONVERSATIONS_LIST_RESPONSE);
+    const mockedSlackConversationsCreate = jest.spyOn(slack, 'slackConversationsCreate').mockResolvedValue(EXAMPLE_SLACK_CONVERSATIONS_CREATE_RESPONSE);
+    const mockedSlackConversationsArchive = jest.spyOn(slack, 'slackConversationsArchive').mockResolvedValue({ 'ok': true });
+    const mockedSlackConversationsUnarchive = jest.spyOn(slack, 'slackConversationsUnarchive').mockResolvedValue({ 'ok': true });
+    const mockedSlackConversationsMembers = jest.spyOn(slack, 'slackConversationsMembers').mockResolvedValue(EXAMPLE_SLACK_CONVERSATIONS_MEMBERS_RESPONSE);
+    const mockedSlackConversationsInvite = jest.spyOn(slack, 'slackConversationsInvite').mockResolvedValue(EXAMPLE_SLACK_CONVERSATIONS_INVITE_RESPONSE);
+    const mockedSlackUsersList = jest.spyOn(slack, 'slackUsersList').mockResolvedValue(EXAMPLE_SLACK_USERS_LIST_RESPONSE);
+    const mockedSlackChatPostMessage = jest.spyOn(slack, 'slackChatPostMessage').mockResolvedValue(EXAMPLE_SLACK_CHAT_POST_MESSAGE_RESPONSE);
 
     afterEach(() => {
         jest.clearAllMocks();
@@ -53,11 +52,9 @@ describe('birthday', () => {
         expect(mockedSlackConversationsMembers.mock.instances.length).toEqual(0);
         expect(mockedSlackConversationsInvite.mock.instances.length).toEqual(1);
         expect(mockedSlackChatPostMessage.mock.instances.length).toEqual(1);
-
     });
 
     it('should unarchive an existing channel', async () => {
-
         await createBirthdayChannels([EXAMPLE_BIRTHDAY_JANE]);
 
         expect(mockedSlackConversationsList.mock.instances.length).toEqual(1);
@@ -67,11 +64,9 @@ describe('birthday', () => {
         expect(mockedSlackConversationsMembers.mock.instances.length).toEqual(1);
         expect(mockedSlackConversationsInvite.mock.instances.length).toEqual(0);
         expect(mockedSlackChatPostMessage.mock.instances.length).toEqual(1);
-
     });
 
     it('should neither create nor unarchive a channel', async () => {
-
         await createBirthdayChannels([]);
 
         expect(mockedSlackConversationsList.mock.instances.length).toEqual(0);
@@ -81,11 +76,9 @@ describe('birthday', () => {
         expect(mockedSlackConversationsMembers.mock.instances.length).toEqual(0);
         expect(mockedSlackConversationsInvite.mock.instances.length).toEqual(0);
         expect(mockedSlackChatPostMessage.mock.instances.length).toEqual(0);
-
     });
 
     it('should send a reminder to a channel', async () => {
-
         mockedSlackConversationsList.mockResolvedValue({
             ...EXAMPLE_SLACK_CONVERSATIONS_LIST_RESPONSE,
             channels: [
@@ -100,16 +93,13 @@ describe('birthday', () => {
 
         expect(mockedSlackConversationsList.mock.instances.length).toEqual(1);
         expect(mockedSlackChatPostMessage.mock.instances.length).toEqual(1);
-
     });
 
     it('should not send a reminder to a channel', async () => {
-
         await sendBirthdayReminder([]);
 
         expect(mockedSlackConversationsList.mock.instances.length).toEqual(0);
         expect(mockedSlackChatPostMessage.mock.instances.length).toEqual(0);
-
     });
 
     it('should archive a channel', async () => {
@@ -127,7 +117,6 @@ describe('birthday', () => {
 
         expect(mockedSlackConversationsList.mock.instances.length).toEqual(1);
         expect(mockedSlackConversationsArchive.mock.instances.length).toEqual(1);
-
     });
 
     it('should not archive a channel', async () => {
@@ -145,6 +134,5 @@ describe('birthday', () => {
 
         expect(mockedSlackConversationsList.mock.instances.length).toEqual(0);
         expect(mockedSlackConversationsArchive.mock.instances.length).toEqual(0);
-
     });
 });
