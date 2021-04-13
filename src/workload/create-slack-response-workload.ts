@@ -2,6 +2,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { WorkloadType } from '../moco/types/workload-types';
 
 const employeeNames = process.env.EMPLOYEE_NAMES ?? '';
+const workloadPercentage: number = parseInt(process.env.WORKLOAD_PERCENTAGE) ?? 75;
 
 const project_employees = employeeNames
     .split(',')
@@ -10,10 +11,10 @@ const project_employees = employeeNames
 export const createSlackResponseWorkload = (workload: WorkloadType, duration: number, from: string, to: string) => {
 
     let response;
-    if (workload.percentage < 75) {
+    if (workload.percentage < workloadPercentage) {
         response = `*Du hast insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung von ` +
             `${workload.percentage.toFixed(0)}%*\nHast du deine Zeiten alle richtig erfasst? Guck mal hier nach <https://newcubator.mocoapp.com/activities|Moco>`;
-    } else if (workload.percentage > 80) {
+    } else if (workload.percentage > workloadPercentage + 5) {
         response = `*Du hast insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung ` +
             `von ${workload.percentage.toFixed(0)}%*\nDu hast eine hohe Auslastung, schau doch mal ob du deine Zeit für etwas anderes nutzen kannst.\n` +
             `<https://gitlab.com/newcubator/book/-/issues|Book>, <https://gitlab.com/newcubator/newcubator-homepage/homepage|Homepage>, ` +
@@ -112,7 +113,7 @@ export const createSlackResponseWorkloadAll = (workload: WorkloadType[], from: D
                     },
                     {
                         'type': 'mrkdwn',
-                        'text': '*Auslastung >= 75%*',
+                        'text': `*Auslastung >= ${workloadPercentage}%*`,
                     }
                 ]
             },
@@ -145,7 +146,7 @@ function createFields(employeeArray: WorkloadType[]) {
         }
 
         let percentageText: string;
-        if (workloadElement.percentage != null && workloadElement.percentage >= 75) {
+        if (workloadElement.percentage != null && workloadElement.percentage >= workloadPercentage) {
             employeesOverSeventyFive++;
             percentageText = ':+1:';
         } else if (workloadElement.percentage != null) {
@@ -180,7 +181,7 @@ function createFields(employeeArray: WorkloadType[]) {
         fields: [
             {
                 type: 'plain_text',
-                text: `Projektmitarbeiter über 75%: ${employeesOverSeventyFive}/${employeesWorked}`
+                text: `Projektmitarbeiter über ${workloadPercentage}%: ${employeesOverSeventyFive}/${employeesWorked}`
             }
         ]
     },
