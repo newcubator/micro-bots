@@ -2,7 +2,7 @@ import dayjs, { Dayjs } from 'dayjs';
 import { WorkloadType } from '../moco/types/workload-types';
 
 const employeeNames = process.env.EMPLOYEE_NAMES ?? '';
-const workloadPercentage: number = parseInt(process.env.WORKLOAD_PERCENTAGE) ?? 75;
+const workloadPercentage: number = parseInt(process.env.WORKLOAD_PERCENTAGE) ?? 95;
 
 const project_employees = employeeNames
     .split(',')
@@ -14,11 +14,6 @@ export const createSlackResponseWorkload = (workload: WorkloadType, duration: nu
     if (workload.percentage < workloadPercentage) {
         response = `*Du hast insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung von ` +
             `${workload.percentage.toFixed(0)}%*\nHast du deine Zeiten alle richtig erfasst? Guck mal hier nach <https://newcubator.mocoapp.com/activities|Moco>`;
-    } else if (workload.percentage > workloadPercentage + 5) {
-        response = `*Du hast insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung ` +
-            `von ${workload.percentage.toFixed(0)}%*\nDu hast eine hohe Auslastung, schau doch mal ob du deine Zeit für etwas anderes nutzen kannst.\n` +
-            `<https://gitlab.com/newcubator/book/-/issues|Book>, <https://gitlab.com/newcubator/newcubator-homepage/homepage|Homepage>, ` +
-            `<https://newcubator.com/blog|Blog>, <https://gitlab.com/newcubator/devsquad/-/issues|DevSquad>`;
     } else {
         response = `Du hast in den letzten ${duration} Tagen insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung von ${workload.percentage.toFixed(0)}%.`;
     }
