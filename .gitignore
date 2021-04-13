@@ -3,4 +3,5 @@
 .serverless
 node_modules
 .env
+.env.local
 .data.json

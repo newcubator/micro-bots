@@ -11,8 +11,6 @@ import { Channel } from '../slack/types/slack-types';
 import { getBirthdayChannels } from './get-channels';
 import { BirthdayType } from './types/birthday-bot-types';
 
-const LEAD_TIME = process.env.LEAD_TIME;
-
 export const createBirthdayChannels = async (birthdays: BirthdayType[]) => {
     if (birthdays.length === 0) {
         console.log(`No birthdays found to open a channel`);
@@ -21,17 +19,26 @@ export const createBirthdayChannels = async (birthdays: BirthdayType[]) => {
 
     const channels = await getBirthdayChannels();
     for (const birthday of birthdays) {
+        const birthdayDate = dayjs(`${dayjs().year()}-${birthday.birthday.slice(5)}`);
+        console.log(`Trying to open/unarchive channel for ${birthday.firstname} ${birthday.lastname} on ${birthdayDate.format('YYYY-MM-DD')}`);
         let channel: Channel;
         const channelName = `birthday-${birthday.firstname.toLowerCase()}`;
-        const archivedChannel = channels.find(channel => channel.name === channelName && channel.is_archived === true);
+
+        const openedChannel = channels.find(channel => channel.name === channelName && !channel.is_archived);
+        if (openedChannel) {
+            console.log(`Channel ${channelName} already opened`);
+            continue;
+        }
+
+        const archivedChannel = channels.find(channel => channel.name === channelName && channel.is_archived);
         if (archivedChannel) {
             const channelResponse = await slackConversationsUnarchive(archivedChannel.id);
             channel = archivedChannel;
-            console.debug(`Unarchived channel ${JSON.stringify(channelResponse)}`);
+            console.log(`Unarchived channel ${JSON.stringify(channelResponse)}`);
         } else {
             const channelResponse = await slackConversationsCreate(channelName);
             channel = channelResponse.channel;
-            console.debug(`Created channel ${JSON.stringify(channelResponse)}`);
+            console.log(`Created channel ${JSON.stringify(channelResponse)}`);
         }
 
         const userResponse = await slackUsersList();
@@ -49,16 +56,16 @@ export const createBirthdayChannels = async (birthdays: BirthdayType[]) => {
 
         if (invites.length > 0) {
             const inviteResponse = await slackConversationsInvite(channel.id, invites.join(','));
-            console.debug(`Invited ${JSON.stringify(inviteResponse)}`);
+            console.log(`Invited ${JSON.stringify(inviteResponse)}`);
         }
 
-        const day = dayjs(birthday.birthday).locale('de').format('DD MMM');
+
         const messageResponse = await slackChatPostMessage(
-            `Hey Leute! ${birthday.firstname} hat in ${LEAD_TIME} Tagen am ${day} Geburtstag! Habt ihr euch bereits über eine kleine Überraschung Gedanken gemacht?`,
+            `Hey Leute! ${birthday.firstname} hat in ${Math.ceil(birthdayDate.diff(dayjs()) / 86400000)} Tagen am ${birthdayDate.locale('de').format('DD MMM')} Geburtstag! Habt ihr euch bereits über eine kleine Überraschung Gedanken gemacht?`,
             channel.id,
             'Birthday Bot',
             ':birthday:',
         );
-        console.debug(`Wrote message ${JSON.stringify(messageResponse)}`);
+        console.log(`Wrote message ${JSON.stringify(messageResponse)}`);
     }
 };

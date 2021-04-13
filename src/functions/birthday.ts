@@ -1,5 +1,5 @@
 import axios from 'axios';
-import dayjs from 'dayjs';
+import dayjs, { Dayjs } from 'dayjs';
 import { closeBirthdayChannels } from '../birthday/close-birthday-channels';
 import { createBirthdayChannels } from '../birthday/create-birthday-channels';
 import { filterBirthdays } from '../birthday/filter-birthdays';
@@ -22,8 +22,14 @@ export const handler = async () => {
     });
     const users: BirthdayType[] = response.data;
 
-    console.log(`Searching for birthdays on the ${birthdayDate.format('MM-DD')} to open channel`);
-    await createBirthdayChannels(filterBirthdays(users, birthdayDate));
+    console.log(`Searching for birthdays from ${today.format('MM-DD')} to ${birthdayDate.format('MM-DD')} to open channel`);
+    let dateArray: Dayjs[] = [];
+    let currentDate = today;
+    while (currentDate <= birthdayDate) {
+        dateArray.push(currentDate);
+        currentDate = currentDate.add(1, 'day');
+    }
+    await createBirthdayChannels(filterBirthdays(users, ...dateArray));
 
     console.log(`Searching for birthdays on the ${today.format('MM-DD')} to send reminder`);
     await sendBirthdayReminder(filterBirthdays(users, today));
