@@ -7,12 +7,16 @@ export const closeBirthdayChannels = async (birthdays: BirthdayType[]) => {
         console.log('No birthdays found to close channel');
         return null;
     }
+
     const channels = await getBirthdayChannels();
     for (const birthday of birthdays) {
-        const channel = channels.find((channel) => channel.name.endsWith(birthday.firstname.toLowerCase()));
+        console.log(`Trying to close channel for ${birthday.firstname} ${birthday.lastname} on ${birthday.birthday.slice(5)}`);
+        const channel = channels.find((channel) => channel.name.endsWith(birthday.firstname.toLowerCase()) && !channel.is_archived);
         if (channel) {
             const archiveResponse = await slackConversationsArchive(channel.id);
-            console.debug(`Archived channel ${JSON.stringify(archiveResponse)}`);
+            console.log(`Archived channel ${JSON.stringify(archiveResponse)}`);
+        } else {
+            console.log(`Channel birthday-${birthday.firstname.toLowerCase()} already archived`);
         }
     }
-}
+};
