@@ -66,3 +66,12 @@ export const slackChatPostMessage = async (text: string, channelId: string, user
         icon_emoji: icon_emoji,
     }) as SlackChatPostMessageResponse;
 };
+
+export const slackUploadFileToChannel = async (channels, file, filename, initial_comment) => {
+    return await exports.slack.files.upload({
+        channels,
+        file,
+        filename,
+        initial_comment
+    });
+};

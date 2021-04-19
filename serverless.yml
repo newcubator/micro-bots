@@ -12,6 +12,7 @@ provider:
     SLACK_TOKEN: ${env:SLACK_TOKEN}
     WORKLOAD_CHANNEL: ${env:WORKLOAD_CHANNEL}
     EMPLOYEE_NAMES: ${env:EMPLOYEE_NAMES}
+    COMPLETION_NOTICE_CHANNEL: ${env:COMPLETION_NOTICE_CHANNEL}
 
 plugins:
   - serverless-webpack
@@ -30,6 +31,14 @@ functions:
       - schedule:
           rate: cron(5 8 * * ? *)
           enabled: true
+  completionNotice:
+    handler: src/functions/completion-notice.handler
+    memorySize: 128
+    timeout: 15
+    events:
+      - http:
+          path: completionNotice
+          method: post
   workload:
     handler: src/functions/workload.handler
     memorySize: 128
