@@ -20,27 +20,27 @@ export const handler = async (event: APIGatewayEvent) => {
     const command: SlackCommandType = decode(event.body) as SlackCommandType;
     const orderNumber = command.text?.trim();
 
-    if (orderNumber == undefined) {
+    if (orderNumber === undefined) {
         return completionNoticeErrorNoOrderNumber();
     }
     sendEphemeralResponse(command.response_url, completionNoticeSuccess(orderNumber));
 
     const project = (await getProjects()).find(project => project.custom_properties.Bestellnummer === orderNumber);
     console.log(`project: ${project}`);
-    if (project == undefined) {
+    if (project === undefined) {
         return completionNoticeErrorNoProjectFound();
     }
 
     const deal = (await getDealById(project.deal.id));
     console.log(`deal: ${deal}`);
 
-    if (deal == undefined) {
+    if (deal === undefined) {
         return completionNoticeErrorNoDealFound();
     }
 
     const contact = (await getContactById(deal.person.id));
 
-    if (contact == undefined) {
+    if (contact === undefined) {
         return completionNoticeErrorNoContactFound();
     }
 

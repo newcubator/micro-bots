@@ -8,7 +8,7 @@ export const createCompletionNoticePdf = (project: MocoProject, contact: MocoCon
         unit: 'pt'
     });
 
-    const title = contact.gender == 'F' ? 'geehrte Frau' : 'geehrter Herr';
+    const title = contact.gender === 'F' ? 'geehrte Frau' : 'geehrter Herr';
 
     doc
         .addImage(logo, 385, 45, 140, 28)
