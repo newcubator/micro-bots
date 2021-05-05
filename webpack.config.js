@@ -7,7 +7,8 @@ module.exports = {
     output: {
         libraryTarget: 'commonjs2',
         path: path.join(__dirname, '.webpack'),
-        filename: '[name].js'
+        filename: '[name].js',
+        assetModuleFilename: 'assets/[name][ext]'
     },
     target: 'node',
     node: {
@@ -22,6 +23,10 @@ module.exports = {
     },
     module: {
         rules: [
+            {
+                test: /\.png/,
+                type: 'asset/inline',
+            },
             {
                 test: /\.tsx?$/,
                 use: [
