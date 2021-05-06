@@ -40,6 +40,20 @@ functions:
       - http:
           path: completionNotice
           method: post
+  lockProject:
+    handler: src/functions/lock-project.handler
+    memorySize: 128
+    events:
+      - http:
+          path: lockProject
+          method: post
+  unlockProject:
+    handler: src/functions/unlock-project.handler
+    memorySize: 128
+    events:
+      - http:
+          path: unlockProject
+          method: post
   workload:
     handler: src/functions/workload.handler
     memorySize: 128

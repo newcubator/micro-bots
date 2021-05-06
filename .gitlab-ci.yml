@@ -19,6 +19,6 @@ test:
 deploy:
   stage: deploy
   script:
-    - npm run deployProd
+    - npm run deploy:prod
   only:
     - master
