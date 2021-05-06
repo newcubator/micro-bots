@@ -4,12 +4,14 @@
   "description": "",
   "scripts": {
     "test": "jest",
-    "deployProd": "NODE_OPTIONS='-r dotenv/config' serverless deploy",
-    "deployDev": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless deploy --stage dev",
-    "invokeBirthday": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f birthday --env dev",
-    "invokeWorkload": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f workload",
-    "invokeWorkloadAll": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f workloadAll",
-    "invokeCompletionNotice": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f completionNotice"
+    "deploy:prod": "NODE_OPTIONS='-r dotenv/config' serverless deploy",
+    "deploy:dev": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless deploy --stage dev",
+    "invoke:birthday": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f birthday --env dev",
+    "invoke:workload": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f workload",
+    "invoke:workloadAll": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f workloadAll",
+    "invoke:completionNotice": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f completionNotice",
+    "invoke:lockProject": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f lockProject",
+    "invoke:unlockProject": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f unlockProject"
   },
   "dependencies": {
     "@slack/web-api": "6.1.0",
