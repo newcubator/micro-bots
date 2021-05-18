@@ -26,11 +26,12 @@ functions:
   birthday:
     handler: src/functions/birthday.handler
     memorySize: 128
+    timeout: 10
     environment:
       LEAD_TIME: 21
     events:
       - schedule:
-          rate: cron(5 8 * * ? *)
+          rate: cron(5 4 * * ? *)
           enabled: true
   completionNotice:
     handler: src/functions/completion-notice.handler
