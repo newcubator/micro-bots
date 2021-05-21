@@ -132,7 +132,7 @@ export const createSlackResponseWorkloadAll = (workload: WorkloadType[], from: D
 function createFields(employeeArray: WorkloadType[]) {
     let headline;
     let responseEmployeeArray = [];
-    let employeesOverSeventyFive = 0;
+    let employeesOverThreshold = 0;
     let employeesWorked = employeeArray.length;
 
     for (const workloadElement of employeeArray) {
@@ -142,8 +142,9 @@ function createFields(employeeArray: WorkloadType[]) {
 
         let percentageText: string;
         if (workloadElement.percentage != null && workloadElement.percentage >= workloadPercentage) {
-            employeesOverSeventyFive++;
+            employeesOverThreshold++;
             percentageText = ':+1:';
+            continue;
         } else if (workloadElement.percentage != null) {
             percentageText = ':-1:';
         } else if (workloadElement.holidays >= 5) {
@@ -176,7 +177,7 @@ function createFields(employeeArray: WorkloadType[]) {
         fields: [
             {
                 type: 'plain_text',
-                text: `Projektmitarbeiter über ${workloadPercentage}%: ${employeesOverSeventyFive}/${employeesWorked}`
+                text: `Projektmitarbeiter über ${workloadPercentage}%: ${employeesOverThreshold}/${employeesWorked}`
             }
         ]
     },
