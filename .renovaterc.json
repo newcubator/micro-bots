@@ -1,0 +1,5 @@
+{
+  "extends": ["group:all"],
+  "rangeStrategy": "pin",
+  "labels": ["Renovate"]
+}
