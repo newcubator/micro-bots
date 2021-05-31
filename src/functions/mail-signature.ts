@@ -45,19 +45,19 @@ function createMailSignature(user: MocoUserType): string {
     `;
 
     return `
-    <pre style="font-variant-ligatures: normal; orphans: 2; widows: 2;"><code style="padding: 3px 0px;"><font color="#000000">
-    ${user.firstname} ${user.lastname}
+<pre style="font-variant-ligatures: normal; orphans: 2; widows: 2;"><code style="padding: 3px 0px;"><font color="#000000">
+${user.firstname} ${user.lastname}
 
-    ---------------------------------------------------------
-    newcubator GmbH
-    ${user.custom_properties.Standort === 'Dortmund' ? addressDortmund : addressHannover}
+---------------------------------------------------------
+newcubator GmbH
+${user.custom_properties.Standort === 'Dortmund' ? addressDortmund : addressHannover}
 
-    ${user.work_phone ? `Telefon: ${user.work_phone}` : ''}
-    ${user.mobile_phone ? `Mobil: ${user.mobile_phone}` : ''}
-    ${user.email ? `Email: ${user.email}` : ''}
+${user.work_phone ? `Telefon: ${user.work_phone}` : ''}
+${user.mobile_phone ? `Mobil: ${user.mobile_phone}` : ''}
+${user.email ? `Email: ${user.email}` : ''}
 
-    Geschäftsführer: Jörg Herbst
-    Sitz der Gesellschaft: Lünen, Amtsgericht Dortmund HRB 28526
-    </font></code></pre>
+Geschäftsführer: Jörg Herbst
+Sitz der Gesellschaft: Lünen, Amtsgericht Dortmund HRB 28526
+</font></code></pre>
     `;
 }
