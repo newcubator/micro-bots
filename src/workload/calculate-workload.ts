@@ -4,7 +4,7 @@ import { DayObjectType, WorkloadType } from '../moco/types/workload-types';
 
 const DATE_FORMAT = 'YYYY-MM-DD';
 
-const isWeekday = (day: Dayjs) => (day.get('day') !== 0 && day.get('day') !== 6);
+const isWeekday = (day: Dayjs) => (day.get('day') > 0 && day.get('day') < 6);
 
 const createDayRange = (from: Dayjs, to: Dayjs) => new Array(to.diff(from, 'day') + 1)
     .fill(from)
@@ -34,10 +34,8 @@ export function calculateWorkload(from: string, to: string, activities: MocoActi
                 .reduce((workedHours, activity) => workedHours + activity.hours, 0);
 
             const employment: MocoEmployment = employments
-                .find(({
-                           from,
-                           to
-                       }: MocoEmployment) => (!from || day.isSame(from) || day.isAfter(from)) && (!to || day.isSame(to) || day.isBefore(to)));
+                .find(({ from, to }: MocoEmployment) =>
+                    (!from || day.isSame(from) || day.isAfter(from)) && (!to || day.isSame(to) || day.isBefore(to)));
 
             const absenceHours = extractAbsenceHours(schedules, null, day);
             // not every time range has an employment; see Lucas Meurer from 28.12.20 - 03.01.21
