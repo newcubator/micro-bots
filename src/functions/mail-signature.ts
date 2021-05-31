@@ -12,7 +12,7 @@ export const handler = async (event: APIGatewayEvent) => {
     if (!user) {
         return {
             statusCode: 200,
-            body: `Ich konnte dich leider keinem Moco User zuordnen.`
+            body: 'Ich konnte dich leider keinem Moco User zuordnen.'
         };
     }
 
