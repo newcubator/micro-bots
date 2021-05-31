@@ -48,6 +48,13 @@ functions:
       - http:
           path: lockProject
           method: post
+  mailSignature:
+    handler: src/functions/mail-signature.handler
+    memorySize: 128
+    events:
+      - http:
+          path: mailSignature
+          method: post
   unlockProject:
     handler: src/functions/unlock-project.handler
     memorySize: 128
