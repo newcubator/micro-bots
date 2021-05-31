@@ -33,3 +33,4 @@ function findUserBySlackId(users: Array<MocoUserType>, slackId: string): MocoUse
 function findUserByMailPrefix(users: Array<MocoUserType>, prefix: string): MocoUserType {
     return users.find(user => user.email.startsWith(prefix));
 }
+
