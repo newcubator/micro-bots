@@ -36,12 +36,12 @@ export const handler = async (event: APIGatewayEvent) => {
 
 function createMailSignature(user: MocoUserType): string {
     const addressHannover = `
-    Bödekerstraße 22
-    D-30161 Hannover
+Bödekerstraße 22
+D-30161 Hannover
     `;
     const addressDortmund = `
-    Freie-Vogel-Straße 369
-    D-44269 Dortmund
+Freie-Vogel-Straße 369
+D-44269 Dortmund
     `;
 
     return `
