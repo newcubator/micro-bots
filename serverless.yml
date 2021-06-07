@@ -13,6 +13,7 @@ provider:
         - Effect: 'Allow'
           Action:
             - 'ses:SendMail'
+          Resource: 'arn:aws:ses:eu-central-1:931595285256:identity/newcubator.com'
   environment:
     MOCO_TOKEN: ${env:MOCO_TOKEN}
     SLACK_TOKEN: ${env:SLACK_TOKEN}
