@@ -11,9 +11,22 @@ export interface EventApplication extends ParsedUrlQuery {
 const SOURCE = 'events@newcubator.com';
 const DESTINATIONS = ['events@newcubator.com'];
 
+const ALLOWED_ORIGINS = [
+    'https://newcubator.com',
+    'http://localhost:8000',
+    'http://localhost:6006',
+];
+
 export const handler = async (event: APIGatewayEvent) => {
     const command: EventApplication = decode(event.body) as EventApplication;
     console.log(`Event Application for ${command.event}: ${command.firstname} (${command.email})`);
+
+    const requestOrigin = event.headers?.['Origin'];
+    if (!requestOrigin || !ALLOWED_ORIGINS.includes(requestOrigin)) {
+        return {
+            statusCode: 405,
+        };
+    }
 
     const client = new SES({ region: 'eu-central-1' });
     const emailRequest: SendEmailRequest = {
@@ -41,5 +54,10 @@ Email: ${command.email}
 
     console.log('Send event application mail');
 
-    return { statusCode: 201 };
+    return {
+        statusCode: 201,
+        headers: {
+            'Access-Control-Allow-Origin': requestOrigin,
+        },
+    };
 };
