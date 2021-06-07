@@ -12,7 +12,7 @@ provider:
       statements:
         - Effect: 'Allow'
           Action:
-            - 'ses:SendMail'
+            - 'ses:SendEmail'
           Resource: 'arn:aws:ses:eu-central-1:931595285256:identity/newcubator.com'
   environment:
     MOCO_TOKEN: ${env:MOCO_TOKEN}
