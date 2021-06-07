@@ -21,6 +21,7 @@ export const handler = async (event: APIGatewayEvent) => {
     const command: EventApplication = decode(event.body) as EventApplication;
     console.log(`Event Application for ${command.event}: ${command.firstname} (${command.email})`);
 
+    console.log('event.headers', event.headers);
     const requestOrigin = event.headers?.['Origin'];
     if (!requestOrigin || !ALLOWED_ORIGINS.includes(requestOrigin)) {
         return {
