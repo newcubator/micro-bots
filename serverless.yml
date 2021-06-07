@@ -69,6 +69,7 @@ functions:
       - http:
           path: eventApplication
           method: post
+          cors: true
   unlockProject:
     handler: src/functions/unlock-project.handler
     memorySize: 128
