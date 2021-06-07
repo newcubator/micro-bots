@@ -7,6 +7,12 @@ provider:
   runtime: nodejs12.x
   region: eu-central-1
   stage: production
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - 'ses:SendMail'
   environment:
     MOCO_TOKEN: ${env:MOCO_TOKEN}
     SLACK_TOKEN: ${env:SLACK_TOKEN}
