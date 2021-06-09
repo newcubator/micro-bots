@@ -5,6 +5,7 @@ import { decode, ParsedUrlQuery } from 'querystring';
 export interface EventApplication extends ParsedUrlQuery {
     event: string;
     firstname: string;
+    lastname: string;
     email: string;
 }
 
@@ -19,7 +20,7 @@ const ALLOWED_ORIGINS = [
 
 export const handler = async (event: APIGatewayEvent) => {
     const command: EventApplication = decode(event.body) as EventApplication;
-    console.log(`Event Application for ${command.event}: ${command.firstname} (${command.email})`);
+    console.log(`Event Application for ${command.event}: ${command.firstname} ${command.lastname} (${command.email})`);
 
     const requestOrigin = event.headers?.['origin'];
     if (!requestOrigin || !ALLOWED_ORIGINS.includes(requestOrigin)) {
@@ -39,7 +40,8 @@ export const handler = async (event: APIGatewayEvent) => {
                 Text: {
                     Data: `
 Event: ${command.event}
-Name: ${command.firstname}
+Vorname: ${command.firstname}
+Nachname: ${command.lastname}
 Email: ${command.email}
                     `
                 },
