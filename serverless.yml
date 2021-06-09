@@ -15,11 +15,15 @@ provider:
             - 'ses:SendEmail'
           Resource: 'arn:aws:ses:eu-central-1:931595285256:identity/newcubator.com'
   environment:
+    AWS_ACCESS_KEY_ID_GOOGLE: ${env:AWS_ACCESS_KEY_ID_GOOGLE}
+    AWS_SECRET_ACCESS_KEY_GOOGLE: ${env:AWS_SECRET_ACCESS_KEY_GOOGLE}
+    AWS_SECRET_NAME: ${env:AWS_SECRET_NAME}
+    COMPLETION_NOTICE_CHANNEL: ${env:COMPLETION_NOTICE_CHANNEL}
+    EMPLOYEE_NAMES: ${env:EMPLOYEE_NAMES}
     MOCO_TOKEN: ${env:MOCO_TOKEN}
     SLACK_TOKEN: ${env:SLACK_TOKEN}
+    SPREADSHEET_ID: ${env:AWS_SECRET_NAME}
     WORKLOAD_CHANNEL: ${env:WORKLOAD_CHANNEL}
-    EMPLOYEE_NAMES: ${env:EMPLOYEE_NAMES}
-    COMPLETION_NOTICE_CHANNEL: ${env:COMPLETION_NOTICE_CHANNEL}
     WORKLOAD_PERCENTAGE: ${env:WORKLOAD_PERCENTAGE}
 
 plugins:
@@ -93,4 +97,12 @@ functions:
           method: post
       - schedule:
           rate: cron(0 16 ? * FRI *)
+          enabled: true
+  coronaHannover:
+    handler: src/functions/corona-hannover.handler
+    memorySize: 128
+    timeout: 10
+    events:
+      - schedule:
+          rate: cron(* 8-20 * * *) # At every minute past hour 8 and 20.
           enabled: true
