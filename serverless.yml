@@ -15,11 +15,16 @@ provider:
             - 'ses:SendEmail'
           Resource: 'arn:aws:ses:eu-central-1:931595285256:identity/newcubator.com'
   environment:
+    AWS_ACCESS_KEY_ID_GOOGLE: ${env:AWS_ACCESS_KEY_ID_GOOGLE}
+    AWS_SECRET_ACCESS_KEY_GOOGLE: ${env:AWS_SECRET_ACCESS_KEY_GOOGLE}
+    AWS_SECRET_NAME: ${env:AWS_SECRET_NAME}
+    COMPLETION_NOTICE_CHANNEL: ${env:COMPLETION_NOTICE_CHANNEL}
+    EMPLOYEE_NAMES: ${env:EMPLOYEE_NAMES}
+    HANNOVER_CHANNEL_ID: ${env:HANNOVER_CHANNEL_ID}
     MOCO_TOKEN: ${env:MOCO_TOKEN}
     SLACK_TOKEN: ${env:SLACK_TOKEN}
+    SPREADSHEET_ID: ${env:SPREADSHEET_ID}
     WORKLOAD_CHANNEL: ${env:WORKLOAD_CHANNEL}
-    EMPLOYEE_NAMES: ${env:EMPLOYEE_NAMES}
-    COMPLETION_NOTICE_CHANNEL: ${env:COMPLETION_NOTICE_CHANNEL}
     WORKLOAD_PERCENTAGE: ${env:WORKLOAD_PERCENTAGE}
 
 plugins:
@@ -31,66 +36,74 @@ custom:
 
 functions:
   birthday:
-    handler: src/functions/birthday.handler
-    memorySize: 128
-    timeout: 10
     environment:
       LEAD_TIME: 21
     events:
       - schedule:
-          rate: cron(5 4 * * ? *)
           enabled: true
+          rate: cron(5 4 * * ? *)
+    handler: src/functions/birthday.handler
+    memorySize: 128
+    timeout: 10
   completionNotice:
+    events:
+      - http:
+          method: post
+          path: completionNotice
     handler: src/functions/completion-notice.handler
     memorySize: 128
     timeout: 15
+  coronaHannover:
     events:
-      - http:
-          path: completionNotice
-          method: post
-  lockProject:
-    handler: src/functions/lock-project.handler
+      - schedule:
+          enabled: true
+          rate: cron(*/2 8-20 * * * *) # At every even  minute past hour 8 and 20.
+    handler: src/functions/corona-hannover.handler
     memorySize: 128
-    events:
-      - http:
-          path: lockProject
-          method: post
-  mailSignature:
-    handler: src/functions/mail-signature.handler
-    memorySize: 128
-    events:
-      - http:
-          path: mailSignature
-          method: post
+    timeout: 10
   eventApplication:
+    events:
+      - http:
+          cors: true
+          method: post
+          path: eventApplication
     handler: src/functions/event-application.handler
     memorySize: 128
+  lockProject:
     events:
       - http:
-          path: eventApplication
           method: post
-          cors: true
+          path: lockProject
+    handler: src/functions/lock-project.handler
+    memorySize: 128
+  mailSignature:
+    events:
+      - http:
+          method: post
+          path: mailSignature
+    handler: src/functions/mail-signature.handler
+    memorySize: 128
   unlockProject:
+    events:
+      - http:
+          method: post
+          path: unlockProject
     handler: src/functions/unlock-project.handler
     memorySize: 128
+  workload:
     events:
       - http:
-          path: unlockProject
           method: post
-  workload:
+          path: workload
     handler: src/functions/workload.handler
     memorySize: 128
+  workloadAll:
     events:
       - http:
-          path: workload
           method: post
-  workloadAll:
+          path: workloadAll
+      - schedule:
+          enabled: true
+          rate: cron(0 16 ? * FRI *)
     handler: src/functions/workload-all.handler
     memorySize: 128
-    events:
-      - http:
-          path: workloadAll
-          method: post
-      - schedule:
-          rate: cron(0 16 ? * FRI *)
-          enabled: true
