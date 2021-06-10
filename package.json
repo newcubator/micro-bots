@@ -7,7 +7,7 @@
     "deploy:prod": "NODE_OPTIONS='-r dotenv/config' serverless deploy",
     "invoke:birthday": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f birthday --env dev",
     "invoke:completionNotice": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f completionNotice",
-    "invoke:coronaHannover": "DOTENV_CONFIG_PATH=.env.local SLS_DEBUG=*  NODE_OPTIONS='-r dotenv/config' serverless invoke local -f coronaHannover",
+    "invoke:coronaHannover": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f coronaHannover",
     "invoke:eventApplication": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f eventApplication",
     "invoke:lockProject": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f lockProject",
     "invoke:mailSignature": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f mailSignature",

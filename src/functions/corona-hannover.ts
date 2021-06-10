@@ -54,30 +54,30 @@ const getSecret = (): Promise<boolean> => {
     });
 };
 
-let sheets;
+let sheetsAccessor;
 
 export const handler = async () => {
 
     if (!GOOGLE_CREDENTIALS) {
         getSecret().then(() => {
-            sheets = new SheetsAccessor();
+            sheetsAccessor = new SheetsAccessor();
             console.log('Starting new Check');
-            return sheets.setupGoogle(GOOGLE_CREDENTIALS)
+            return sheetsAccessor.setupGoogle(GOOGLE_CREDENTIALS)
                 .then(async () => {
-                        await request(sheets);
+                        await request(sheetsAccessor);
                     }
                 );
         });
     } else {
-        await request(sheets);
+        await request(sheetsAccessor);
     }
 };
 
-const request = async (sheets: SheetsAccessor) => {
+const request = async (sheetsAccessor: SheetsAccessor) => {
     return await axios.get(VACCINATION_CENTER_HANNOVER, {}).then(async (response) => {
         const res: ResponseType = response.data;
         if (res.succeeded) {
-            await check(response.data, sheets);
+            await check(response.data, sheetsAccessor);
         } else {
             console.log(
                 'something went wrong.',
@@ -85,18 +85,18 @@ const request = async (sheets: SheetsAccessor) => {
             );
 
         }
-        console.log('Finished Check');
-    });
+    })
+        .finally(() => console.log('Finished Check'));
 };
 
-const check = (result: ResponseType, sheets: SheetsAccessor) => {
+const check = async (result: ResponseType, sheetsAccessor: SheetsAccessor) => {
     const promises: Promise<any>[] = [];
     const hannoverChannelID = process.env.HANNOVER_CHANNEL_ID;
     let isNotified = false;
-    promises.push(sheets.getRows()
+    promises.push(sheetsAccessor.getRows()
         .then(value => isNotified = value));
 
-    Promise.all(promises).then(() => {
+    return await Promise.all(promises).then(() => {
         result.resultList.forEach(async (value) => {
             console.log(
                 `Out of Stock: ${value.outOfStock
@@ -107,10 +107,10 @@ const check = (result: ResponseType, sheets: SheetsAccessor) => {
                     hannoverChannelID,
                     'Impf Notification',
                     ':microbe:');
-                await sheets.updateStatus('TRUE');
+                await sheetsAccessor.updateStatus('TRUE');
                 isNotified = true;
             } else if (isNotified) {
-                await sheets.updateStatus('FALSE');
+                await sheetsAccessor.updateStatus('FALSE');
                 isNotified = false;
             }
         });

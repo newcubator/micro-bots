@@ -34,10 +34,8 @@ export class SheetsAccessor {
                 })
                 .catch((err) => {
                     console.log(err);
-                })
-                .finally(() => {
                     reject('something went wrong');
-                });
+                })
         });
     }
 
