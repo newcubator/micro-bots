@@ -56,21 +56,27 @@ const getSecret = (): Promise<boolean> => {
 
 let sheetsAccessor;
 
-export const handler = async () => {
+export const handler = () => {
+    return new Promise<boolean>(async (resolve, reject) => {
 
-    if (!GOOGLE_CREDENTIALS) {
-        getSecret().then(() => {
-            sheetsAccessor = new SheetsAccessor();
-            console.log('Starting new Check');
-            return sheetsAccessor.setupGoogle(GOOGLE_CREDENTIALS)
-                .then(async () => {
-                        await request(sheetsAccessor);
-                    }
-                );
-        });
-    } else {
-        await request(sheetsAccessor);
-    }
+        if (!GOOGLE_CREDENTIALS) {
+            getSecret().then(() => {
+                sheetsAccessor = new SheetsAccessor();
+                console.log('Starting new Check');
+                return sheetsAccessor.setupGoogle(GOOGLE_CREDENTIALS)
+                    .then(async () => {
+                            request(sheetsAccessor)
+                                .then(() => resolve(true))
+                                .catch(() => reject('something went wrong'));
+                        }
+                    );
+            });
+        } else {
+            request(sheetsAccessor)
+                .then(() => resolve(true))
+                .catch(() => reject('something went wrong'));
+        }
+    });
 };
 
 const request = async (sheetsAccessor: SheetsAccessor) => {
