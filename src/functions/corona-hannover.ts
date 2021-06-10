@@ -1,5 +1,4 @@
 import axios from 'axios';
-import { getBirthdayChannels } from '../birthday/get-channels';
 import { SheetsAccessor } from '../googlesheets/sheets.accessor';
 import { slackChatPostMessage } from '../slack/slack';
 
@@ -58,11 +57,8 @@ const request = async (sheets: SheetsAccessor) => {
 
 const check = (result: ResponseType, sheets: SheetsAccessor) => {
     const promises: Promise<any>[] = [];
+    const hannoverChannelID = process.env.HANNOVER_CHANNEL_ID;
     let isNotified = false;
-    let channel = null;
-    promises.push(getBirthdayChannels()
-        .then(channels => channels.find((channel) => channel.name === 'hannover'))
-        .then(value => channel = value));
     promises.push(sheets.getRows()
         .then(value => isNotified = value));
 
@@ -74,12 +70,12 @@ const check = (result: ResponseType, sheets: SheetsAccessor) => {
             );
             if (!value.outOfStock && !isNotified) {
                 await slackChatPostMessage('Es sind wieder Termine in Hannover vorhanden. 🎉\nSchau gleich nach bevor die wieder weg sind:\nhttps://www.impfportal-niedersachsen.de/portal/#/appointment/public',
-                    channel.id,
+                    hannoverChannelID,
                     'Impf Notification',
                     ':microbe:');
                 await sheets.updateStatus('TRUE');
                 isNotified = true;
-            } else {
+            } else if (isNotified) {
                 await sheets.updateStatus('FALSE');
                 isNotified = false;
             }

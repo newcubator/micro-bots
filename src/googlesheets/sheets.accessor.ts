@@ -29,9 +29,9 @@ export class SheetsAccessor {
         });
     }
 
-    getRows(): Promise<boolean> {
+    async getRows(): Promise<boolean> {
         return new Promise<boolean>((resolve, reject) => {
-            return this.googleSheets.spreadsheets.values
+            this.googleSheets.spreadsheets.values
                 .get({
                     auth: this.googleAuth,
                     spreadsheetId: this.SPREADSHEET_ID,
