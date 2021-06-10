@@ -1,3 +1,4 @@
+import AWS from 'aws-sdk';
 import axios from 'axios';
 import { SheetsAccessor } from '../googlesheets/sheets.accessor';
 import { slackChatPostMessage } from '../slack/slack';
@@ -27,16 +28,49 @@ interface ResultItem {
     publicAppointment: boolean;
 }
 
+const AWS_SECRET_NAME = process.env.AWS_SECRET_NAME;
+
+const AWS_CLIENT = new AWS.SecretsManager({
+    accessKeyId: process.env.AWS_ACCESS_KEY_ID_GOOGLE,
+    secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY_GOOGLE,
+    region: 'eu-central-1'
+});
+
 const VACCINATION_CENTER_HANNOVER = 'https://www.impfportal-niedersachsen.de/portal/rest/appointments/findVaccinationCenterListFree/30159?stiko=&count=1&birthdate=825202800000';
 
-export const handler = async () => {
-    const sheets = new SheetsAccessor();
-    console.log('Starting new Check');
-    return sheets.setupGoogle()
-        .then(async () => {
-                await request(sheets);
+let GOOGLE_CREDENTIALS;
+
+const getSecret = (): Promise<boolean> => {
+    return new Promise<boolean>((resolve, reject) => {
+        AWS_CLIENT.getSecretValue({ SecretId: AWS_SECRET_NAME }, (err, data) => {
+            if (err) {
+                console.log(err);
+                reject(err);
+            } else {
+                GOOGLE_CREDENTIALS = JSON.parse(data.SecretString);
+                resolve(true);
             }
-        );
+        });
+    });
+};
+
+let sheets;
+
+export const handler = async () => {
+
+    if (!GOOGLE_CREDENTIALS) {
+        getSecret().then(() => {
+            sheets = new SheetsAccessor();
+            console.log('Starting new Check');
+            return sheets.setupGoogle(GOOGLE_CREDENTIALS)
+                .then(async () => {
+                        await request(sheets);
+                    }
+                );
+        });
+    } else {
+        await request(sheets);
+    }
 };
 
 const request = async (sheets: SheetsAccessor) => {

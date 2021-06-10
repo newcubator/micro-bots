@@ -1,29 +1,21 @@
-import AWS from 'aws-sdk';
 import { google } from 'googleapis';
 
 export class SheetsAccessor {
-    private static AWS_SECRET_NAME = process.env.AWS_SECRET_NAME;
-
-    private static AWS_CLIENT = new AWS.SecretsManager({
-        accessKeyId: process.env.AWS_ACCESS_KEY_ID_GOOGLE,
-        secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY_GOOGLE,
-        region: 'eu-central-1'
-    });
-
-    private GOOGLE_CREDENTIALS;
 
     private googleAuth;
 
     private SPREADSHEET_ID = process.env.SPREADSHEET_ID;
 
+    private GOOGLE_CREDENTIALS;
+
     private client: any;
 
     private googleSheets: any;
 
-    public setupGoogle(): Promise<any> {
+    public setupGoogle(credentials: any): Promise<any> {
+        this.GOOGLE_CREDENTIALS = credentials;
         return new Promise<any>(resolve => {
-            this.getSecret()
-                .then(() => this.setGoogleAuth())
+            this.setGoogleAuth()
                 .then(() => this.authGoogle())
                 .then(() => resolve(true));
         });
@@ -58,20 +50,6 @@ export class SheetsAccessor {
             requestBody: {
                 values: [[value]],
             }
-        });
-    }
-
-    private async getSecret(): Promise<boolean> {
-        return new Promise<boolean>((resolve, reject) => {
-            SheetsAccessor.AWS_CLIENT.getSecretValue({ SecretId: SheetsAccessor.AWS_SECRET_NAME }, (err, data) => {
-                if (err) {
-                    console.log(err);
-                    reject(err);
-                } else {
-                    this.GOOGLE_CREDENTIALS = JSON.parse(data.SecretString);
-                    resolve(true);
-                }
-            });
         });
     }
 
