@@ -57,7 +57,7 @@ ${user.mobile_phone ? `Mobil: ${user.mobile_phone}` : ''}
 ${user.email ? `Email: ${user.email}` : ''}
 
 Geschäftsführer: Jörg Herbst
-Sitz der Gesellschaft: Lünen, Amtsgericht Dortmund HRB 28526
+Sitz der Gesellschaft: Hannover, Amtsgericht Hannover HRB 221930
 </font></code></pre>
     `;
 }
