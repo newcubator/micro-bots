@@ -3,18 +3,18 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
-    "test": "jest",
-    "deploy:prod": "NODE_OPTIONS='-r dotenv/config' serverless deploy",
     "deploy:dev": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless deploy --stage dev",
+    "deploy:prod": "NODE_OPTIONS='-r dotenv/config' serverless deploy",
     "invoke:birthday": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f birthday --env dev",
+    "invoke:completionNotice": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f completionNotice",
+    "invoke:coronaHannover": "DOTENV_CONFIG_PATH=.env.local SLS_DEBUG=*  NODE_OPTIONS='-r dotenv/config' serverless invoke local -f coronaHannover",
+    "invoke:eventApplication": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f eventApplication",
+    "invoke:lockProject": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f lockProject",
+    "invoke:mailSignature": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f mailSignature",
+    "invoke:unlockProject": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f unlockProject",
     "invoke:workload": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f workload",
     "invoke:workloadAll": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f workloadAll",
-    "invoke:completionNotice": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f completionNotice",
-    "invoke:lockProject": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f lockProject",
-    "invoke:unlockProject": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f unlockProject",
-    "invoke:mailSignature": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f mailSignature",
-    "invoke:eventApplication": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f eventApplication",
-    "invoke:coronaHannover": "DOTENV_CONFIG_PATH=.env.local SLS_DEBUG=*  NODE_OPTIONS='-r dotenv/config' serverless invoke local -f coronaHannover"
+    "test": "jest"
   },
   "dependencies": {
     "@slack/web-api": "6.2.4",

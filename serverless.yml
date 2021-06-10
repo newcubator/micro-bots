@@ -36,74 +36,74 @@ custom:
 
 functions:
   birthday:
-    handler: src/functions/birthday.handler
-    memorySize: 128
-    timeout: 10
     environment:
       LEAD_TIME: 21
     events:
       - schedule:
-          rate: cron(5 4 * * ? *)
           enabled: true
+          rate: cron(5 4 * * ? *)
+    handler: src/functions/birthday.handler
+    memorySize: 128
+    timeout: 10
   completionNotice:
+    events:
+      - http:
+          method: post
+          path: completionNotice
     handler: src/functions/completion-notice.handler
     memorySize: 128
     timeout: 15
-    events:
-      - http:
-          path: completionNotice
-          method: post
-  lockProject:
-    handler: src/functions/lock-project.handler
-    memorySize: 128
-    events:
-      - http:
-          path: lockProject
-          method: post
-  mailSignature:
-    handler: src/functions/mail-signature.handler
-    memorySize: 128
-    events:
-      - http:
-          path: mailSignature
-          method: post
-  eventApplication:
-    handler: src/functions/event-application.handler
-    memorySize: 128
-    events:
-      - http:
-          path: eventApplication
-          method: post
-          cors: true
-  unlockProject:
-    handler: src/functions/unlock-project.handler
-    memorySize: 128
-    events:
-      - http:
-          path: unlockProject
-          method: post
-  workload:
-    handler: src/functions/workload.handler
-    memorySize: 128
-    events:
-      - http:
-          path: workload
-          method: post
-  workloadAll:
-    handler: src/functions/workload-all.handler
-    memorySize: 128
-    events:
-      - http:
-          path: workloadAll
-          method: post
-      - schedule:
-          rate: cron(0 16 ? * FRI *)
-          enabled: true
   coronaHannover:
+    events:
+      - schedule:
+          enabled: true
+          rate: cron(* 8-20 * * *) # At every minute past hour 8 and 20.
     handler: src/functions/corona-hannover.handler
     memorySize: 128
     timeout: 10
+  eventApplication:
     events:
+      - http:
+          cors: true
+          method: post
+          path: eventApplication
+    handler: src/functions/event-application.handler
+    memorySize: 128
+  lockProject:
+    events:
+      - http:
+          method: post
+          path: lockProject
+    handler: src/functions/lock-project.handler
+    memorySize: 128
+  mailSignature:
+    events:
+      - http:
+          method: post
+          path: mailSignature
+    handler: src/functions/mail-signature.handler
+    memorySize: 128
+  unlockProject:
+    events:
+      - http:
+          method: post
+          path: unlockProject
+    handler: src/functions/unlock-project.handler
+    memorySize: 128
+  workload:
+    events:
+      - http:
+          method: post
+          path: workload
+    handler: src/functions/workload.handler
+    memorySize: 128
+  workloadAll:
+    events:
+      - http:
+          method: post
+          path: workloadAll
       - schedule:
-          rate: cron(* 8-20 * * *) # At every minute past hour 8 and 20.
           enabled: true
+          rate: cron(0 16 ? * FRI *)
+    handler: src/functions/workload-all.handler
+    memorySize: 128
