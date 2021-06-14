@@ -3,6 +3,8 @@
   "version": "1.0.0",
   "description": "",
   "scripts": {
+    "lint": "npm run lint:prettier",
+    "lint:prettier": "prettier --check .",
     "deploy:dev": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless deploy --stage dev",
     "deploy:prod": "NODE_OPTIONS='-r dotenv/config' serverless deploy",
     "invoke:birthday": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f birthday --env dev",
@@ -30,6 +32,7 @@
     "@types/node": "16.3.2",
     "dotenv": "10.0.0",
     "jest": "27.0.6",
+    "prettier": "2.3.1",
     "serverless": "2.52.0",
     "serverless-webpack": "5.5.1",
     "ts-jest": "27.0.3",

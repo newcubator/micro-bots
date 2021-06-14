@@ -9,6 +9,7 @@ default:
 test:
   stage: test
   script:
+    - npm run lint
     - npm run test
 
 deploy:
