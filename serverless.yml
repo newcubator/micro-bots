@@ -28,11 +28,14 @@ provider:
     WORKLOAD_PERCENTAGE: ${env:WORKLOAD_PERCENTAGE}
 
 plugins:
-  - serverless-webpack
+  - serverless-esbuild
 
 custom:
-  webpack:
-    includeModules: true
+  esbuild:
+    bundle: true
+    sourcemap: true
+    loader:
+      .png: dataurl
 
 functions:
   birthday:
