@@ -1,15 +1,10 @@
-image: node:latest
-
-cache:
-  paths:
-    - node_modules/
-
-stages:
-  - test
-  - deploy
-
-before_script:
-  - npm ci
+default:
+  image: node:latest
+  cache:
+    paths:
+      - node_modules/
+  before_script:
+    - npm ci
 
 test:
   stage: test
