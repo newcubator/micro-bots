@@ -19,7 +19,7 @@
   "dependencies": {
     "@slack/web-api": "6.2.4",
     "@types/aws-lambda": "8.10.77",
-    "aws-sdk": "2.927.0",
+    "aws-sdk": "2.928.0",
     "axios": "0.21.1",
     "dayjs": "1.10.5",
     "googleapis": "76.0.0",
