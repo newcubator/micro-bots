@@ -16,6 +16,11 @@ $ severless invoke local
 
 Basic invoke commands are available in the package.json.
 
+If you want to invoke your function with a payload create a json file in the payloads directory and invoke your function with
+```
+$ severless invoke local -p ./payloads/<your-json-file.json>
+```
+
 For more information on that
 visit [serverless invoke local](https://www.serverless.com/framework/docs/providers/aws/cli-reference/invoke-local/)
 
@@ -46,3 +51,7 @@ Can only be triggered by a slack command and returns information about your own 
 
 Is automatically triggered at the end of the week posting an overview over the workload to a slack channel. The environment variable "
 EMPLOYEE_NAMES" holds a list of all employees which work for customer projects.
+
+### Mail Signature Bot
+
+This bot can be invoked from Slack returning you a personalized mail signature that you can use in your mails.
