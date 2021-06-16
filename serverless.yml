@@ -57,7 +57,7 @@ functions:
     events:
       - schedule:
           enabled: true
-          rate: cron(*/2 6-18 * ? * *) # At every even  minute past hour 8 and 20.
+          rate: cron(0/2 6-18 ? * * *) # At every even  minute past hour 8 and 20.
     handler: src/functions/corona-hannover.handler
     memorySize: 128
     timeout: 10
