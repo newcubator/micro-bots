@@ -26,6 +26,9 @@ interface ResultItem {
     distance: number;
     outOfStock: boolean;
     publicAppointment: boolean;
+    "firstAppoinmentDateSorterOnline": 1623967200000,
+    "freeSlotSizeOnline"?: number,
+    "maxFreeSlotPerDay"?: number,
 }
 
 const AWS_SECRET_NAME = process.env.AWS_SECRET_NAME;
@@ -106,10 +109,10 @@ const check = async (result: ResponseType, sheetsAccessor: SheetsAccessor) => {
         result.resultList.forEach(async (value) => {
             console.log(
                 `Out of Stock: ${value.outOfStock
-                }\t Public Appointment: ${value.publicAppointment}`,
+                }\t freeSlotSizeOnline: ${value.freeSlotSizeOnline}`,
             );
             if (!value.outOfStock && !isNotified) {
-                await slackChatPostMessage('Es sind wieder Termine in Hannover vorhanden. 🎉\nSchau gleich nach bevor die wieder weg sind:\nhttps://www.impfportal-niedersachsen.de/portal/#/appointment/public',
+                await slackChatPostMessage(`Es gibt in Hannover wieder Freie Termine.\n Aktuell sind es ${value.freeSlotSizeOnline} freie Termine 🎉\nSchau gleich nach bevor die wieder weg sind:\nhttps://www.impfportal-niedersachsen.de/portal/#/appointment/public`,
                     hannoverChannelID,
                     'Impf Notification',
                     ':microbe:');
