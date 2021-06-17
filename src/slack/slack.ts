@@ -64,6 +64,7 @@ export const slackChatPostMessage = async (text: string, channelId: string, user
         channel: channelId,
         username: username,
         icon_emoji: icon_emoji,
+        link_names: true
     }) as SlackChatPostMessageResponse;
 };
 
