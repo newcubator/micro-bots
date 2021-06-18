@@ -1,7 +1,18 @@
 import { APIGatewayEvent } from 'aws-lambda';
-import { Lambda } from 'aws-sdk';
+import { jsPDF } from 'jspdf';
 import { decode } from 'querystring';
-import { completionNoticeErrorNoOrderNumber } from '../completion-notice/createSlackResponses';
+import { createCompletionNoticePdf } from '../completion-notice/createCompletionNoticePdf';
+import {
+    completionNoticeErrorNoContactFound,
+    completionNoticeErrorNoDealFound,
+    completionNoticeErrorNoOrderNumber,
+    completionNoticeErrorNoProjectFound,
+    completionNoticeSuccess
+} from '../completion-notice/createSlackResponses';
+import { getContactById } from '../moco/contacts';
+import { getDealById } from '../moco/deals';
+import { getProjects } from '../moco/projects';
+import { slackUploadFileToChannel } from '../slack/slack';
 import { SlackCommandType } from '../slack/types/slack-types';
 
 export const handler = async (event: APIGatewayEvent) => {
@@ -12,17 +23,37 @@ export const handler = async (event: APIGatewayEvent) => {
         return completionNoticeErrorNoOrderNumber();
     }
 
-    const lambda = new Lambda();
+    // execute heavy lifting asynchronously and respond to slack immediately
+    setTimeout(() => sendCompletionNoticeToChannel(orderNumber), 0);
 
-    lambda.invoke({
-        FunctionName: 'completionNoticePdfCreation',
-        InvocationType: 'Event',
-        LogType: 'Tail',
-        Payload: JSON.stringify({ orderNumber }),
-    });
-
-    return {
-        statusCode: 200,
-        body: `Danke für deine Anfrage, ich werde nach einem Projekt mit der Bestellnummer: "${orderNumber}" suchen.`,
-    };
+    return completionNoticeSuccess(orderNumber);
 };
+
+async function sendCompletionNoticeToChannel(orderNumber: string) {
+    const project = (await getProjects()).find(project => project.custom_properties.Bestellnummer === orderNumber);
+    console.log(`project: ${JSON.stringify(project)}`);
+    if (project === undefined) {
+        return completionNoticeErrorNoProjectFound();
+    }
+
+    const deal = (await getDealById(project.deal.id));
+    console.log(`deal: ${JSON.stringify(deal)}`);
+
+    if (deal === undefined) {
+        return completionNoticeErrorNoDealFound();
+    }
+
+    const contact = (await getContactById(deal.person.id));
+
+    if (contact === undefined) {
+        return completionNoticeErrorNoContactFound();
+    }
+
+    const pdf: jsPDF = createCompletionNoticePdf(project, contact);
+
+    await slackUploadFileToChannel(process.env.COMPLETION_NOTICE_CHANNEL,
+        Buffer.from(pdf.output('arraybuffer')),
+        `${orderNumber}.pdf`,
+        `Hier ist die Fertigstellungsanzeige für das Projekt: ${project.name}, Bestellnummer: ${orderNumber}`
+    );
+}
