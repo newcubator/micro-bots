@@ -4,7 +4,7 @@ const responseTemplate = (text) => ({
 });
 
 export const completionNoticeSuccess = (orderNumber) => {
-    return responseTemplate(`Danke für deine Anfrage, ich werde nach einem Projekt mit der Bestellnummer: "${orderNumber}" suchen.`);
+    return { statusCode: 200, body: `Danke für deine Anfrage, ich werde nach einem Projekt mit der Bestellnummer: "${orderNumber}" suchen.` };
 
 };
 export const completionNoticeErrorNoOrderNumber = () => {

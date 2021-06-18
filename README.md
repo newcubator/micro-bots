@@ -18,7 +18,7 @@ Basic invoke commands are available in the package.json.
 
 If you want to invoke your function with a payload create a json file in the payloads directory and invoke your function with
 ```
-$ severless invoke local -p ./payloads/<your-json-file.json>
+$ severless invoke local -f <your-function> -p ./payloads/<your-json-file.json>
 ```
 
 For more information on that
