@@ -15,7 +15,7 @@ export const handler = async (event: APIGatewayEvent) => {
     const lambda = new Lambda();
 
     lambda.invoke({
-        FunctionName: 'completionNoticePdfCreation',
+        FunctionName: 'micro-bots-production-completionNoticePdfCreation',
         InvocationType: 'Event',
         LogType: 'Tail',
         Payload: JSON.stringify({ orderNumber }),
