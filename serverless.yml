@@ -14,10 +14,6 @@ provider:
           Action:
             - 'ses:SendEmail'
           Resource: 'arn:aws:ses:eu-central-1:931595285256:identity/newcubator.com'
-        - Effect: 'Allow'
-          Action:
-            - 'lambda:InvokeFunction'
-          Resource: '*'
   environment:
     AWS_ACCESS_KEY_ID_GOOGLE: ${env:AWS_ACCESS_KEY_ID_GOOGLE}
     AWS_SECRET_ACCESS_KEY_GOOGLE: ${env:AWS_SECRET_ACCESS_KEY_GOOGLE}
@@ -55,14 +51,6 @@ functions:
           method: post
           path: completionNotice
     handler: src/functions/completion-notice.handler
-    memorySize: 128
-    timeout: 15
-  completionNoticePdfCreation:
-    events:
-      - http:
-          method: post
-          path: completionNoticePdfCreation
-    handler: src/functions/completion-notice-pdf-creation.handler
     memorySize: 128
     timeout: 15
   coronaHannover:
