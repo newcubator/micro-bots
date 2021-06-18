@@ -3,10 +3,6 @@ const responseTemplate = (text) => ({
     text
 });
 
-export const completionNoticeSuccess = (orderNumber) => {
-    return responseTemplate(`Danke für deine Anfrage, ich werde nach einem Projekt mit der Bestellnummer: "${orderNumber}" suchen.`);
-
-};
 export const completionNoticeErrorNoOrderNumber = () => {
     return responseTemplate('Du hast keine Bestellnummer angegeben oder deine Bestellnummer war ungültig. Versuche das Kommando noch einmal mit einer korrekten Bestellnummer aufzurufen.');
 };
