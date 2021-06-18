@@ -12,14 +12,24 @@ export const handler = async (event: APIGatewayEvent) => {
         return completionNoticeErrorNoOrderNumber();
     }
 
-    const lambda = new Lambda();
+    const lambda = new Lambda({
+        region: 'eu-central-1',
+    });
 
     lambda.invoke({
         FunctionName: 'micro-bots-production-completionNoticePdfCreation',
         InvocationType: 'Event',
         LogType: 'Tail',
         Payload: JSON.stringify({ orderNumber }),
-    });
+    },
+        (error, data) => {
+            if (error) {
+                console.error(error);
+            }
+            if (data) {
+                console.log(data);
+            }
+        });
 
     return {
         statusCode: 200,
