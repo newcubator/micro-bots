@@ -112,7 +112,7 @@ const check = async (result: ResponseType, sheetsAccessor: SheetsAccessor) => {
                 }\t freeSlotSizeOnline: ${value.freeSlotSizeOnline}`,
             );
             if (!value.outOfStock && !isNotified) {
-                await slackChatPostMessage(`<@UQ5D019V0> <@U0113K56PPS> <@U0114BBH1U4> \nEs gibt in Hannover wieder Freie Termine.\nAktuell sind es ${value.freeSlotSizeOnline} freie Termine 🎉\nSchau gleich nach bevor die wieder weg sind:\nhttps://www.impfportal-niedersachsen.de/portal/#/appointment/public`,
+                await slackChatPostMessage(`@channel \nEs gibt in Hannover wieder Freie Termine.\nAktuell sind es ${value.freeSlotSizeOnline} freie Termine 🎉\nSchau gleich nach bevor die wieder weg sind:\nhttps://www.impfportal-niedersachsen.de/portal/#/appointment/public`,
                     hannoverChannelID,
                     'Impf Notification',
                     ':microbe:');
