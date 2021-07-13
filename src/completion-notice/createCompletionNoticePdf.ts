@@ -27,8 +27,8 @@ export const createCompletionNoticePdf = (project: MocoProject, contact: MocoCon
         .text('Wir bedanken uns für die gute Zusammenarbeit und verbleiben', 68, 360)
         .text('mit freundlichen Grüßen\n\nnewcubator GmbH\n\n\nJörg Herbst', 68, 400)
         .setFontSize(8)
-        .text('newcubator GmbH\nBödekerstraße 22\n\n30161 Hannover\n+49 (0) 231 477 983 0\ninfo@newcubator.com\nhttps://newcubator.com', 68, 745)
-        .text('Geschäftsführer: Jörg Herbst\nSitz der Gesellschaft: Lünen\nAmtsgericht Dortmund HRB 28526\n\n\nSeite 1 von 1', 525, 745, {
+        .text('newcubator GmbH\nBödekerstraße 22\n\n30161 Hannover\n+49 (0) 511-95731300\ninfo@newcubator.com\nhttps://newcubator.com', 68, 745)
+        .text('Geschäftsführer: Jörg Herbst\nSitz der Gesellschaft: Hannover\nAmtsgericht Hannover HRB 221930', 525, 745, {
             align: 'right'
         });
     return doc;
