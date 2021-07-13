@@ -11,13 +11,13 @@ import { SlackCommandType } from '../slack/types/slack-types';
 export const handler = async (event: APIGatewayEvent) => {
     const command: SlackCommandType = decode(event.body) as SlackCommandType;
     const projectId = command.text?.trim();
-    console.time('Lock Project start');
+    console.time('Lock Project');
     if (projectId === undefined) {
         return lockUnlockProjectErrorNoProjectId();
     }
 
     const project = await getProject(projectId);
-    console.time('Lock Project get project');
+    console.timeLog('Lock Project');
 
     if (!project) {
         return lockUnlockProjectErrorNoProjectFound();
@@ -27,7 +27,7 @@ export const handler = async (event: APIGatewayEvent) => {
         ...contract,
         active: false
     })));
-    console.timeEnd('Lock Project end');
+    console.timeEnd('Lock Project');
 
     return lockProjectSuccess(projectId);
 };
