@@ -23,7 +23,11 @@ export async function getProject(id: string) {
         headers: {
             'Authorization': 'Token token=' + MOCO_TOKEN
         }
-    }).then(response => response.data);
+    }).then(response => {
+        console.log(response.data);
+        return response.data;
+        ;
+    });
 }
 
 export async function putProjectContract(projectId: string, contract: MocoContract) {
@@ -31,6 +35,9 @@ export async function putProjectContract(projectId: string, contract: MocoContra
         headers: {
             'Authorization': 'Token token=' + MOCO_TOKEN
         },
-    }).then(response => response.data);
+    }).then(response => {
+        console.log(response.data);
+        return response.data;
+    });
 }
 
