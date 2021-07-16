@@ -18,6 +18,7 @@ export const handler = async (event: APIGatewayEvent) => {
 
     const project = await getProject(projectId);
     console.timeLog('Lock Project');
+    console.log('Project', project)
 
     if (!project) {
         return lockUnlockProjectErrorNoProjectFound();
