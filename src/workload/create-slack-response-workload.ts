@@ -1,197 +1,214 @@
-import dayjs, { Dayjs } from 'dayjs';
-import { WorkloadType } from '../moco/types/workload-types';
+import dayjs, { Dayjs } from "dayjs";
+import { WorkloadType } from "../moco/types/workload-types";
 
-const employeeNames = process.env.EMPLOYEE_NAMES ?? '';
+const employeeNames = process.env.EMPLOYEE_NAMES ?? "";
 const workloadPercentage: number = parseInt(process.env.WORKLOAD_PERCENTAGE) ?? 95;
 
-const project_employees = employeeNames
-    .split(',')
-    .map((name: string) => name.trim());
+const project_employees = employeeNames.split(",").map((name: string) => name.trim());
 
 export const createSlackResponseWorkload = (workload: WorkloadType, duration: number, from: string, to: string) => {
+  let response;
+  if (workload.percentage < workloadPercentage) {
+    response =
+      `*Du hast insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung von ` +
+      `${workload.percentage.toFixed(
+        0
+      )}%*\nHast du deine Zeiten alle richtig erfasst? Guck mal hier nach <https://newcubator.mocoapp.com/activities|Moco>`;
+  } else {
+    response = `Du hast in den letzten ${duration} Tagen insgesamt ${
+      workload.workedHours
+    } Stunden erfasst und damit eine Auslastung von ${workload.percentage.toFixed(0)}%.`;
+  }
 
-    let response;
-    if (workload.percentage < workloadPercentage) {
-        response = `*Du hast insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung von ` +
-            `${workload.percentage.toFixed(0)}%*\nHast du deine Zeiten alle richtig erfasst? Guck mal hier nach <https://newcubator.mocoapp.com/activities|Moco>`;
-    } else {
-        response = `Du hast in den letzten ${duration} Tagen insgesamt ${workload.workedHours} Stunden erfasst und damit eine Auslastung von ${workload.percentage.toFixed(0)}%.`;
-    }
-
-    return {
-        'blocks': [
-            {
-                'type': 'section',
-                'text': {
-                    'type': 'mrkdwn',
-                    'text': response
-                }
-            },
-            {
-                'type': 'context',
-                'elements': [
-                    {
-                        'type': 'plain_text',
-                        'text': `Zeitraum: ${dayjs(from).format('DD.MM.YYYY')} bis ${dayjs(to).format('DD.MM.YYYY')}`,
-                        'emoji': true
-                    },
-                    {
-                        'type': 'plain_text',
-                        'text': `Urlaubstage/Feiertage: ${workload.holidays}`,
-                        'emoji': true
-                    }
-                ]
-            }
-        ]
-    };
+  return {
+    blocks: [
+      {
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text: response,
+        },
+      },
+      {
+        type: "context",
+        elements: [
+          {
+            type: "plain_text",
+            text: `Zeitraum: ${dayjs(from).format("DD.MM.YYYY")} bis ${dayjs(to).format("DD.MM.YYYY")}`,
+            emoji: true,
+          },
+          {
+            type: "plain_text",
+            text: `Urlaubstage/Feiertage: ${workload.holidays}`,
+            emoji: true,
+          },
+        ],
+      },
+    ],
+  };
 };
 
 export const createSlackResponseWorkloadAll = (workload: WorkloadType[], from: Dayjs, to: Dayjs) => {
-    let responseEmployeeArray = [];
+  let responseEmployeeArray = [];
 
-    workload.sort((firstElement, secondElement) => firstElement.user.lastname.localeCompare(secondElement.user.lastname));
+  workload.sort((firstElement, secondElement) => firstElement.user.lastname.localeCompare(secondElement.user.lastname));
 
-    const projectEmployeesArray = workload.filter((workloadElement) => project_employees.find(s => s === workloadElement?.user.firstname));
-    const nonProjectEmployeesArray = workload.filter((workloadElement) => !project_employees.find(s => s === workloadElement?.user.firstname));
+  const projectEmployeesArray = workload.filter((workloadElement) =>
+    project_employees.find((s) => s === workloadElement?.user.firstname)
+  );
+  const nonProjectEmployeesArray = workload.filter(
+    (workloadElement) => !project_employees.find((s) => s === workloadElement?.user.firstname)
+  );
 
-    let projectEmployeesArrayBlocks = createFields(projectEmployeesArray);
-    let nonProjectEmployeesArrayBlocks = createFields(nonProjectEmployeesArray);
+  let projectEmployeesArrayBlocks = createFields(projectEmployeesArray);
+  let nonProjectEmployeesArrayBlocks = createFields(nonProjectEmployeesArray);
 
-    responseEmployeeArray.push(
+  responseEmployeeArray.push(
+    {
+      type: "section",
+      fields: [
         {
-            type: 'section',
-            fields: [{
-                type: 'mrkdwn',
-                text: '*Projektmitarbeiter*'
-            }]
+          type: "mrkdwn",
+          text: "*Projektmitarbeiter*",
         },
+      ],
+    },
+    {
+      type: "divider",
+    },
+    ...projectEmployeesArrayBlocks.content,
+    {
+      type: "section",
+      fields: [
         {
-            'type': 'divider'
+          type: "mrkdwn",
+          text: "*nicht-Projektmitarbeiter*",
         },
-        ...projectEmployeesArrayBlocks.content,
-        {
-            type: 'section',
-            fields: [{
-                type: 'mrkdwn',
-                text: '*nicht-Projektmitarbeiter*'
-            }]
-        },
-        {
-            'type': 'divider'
-        },
-        ...nonProjectEmployeesArrayBlocks.content);
+      ],
+    },
+    {
+      type: "divider",
+    },
+    ...nonProjectEmployeesArrayBlocks.content
+  );
 
-    return {
-        'blocks': [
-            {
-                'type': 'header',
-                'text': {
-                    'type': 'plain_text',
-                    'text': 'Wöchentliche Auslastung'
-                }
-            },
-            {
-                'type': 'section',
-                'text': {
-                    'type': 'mrkdwn',
-                    'text': `Hallo <!channel>, hier ist eure Auslastung vom ${from.format('DD.MM.YYYY')} bis zum ${to.format('DD.MM.YYYY')}. ` +
-                        `Schaut doch bitte mal ob ihr alle eure Stunden richtig erfasst habt.`
-                }
-            },
-            ...projectEmployeesArrayBlocks.headline,
-            {
-                'type': 'section',
-                'fields': [
-                    {
-                        'type': 'mrkdwn',
-                        'text': '*Mitarbeitende*',
-                    },
-                    {
-                        'type': 'mrkdwn',
-                        'text': `*Auslastung >= ${workloadPercentage}%*`,
-                    }
-                ]
-            },
-            {
-                'type': 'divider'
-            },
-            ...responseEmployeeArray,
-            {
-                'type': 'context',
-                'elements': [
-                    {
-                        'type': 'mrkdwn',
-                        'text': 'Für weitere Informationen zu eurer Auslastung könnt ihr den Befehl /workload nutzen.'
-                    }
-                ]
-            }
-        ]
-    };
+  return {
+    blocks: [
+      {
+        type: "header",
+        text: {
+          type: "plain_text",
+          text: "Wöchentliche Auslastung",
+        },
+      },
+      {
+        type: "section",
+        text: {
+          type: "mrkdwn",
+          text:
+            `Hallo <!channel>, hier ist eure Auslastung vom ${from.format("DD.MM.YYYY")} bis zum ${to.format(
+              "DD.MM.YYYY"
+            )}. ` + `Schaut doch bitte mal ob ihr alle eure Stunden richtig erfasst habt.`,
+        },
+      },
+      ...projectEmployeesArrayBlocks.headline,
+      {
+        type: "section",
+        fields: [
+          {
+            type: "mrkdwn",
+            text: "*Mitarbeitende*",
+          },
+          {
+            type: "mrkdwn",
+            text: `*Auslastung >= ${workloadPercentage}%*`,
+          },
+        ],
+      },
+      {
+        type: "divider",
+      },
+      ...responseEmployeeArray,
+      {
+        type: "context",
+        elements: [
+          {
+            type: "mrkdwn",
+            text: "Für weitere Informationen zu eurer Auslastung könnt ihr den Befehl /workload nutzen.",
+          },
+        ],
+      },
+    ],
+  };
 };
 
 function createFields(employeeArray: WorkloadType[]) {
-    let headline;
-    let responseEmployeeArray = [];
-    let employeesOverThreshold = 0;
-    let employeesWorked = employeeArray.length;
+  let headline;
+  let responseEmployeeArray = [];
+  let employeesOverThreshold = 0;
+  let employeesWorked = employeeArray.length;
 
-    for (const workloadElement of employeeArray) {
-        if (!workloadElement) {
-            continue;
-        }
-
-        let percentageText: string;
-        if (workloadElement.percentage != null && workloadElement.percentage >= workloadPercentage) {
-            employeesOverThreshold++;
-            percentageText = ':+1:';
-            continue;
-        } else if (workloadElement.percentage != null) {
-            percentageText = ':-1:';
-        } else if (workloadElement.holidays >= 5) {
-            employeesWorked--;
-            percentageText = ':palm_tree:';
-        } else {
-            employeesWorked--;
-            percentageText = ':man-shrugging:';
-        }
-        responseEmployeeArray.push({
-            type: 'section',
-            fields: [
-                {
-                    type: 'plain_text',
-                    text: `${workloadElement.user.firstname} ${workloadElement.user.lastname}`
-                },
-                {
-                    type: 'plain_text',
-                    text: `${percentageText}`,
-                    emoji: true
-                }
-            ]
-        }, {
-            type: 'divider'
-        });
+  for (const workloadElement of employeeArray) {
+    if (!workloadElement) {
+      continue;
     }
 
-    headline = [{
-        type: 'section',
+    let percentageText: string;
+    if (workloadElement.percentage != null && workloadElement.percentage >= workloadPercentage) {
+      employeesOverThreshold++;
+      percentageText = ":+1:";
+      continue;
+    } else if (workloadElement.percentage != null) {
+      percentageText = ":-1:";
+    } else if (workloadElement.holidays >= 5) {
+      employeesWorked--;
+      percentageText = ":palm_tree:";
+    } else {
+      employeesWorked--;
+      percentageText = ":man-shrugging:";
+    }
+    responseEmployeeArray.push(
+      {
+        type: "section",
         fields: [
-            {
-                type: 'plain_text',
-                text: `Projektmitarbeiter über ${workloadPercentage}%: ${employeesOverThreshold}/${employeesWorked}`
-            }
-        ]
-    },
-        {
-            'type': 'section',
-            'text': {
-                'type': 'plain_text',
-                'text': ' '
-            }
-        }
-    ];
+          {
+            type: "plain_text",
+            text: `${workloadElement.user.firstname} ${workloadElement.user.lastname}`,
+          },
+          {
+            type: "plain_text",
+            text: `${percentageText}`,
+            emoji: true,
+          },
+        ],
+      },
+      {
+        type: "divider",
+      }
+    );
+  }
 
-    return {
-        headline: headline,
-        content: responseEmployeeArray
-    };
+  headline = [
+    {
+      type: "section",
+      fields: [
+        {
+          type: "plain_text",
+          text: `Projektmitarbeiter über ${workloadPercentage}%: ${employeesOverThreshold}/${employeesWorked}`,
+        },
+      ],
+    },
+    {
+      type: "section",
+      text: {
+        type: "plain_text",
+        text: " ",
+      },
+    },
+  ];
+
+  return {
+    headline: headline,
+    content: responseEmployeeArray,
+  };
 }

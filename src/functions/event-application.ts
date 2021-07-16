@@ -1,65 +1,61 @@
-import { APIGatewayEvent } from 'aws-lambda';
-import SES, { SendEmailRequest } from 'aws-sdk/clients/ses';
-import { decode, ParsedUrlQuery } from 'querystring';
+import { APIGatewayEvent } from "aws-lambda";
+import SES, { SendEmailRequest } from "aws-sdk/clients/ses";
+import { decode, ParsedUrlQuery } from "querystring";
 
 export interface EventApplication extends ParsedUrlQuery {
-    event: string;
-    firstname: string;
-    lastname: string;
-    email: string;
+  event: string;
+  firstname: string;
+  lastname: string;
+  email: string;
 }
 
-const SOURCE = 'events@newcubator.com';
-const DESTINATIONS = ['events@newcubator.com'];
+const SOURCE = "events@newcubator.com";
+const DESTINATIONS = ["events@newcubator.com"];
 
-const ALLOWED_ORIGINS = [
-    'https://newcubator.com',
-    'http://localhost:8000',
-    'http://localhost:6006',
-];
+const ALLOWED_ORIGINS = ["https://newcubator.com", "http://localhost:8000", "http://localhost:6006"];
 
 export const handler = async (event: APIGatewayEvent) => {
-    const command: EventApplication = decode(event.body) as EventApplication;
-    console.log(`Event Application for ${command.event}: ${command.firstname} ${command.lastname} (${command.email})`);
+  const command: EventApplication = decode(event.body) as EventApplication;
+  console.log(`Event Application for ${command.event}: ${command.firstname} ${command.lastname} (${command.email})`);
 
-    const requestOrigin = event.headers?.['origin'];
-    if (!requestOrigin || !ALLOWED_ORIGINS.includes(requestOrigin)) {
-        return {
-            statusCode: 405,
-        };
-    }
+  const requestOrigin = event.headers?.["origin"];
+  if (!requestOrigin || !ALLOWED_ORIGINS.includes(requestOrigin)) {
+    return {
+      statusCode: 405,
+    };
+  }
 
-    const client = new SES({ region: 'eu-central-1' });
-    const emailRequest: SendEmailRequest = {
-        Message: {
-            Subject: {
-                Data: `Anmeldung für ${command.event}`,
-                Charset: 'utf8',
-            },
-            Body: {
-                Text: {
-                    Data: `
+  const client = new SES({ region: "eu-central-1" });
+  const emailRequest: SendEmailRequest = {
+    Message: {
+      Subject: {
+        Data: `Anmeldung für ${command.event}`,
+        Charset: "utf8",
+      },
+      Body: {
+        Text: {
+          Data: `
 Event: ${command.event}
 Vorname: ${command.firstname}
 Nachname: ${command.lastname}
 Email: ${command.email}
-                    `
-                },
-            }
+                    `,
         },
-        Source: SOURCE,
-        Destination: {
-            ToAddresses: DESTINATIONS,
-        },
-    };
-    await client.sendEmail(emailRequest).promise();
+      },
+    },
+    Source: SOURCE,
+    Destination: {
+      ToAddresses: DESTINATIONS,
+    },
+  };
+  await client.sendEmail(emailRequest).promise();
 
-    console.log('Send event application mail');
+  console.log("Send event application mail");
 
-    return {
-        statusCode: 201,
-        headers: {
-            'Access-Control-Allow-Origin': requestOrigin,
-        },
-    };
+  return {
+    statusCode: 201,
+    headers: {
+      "Access-Control-Allow-Origin": requestOrigin,
+    },
+  };
 };
