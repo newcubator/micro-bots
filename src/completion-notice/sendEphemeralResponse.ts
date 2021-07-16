@@ -1,6 +1,5 @@
-import axios from 'axios';
+import axios from "axios";
 
 export const sendEphemeralResponse = (url: string, data: object) => {
-    axios.post(url, data);
+  axios.post(url, data);
 };
-

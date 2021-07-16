@@ -5,11 +5,13 @@ This project hosts a collection of our internal bots which are little useful too
 ## Getting started
 
 To run the bots locally you first have to install all dependencies
+
 ```
 $ npm install
 ```
 
 To then invoke the function locally you have to use
+
 ```
 $ severless invoke local
 ```
@@ -17,6 +19,7 @@ $ severless invoke local
 Basic invoke commands are available in the package.json.
 
 If you want to invoke your function with a payload create a json file in the payloads directory and invoke your function with
+
 ```
 $ severless invoke local -p ./payloads/<your-json-file.json>
 ```
@@ -27,6 +30,7 @@ visit [serverless invoke local](https://www.serverless.com/framework/docs/provid
 ## Deployment
 
 For deployment use
+
 ```
 $ serverless deploy
 ```
@@ -45,6 +49,7 @@ The workload bots are used to gain an overview over the employees tracked times 
 certain percentage of their time for a customer.
 
 #### workload
+
 Can only be triggered by a slack command and returns information about your own workload.
 
 #### workload-all
