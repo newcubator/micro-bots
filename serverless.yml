@@ -86,6 +86,13 @@ functions:
           path: mailSignature
     handler: src/functions/mail-signature.handler
     memorySize: 128
+  privateChannel:
+    events:
+      - http:
+          method: post
+          path: privateChannel
+    handler: src/functions/private-channel.handler
+    memorySize: 128
   unlockProject:
     events:
       - http:
