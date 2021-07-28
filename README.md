@@ -37,6 +37,8 @@ $ serverless deploy
 
 ## Bots
 
+- [Private Channel](./docs/private-channel.md)
+
 ### Birthday Bot
 
 This bot opens a slack channel a few weeks before an employee's birthday with all other newcubator employees. This way we do not forget

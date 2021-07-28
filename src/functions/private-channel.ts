@@ -14,6 +14,13 @@ export const handler = async (event: APIGatewayEvent) => {
   const excludedUsers = command.text.split("@").map((str) => str.trim());
   const channelName = excludedUsers.shift().trim();
 
+  if (channelName.includes(".")) {
+    return {
+      response_type: "ephemeral",
+      text: "Der Channel-Name darf keine Punkte beinhalten.",
+    };
+  }
+
   console.info(`Trying to create channel ${channelName} without users ${excludedUsers}`);
 
   const channelsResponse = await slackConversationsList();
