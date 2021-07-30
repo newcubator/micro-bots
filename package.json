@@ -21,8 +21,8 @@
   },
   "dependencies": {
     "@slack/web-api": "6.3.0",
-    "@types/aws-lambda": "8.10.79",
-    "aws-sdk": "2.950.0",
+    "@types/aws-lambda": "8.10.81",
+    "aws-sdk": "2.957.0",
     "axios": "0.21.1",
     "dayjs": "1.10.6",
     "googleapis": "82.0.0",
@@ -30,14 +30,14 @@
   },
   "devDependencies": {
     "@types/jest": "26.0.24",
-    "@types/node": "16.4.0",
+    "@types/node": "16.4.7",
     "dotenv": "10.0.0",
-    "esbuild": "0.12.15",
+    "esbuild": "0.12.17",
     "jest": "27.0.6",
     "prettier": "2.3.2",
-    "serverless": "2.52.0",
+    "serverless": "2.52.1",
     "serverless-esbuild": "1.16.1",
-    "ts-jest": "27.0.3",
+    "ts-jest": "27.0.4",
     "typescript": "4.3.5"
   }
 }
