@@ -25,7 +25,6 @@
     "aws-sdk": "2.969.0",
     "axios": "0.21.1",
     "dayjs": "1.10.6",
-    "googleapis": "84.0.0",
     "jspdf": "2.3.1"
   },
   "devDependencies": {
