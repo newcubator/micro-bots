@@ -21,13 +21,13 @@
   },
   "dependencies": {
     "@slack/web-api": "6.3.0",
-    "@types/aws-lambda": "8.10.82",
     "aws-sdk": "2.969.0",
     "axios": "0.21.1",
     "dayjs": "1.10.6",
     "jspdf": "2.3.1"
   },
   "devDependencies": {
+    "@types/aws-lambda": "8.10.82",
     "@types/jest": "27.0.1",
     "@types/node": "16.6.1",
     "dotenv": "10.0.0",
