@@ -25,7 +25,7 @@ let schedules: MocoSchedule[];
 
 export const handler = async (event: APIGatewayEvent | ScheduledEvent) => {
   let from = dayjs();
-  let to = dayjs().subtract(1, "day");
+  let to = dayjs();
   let slack: WebClient = null;
   if (eventIsApiGatewayEvent(event)) {
     let command: SlackCommandType = decode(event.body) as SlackCommandType;
