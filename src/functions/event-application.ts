@@ -1,5 +1,5 @@
 import { APIGatewayEvent } from "aws-lambda";
-import SES, { SendEmailRequest } from "aws-sdk/clients/ses";
+import SES, { SendEmailRequest } from "@aws-sdk/client-ses";
 import { decode, ParsedUrlQuery } from "querystring";
 
 export interface EventApplication extends ParsedUrlQuery {
