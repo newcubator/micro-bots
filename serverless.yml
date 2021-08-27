@@ -78,6 +78,13 @@ functions:
           path: mailSignature
     handler: src/functions/mail-signature.handler
     memorySize: 128
+  mailSignatureGenerator:
+    events:
+      - http:
+          method: get
+          path: mailSignatureGenerator
+    handler: src/functions/mail-signature-generator.handler
+    memorySize: 128
   privateChannel:
     events:
       - http:

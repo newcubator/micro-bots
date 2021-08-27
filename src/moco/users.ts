@@ -17,7 +17,9 @@ export function getUsers(): Promise<Array<MocoUserType>> {
     .then((response: AxiosResponse<Array<MocoUserType>>) => response.data);
 }
 
-export function findUserBySlackCommand(command: SlackCommandType): (users: Array<MocoUserType>) => MocoUserType {
+export function findUserBySlackCommand(
+  command: Pick<SlackCommandType, "user_id" | "user_name">
+): (users: Array<MocoUserType>) => MocoUserType {
   return (users: Array<MocoUserType>): MocoUserType => {
     let user: MocoUserType;
     user = findUserBySlackId(users, command.user_id);
