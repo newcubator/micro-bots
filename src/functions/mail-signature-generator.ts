@@ -21,7 +21,7 @@ export const handler = async (event: APIGatewayEvent) => {
     statusCode: 200,
     body: createMailSignature(user),
     headers: {
-      "Content-Type": "text/html",
+      "Content-Type": "text/plain;charset=utf-8",
     },
   };
 };
