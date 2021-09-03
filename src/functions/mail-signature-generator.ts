@@ -17,7 +17,7 @@ export const handler = async (event: APIGatewayEvent) => {
 
   console.log("Creating mail signature for", user.firstname, user.lastname);
 
-  const signature = createMailSignature(user);
+  const signature = replaceUmlautsWithHtml(createMailSignature(user));
 
   return {
     statusCode: 200,
@@ -35,6 +35,17 @@ function copy() {
     },
   };
 };
+
+function replaceUmlautsWithHtml(str: string): string {
+  return str
+    .replace(/ä/g, "&auml;")
+    .replace(/ö/g, "&ouml;")
+    .replace(/ü/g, "&uuml;")
+    .replace(/ß/g, "&szlig;")
+    .replace(/Ä/g, "&Auml;")
+    .replace(/Ö/g, "&Ouml;")
+    .replace(/Ü/g, "&Uuml;");
+}
 
 function replaceUmlauts(str: string): string {
   return str
@@ -55,7 +66,7 @@ function createMailSignature(user: MocoUserType): string {
     user.firstname.toLowerCase()
   )}-${replaceUmlauts(
     user.lastname.toLowerCase()
-  )}.jpg" role="presentation" width="130" style="max-width: 128px; display: block;"> </td></tr><tr> <td height="30"></td></tr><tr> <td style="text-align: center;"> <img src="https://newcubator.com/images/mailsignature/nc-logo.png" role="presentation" width="130" style="max-width: 130px; display: block;"> </td></tr><tr> <td height="30"></td></tr><tr> <td style="text-align: center;"> <table cellpadding="0" cellspacing="0" style="vertical-align: -webkit-baseline-middle; font-size: medium; font-family: Arial; display: inline-block;"> <tbody> <tr style="text-align: center;"> <td> <a href="https://www.facebook.com/newcubator" color="#50505E" style="display: inline-block; padding: 0px; background-color: rgb(80, 80, 94);"> <img src="https://newcubator.com/images/mailsignature/facebook-icon-2x.png" alt="facebook" color="#50505E" height="24" style="background-color: rgb(80, 80, 94); max-width: 135px; display: block;"> </a> </td><td width="5"> <div></div></td><td> <a href="https://twitter.com/newcubator?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor" color="#50505E" style="display: inline-block; padding: 0px; background-color: rgb(80, 80, 94);"> <img src="https://newcubator.com/images/mailsignature/twitter-icon-2x.png" alt="twitter" color="#50505E" height="24" style="background-color: rgb(80, 80, 94); max-width: 135px; display: block;"> </a> </td><td width="5"> <div></div></td><td> <a href="https://www.linkedin.com/in/j%C3%B6rg-herbst-185101ba/" color="#50505E" style="display: inline-block; padding: 0px; background-color: rgb(80, 80, 94);"> <img src="https://newcubator.com/images/mailsignature/linkedin-icon-2x.png" alt="linkedin" color="#50505E" height="24" style="background-color: rgb(80, 80, 94); max-width: 135px; display: block;"> </a> </td><td width="5"> <div></div></td><td> <a href="https://www.instagram.com/newcubator/?hl=de" color="#50505E" style="display: inline-block; padding: 0px; background-color: rgb(80, 80, 94);"> <img src="https://newcubator.com/images/mailsignature/instagram-icon-2x.png" alt="instagram" color="#50505E" height="24" style="background-color: rgb(80, 80, 94); max-width: 135px; display: block;"> </a> </td><td width="5"> <div></div></td></tr></tbody> </table> </td></tr></tbody> </table> </td><td width="46"> <div></div></td><td style="padding: 0px; vertical-align: middle;"> <h3 color="#50505e" style="margin: 0px; font-size: 18px; color: rgb(80, 80, 94);"> <span>${
+  )}.jpg" role="presentation" width="130" style="max-width: 128px; display: block;"> </td></tr><tr> <td height="30"></td></tr><tr> <td style="text-align: center;"> <img src="https://newcubator.com/images/mailsignature/nc-logo.png" role="presentation" width="130" style="max-width: 130px; display: block;"> </td></tr><tr> <td height="30"></td></tr><tr> <td style="text-align: center;"> <table cellpadding="0" cellspacing="0" style="vertical-align: -webkit-baseline-middle; font-size: medium; font-family: Arial; display: inline-block;"> <tbody> <tr style="text-align: center;"> <td> <a href="https://twitter.com/newcubator?ref_src=twsrc%5Egoogle%7Ctwcamp%5Eserp%7Ctwgr%5Eauthor" color="#50505E" style="display: inline-block; padding: 0px; background-color: rgb(80, 80, 94);"> <img src="https://newcubator.com/images/mailsignature/twitter-icon-2x.png" alt="twitter" color="#50505E" height="24" style="background-color: rgb(80, 80, 94); max-width: 135px; display: block;"> </a> </td><td width="5"> <div></div></td><td> <a href="https://www.linkedin.com/in/j%C3%B6rg-herbst-185101ba/" color="#50505E" style="display: inline-block; padding: 0px; background-color: rgb(80, 80, 94);"> <img src="https://newcubator.com/images/mailsignature/linkedin-icon-2x.png" alt="linkedin" color="#50505E" height="24" style="background-color: rgb(80, 80, 94); max-width: 135px; display: block;"> </a> </td><td width="5"> <div></div></td><td> <a href="https://www.instagram.com/newcubator/?hl=de" color="#50505E" style="display: inline-block; padding: 0px; background-color: rgb(80, 80, 94);"> <img src="https://newcubator.com/images/mailsignature/instagram-icon-2x.png" alt="instagram" color="#50505E" height="24" style="background-color: rgb(80, 80, 94); max-width: 135px; display: block;"> </a> </td><td width="5"> <div></div></td></tr></tbody> </table> </td></tr></tbody> </table> </td><td width="46"> <div></div></td><td style="padding: 0px; vertical-align: middle;"> <h3 color="#50505e" style="margin: 0px; font-size: 18px; color: rgb(80, 80, 94);"> <span>${
     user.firstname
   }</span> <span>${
     user.lastname
