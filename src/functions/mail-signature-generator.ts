@@ -27,7 +27,7 @@ export const handler = async (event: APIGatewayEvent) => {
 </body>
 <script type="text/javascript">
 function copy() {
-    navigator.clipboard.writeText(document.getElementById('signature').innerHTML);
+    navigator.clipboard.writeText(replaceUmlautsWithHtml(document.getElementById('signature').innerHTML));
 }
 </script>`,
     headers: {
