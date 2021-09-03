@@ -26,6 +26,17 @@ export const handler = async (event: APIGatewayEvent) => {
     <button onclick="copy()">Copy to Clipboard</button>
 </body>
 <script type="text/javascript">
+function replaceUmlautsWithHtml(str) {
+  return str
+    .replace(/ä/g, "&auml;")
+    .replace(/ö/g, "&ouml;")
+    .replace(/ü/g, "&uuml;")
+    .replace(/ß/g, "&szlig;")
+    .replace(/Ä/g, "&Auml;")
+    .replace(/Ö/g, "&Ouml;")
+    .replace(/Ü/g, "&Uuml;");
+}
+
 function copy() {
     navigator.clipboard.writeText(replaceUmlautsWithHtml(document.getElementById('signature').innerHTML));
 }
