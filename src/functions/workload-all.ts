@@ -46,7 +46,7 @@ export const handler = async (event: APIGatewayEvent | ScheduledEvent) => {
       from = from.subtract(DEFAULT_FROM, "day");
     }
   } else {
-    from = from.subtract(4, "day");
+    from = from.startOf("week");
     slack = new WebClient(process.env.SLACK_TOKEN);
   }
 
