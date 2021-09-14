@@ -8,8 +8,6 @@ export const handler = async (event: APIGatewayEvent) => {
 
   const user: MocoUserType = await getUsers().then(findUserBySlackCommand({ user_id, user_name }));
 
-  console.log("USER", user);
-
   if (!user) {
     return {
       statusCode: 200,
