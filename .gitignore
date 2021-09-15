@@ -3,3 +3,4 @@
 .serverless
 .vscode
 node_modules
+.esbuild
