@@ -69,7 +69,8 @@ export const slackChatPostMessage = async (text: string, channelId: string, user
 };
 
 export const slackUploadFileToChannel = async (channels, file, filename, initial_comment) => {
-  return await exports.slack.files.upload({
+  console.log("Slack client", slack);
+  return await slack.files.upload({
     channels,
     file,
     filename,

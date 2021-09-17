@@ -29,7 +29,7 @@ export const handler = async (event: APIGatewayEvent) => {
   console.time("Fetching Projects");
   const project = (await getProjects()).find((project) => project.custom_properties.Bestellnummer === orderNumber);
   console.timeEnd("Fetching Projects");
-  console.log(`project: ${project}`);
+  console.log(`project: ${JSON.stringify(project, null, 2)}`);
   if (project === undefined) {
     return completionNoticeErrorNoProjectFound();
   }
@@ -37,7 +37,7 @@ export const handler = async (event: APIGatewayEvent) => {
   console.time("Fetching Deal");
   const deal = await getDealById(project.deal.id);
   console.timeEnd("Fetching Deal");
-  console.log(`deal: ${deal}`);
+  console.log(`deal: ${JSON.stringify(deal, null, 2)}`);
 
   if (deal === undefined) {
     return completionNoticeErrorNoDealFound();
