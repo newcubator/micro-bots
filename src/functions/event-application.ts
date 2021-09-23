@@ -6,6 +6,8 @@ export interface EventApplication extends ParsedUrlQuery {
   event: string;
   firstname: string;
   lastname: string;
+  company: string;
+  attendanceType: string;
   email: string;
 }
 
@@ -16,7 +18,9 @@ const ALLOWED_ORIGINS = ["https://newcubator.com", "http://localhost:8000", "htt
 
 export const handler = async (event: APIGatewayEvent) => {
   const command: EventApplication = decode(event.body) as EventApplication;
-  console.log(`Event Application for ${command.event}: ${command.firstname} ${command.lastname} (${command.email})`);
+  console.log(
+    `Event Application for ${command.event}: ${command.firstname} ${command.lastname} ${command.company} ${command.attendanceType} (${command.email})`
+  );
 
   const requestOrigin = event.headers?.["origin"];
   if (!requestOrigin || !ALLOWED_ORIGINS.includes(requestOrigin)) {
@@ -38,6 +42,8 @@ export const handler = async (event: APIGatewayEvent) => {
 Event: ${command.event}
 Vorname: ${command.firstname}
 Nachname: ${command.lastname}
+Unternehmen: ${command.company}
+Art der Teilnahme: ${command.attendanceType}
 Email: ${command.email}
                     `,
         },
