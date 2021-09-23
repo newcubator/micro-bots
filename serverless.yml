@@ -56,6 +56,14 @@ functions:
     handler: src/functions/completion-notice.handler
     memorySize: 128
     timeout: 15
+  contactRequest:
+    events:
+      - http:
+          cors: true
+          method: post
+          path: contactRequest
+    handler: src/functions/contact-request.handler
+    memorySize: 128
   eventApplication:
     events:
       - http:
