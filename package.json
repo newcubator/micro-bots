@@ -15,6 +15,7 @@
     "invoke:mailSignature": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f mailSignature",
     "invoke:mailSignatureGenerator": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f mailSignatureGenerator",
     "invoke:privateChannel": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f privateChannel",
+    "invoke:twitterBot": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f twitterBot",
     "invoke:unlockProject": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f unlockProject",
     "invoke:vacationHandover": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f vacationHandover",
     "invoke:workload": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f workload",
@@ -31,6 +32,8 @@
     "dayjs-business-time": "1.0.4",
     "jspdf": "2.4.0",
     "serverless-sentry-lib": "2.4.0"
+    "rss-parser": "3.12.0",
+    "twitter-api-v2": "1.5.2"
   },
   "devDependencies": {
     "@types/aws-lambda": "8.10.85",
