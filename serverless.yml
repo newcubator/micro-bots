@@ -14,16 +14,22 @@ provider:
           Action:
             - "ses:SendEmail"
           Resource: "arn:aws:ses:eu-central-1:931595285256:identity/newcubator.com"
+        - Effect: "Allow"
+          Action:
+            - "events:PutEvents"
+          Resource:
+            - "*"
+  # https://www.serverless.com/framework/docs/deprecations/#LAMBDA_HASHING_VERSION_V2
+  lambdaHashingVersion: 20201221
+  eventBridge:
+    # https://www.serverless.com/framework/docs/deprecations/#AWS_EVENT_BRIDGE_CUSTOM_RESOURCE
+    useCloudFormation: true
   environment:
-    AWS_ACCESS_KEY_ID_GOOGLE: ${env:AWS_ACCESS_KEY_ID_GOOGLE}
-    AWS_SECRET_ACCESS_KEY_GOOGLE: ${env:AWS_SECRET_ACCESS_KEY_GOOGLE}
-    AWS_SECRET_NAME: ${env:AWS_SECRET_NAME}
     COMPLETION_NOTICE_CHANNEL: ${env:COMPLETION_NOTICE_CHANNEL}
     EMPLOYEE_NAMES: ${env:EMPLOYEE_NAMES}
     HANNOVER_CHANNEL_ID: ${env:HANNOVER_CHANNEL_ID}
     MOCO_TOKEN: ${env:MOCO_TOKEN}
     SLACK_TOKEN: ${env:SLACK_TOKEN}
-    SPREADSHEET_ID: ${env:SPREADSHEET_ID}
     WORKLOAD_CHANNEL: ${env:WORKLOAD_CHANNEL}
     WORKLOAD_PERCENTAGE: ${env:WORKLOAD_PERCENTAGE}
 
@@ -34,8 +40,6 @@ custom:
   esbuild:
     bundle: true
     sourcemap: true
-    loader:
-      .png: dataurl
 
 functions:
   birthday:
@@ -48,22 +52,38 @@ functions:
     handler: src/functions/birthday.handler
     memorySize: 128
     timeout: 10
-  completionNotice:
+
+  ##
+  ## Completion Notice
+  ##
+
+  completionNoticeCommand:
+    handler: src/completion-notice/command-handler.commandHandler
+    runtime: nodejs14.x
+    timeout: 3
     events:
       - http:
           method: post
-          path: completionNotice
-    handler: src/functions/completion-notice.handler
-    memorySize: 128
-    timeout: 15
-  contactRequest:
+          path: completion-notice-command
+  completionNoticeInteraction:
+    handler: src/completion-notice/interaction-handler.interactionHandler
+    runtime: nodejs14.x
+    timeout: 3
+    environment:
+      EVENT_BUS: ${self:service}-${sls:stage}
     events:
       - http:
-          cors: true
           method: post
-          path: contactRequest
-    handler: src/functions/contact-request.handler
-    memorySize: 128
+          path: completion-notice-interaction
+  completionNoticeEvent:
+    handler: src/completion-notice/event-handler.eventHandler
+    events:
+      - eventBridge:
+          eventBus: ${self:service}-${sls:stage}
+          pattern:
+            detail-type:
+              - "CompletionNoticeRequestedEvent"
+
   eventApplication:
     events:
       - http:

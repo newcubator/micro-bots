@@ -1,4 +1,4 @@
-import { WebAPICallResult } from "@slack/web-api";
+import { PlainTextElement, WebAPICallResult } from "@slack/web-api";
 import { ParsedUrlQuery } from "querystring";
 
 export interface SlackCommandType extends ParsedUrlQuery {
@@ -12,6 +12,27 @@ export interface SlackCommandType extends ParsedUrlQuery {
   command: string;
   text: string;
   response_url: string;
+}
+
+export interface BlockAction {
+  type: "block_actions";
+  container: Container;
+  response_url: string;
+  actions: ElementAction[];
+}
+
+interface Container {
+  type: string;
+  message_ts: string;
+  channel_id: string;
+  is_ephemeral: boolean;
+}
+
+interface ElementAction {
+  selected_option: {
+    text: PlainTextElement;
+    value: string;
+  };
 }
 
 export interface Channel {
