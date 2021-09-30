@@ -73,10 +73,10 @@ async function sendTweet(message: string) {
 function tweetedRssGuids(feed: RssFeedItem[], tweets: TweetV2[]) {
   //filter alle
   const tweetedRss = feed
-    .filter((f) => tweets.some((t) => t.text.includes(f.title)))
+    .filter((feedItems) => tweets.some((tweet) => tweet.text.includes(feedItems.title)))
     //neues Array von allen guids
-    .map((f) => f.guid);
-  return feed.filter((f) => !tweetedRss.includes(f.guid));
+    .map((feedItems) => feedItems.guid);
+  return feed.filter((feedItems) => !tweetedRss.includes(feedItems.guid));
 }
 
 interface RssFeedItem {
