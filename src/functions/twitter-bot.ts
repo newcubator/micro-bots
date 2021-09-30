@@ -15,8 +15,7 @@ export const handler = async () => {
     const feed = await fetchRssFeed();
     const tweets = await fetchLatestTweets();
     const betterTweets: TweetV2[] = tweets.map((tweet) => ({ ...tweet, text: unEscape(tweet.text) }));
-    const tweetedRss = tweetedRssGuids(feed, betterTweets);
-    const notYetTweeted = feed.filter((feedItem) => !tweetedRss.includes(feedItem.guid));
+    const notYetTweeted = tweetedRssGuids(feed, betterTweets);
     createNewTweet(notYetTweeted[0]);
   } catch (ex) {
     console.error(ex);
@@ -73,12 +72,11 @@ async function sendTweet(message: string) {
 
 function tweetedRssGuids(feed: RssFeedItem[], tweets: TweetV2[]) {
   //filter alle
-  return (
-    feed
-      .filter((f) => tweets.some((t) => t.text.includes(f.title)))
-      //neues Array von allen guids
-      .map((f) => f.guid)
-  );
+  const tweetedRss = feed
+    .filter((f) => tweets.some((t) => t.text.includes(f.title)))
+    //neues Array von allen guids
+    .map((f) => f.guid);
+  return feed.filter((f) => !tweetedRss.includes(f.guid));
 }
 
 interface RssFeedItem {
