@@ -55,8 +55,11 @@ function unEscape(htmlStr: string) {
 
 //Tweet formatieren
 function createNewTweet(feedItem: RssFeedItem) {
-  const statusUpdate = `Neues aus dem Entwicklerteam: ${feedItem.title} ${feedItem.link} #devsquad`;
-  sendTweet(statusUpdate);
+  let statusUpdate = `Neues aus dem Entwicklerteam: ${feedItem.title} ${feedItem.link} #devsquad`;
+    if (statusUpdate.length > 280){
+        statusUpdate = `Neues aus dem Entwicklerteam: ${feedItem.title.substr(0, feedItem.title.length-(statusUpdate.length-277))}... ${feedItem.link} #devsquad`
+        sendTweet(statusUpdate);
+    } else sendTweet(statusUpdate);
 }
 
 //Tweets absenden:
