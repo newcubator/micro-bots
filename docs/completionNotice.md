@@ -1,8 +1,6 @@
 # Project Completion Notice
 
-A Slack Slash Command that maks it easy to generate project completion notices
-that are then send to the client. For this the asks you for a Moco Project and posts a completion
-notice as PDF in a given Slack channel.
+A Slack Slash Command that maks it easy to generate project completion notices that are then send to the client. After calling command all ather the needed information for the PDF can be entered interactivly. The final pdf is then posted in the slack thread of the command.
 
 ## Technical Flow
 

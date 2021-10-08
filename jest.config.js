@@ -1,3 +1,5 @@
+process.env.TZ = "Europe/Berlin";
+
 process.env.AWS_LAMBDA_FUNCTION_NAME = "lambda-function-name";
 process.env.AWS_REGION = "eu-newcubator-1";
 process.env.EVENT_BUS = "test-event-bus";
