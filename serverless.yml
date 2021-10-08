@@ -84,6 +84,14 @@ functions:
             detail-type:
               - "CompletionNoticeRequestedEvent"
 
+  contactRequest:
+    events:
+      - http:
+          cors: true
+          method: post
+          path: contactRequest
+    handler: src/functions/contact-request.handler
+    memorySize: 128
   eventApplication:
     events:
       - http:
