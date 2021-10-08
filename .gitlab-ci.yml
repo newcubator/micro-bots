@@ -11,6 +11,10 @@ test:
   script:
     - npm run lint
     - npm run test
+  coverage: '/^Statements\s*:\s*([^%]+)/'
+  artifacts:
+    reports:
+      cobertura: coverage/cobertura-coverage.xml
 
 deploy:
   stage: deploy
