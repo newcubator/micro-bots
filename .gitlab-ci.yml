@@ -1,6 +1,10 @@
 default:
   image: node:fermium-alpine
   cache:
+    key:
+      files:
+        - .nvmrc
+        - package-lock.json
     paths:
       - node_modules/
   before_script:
