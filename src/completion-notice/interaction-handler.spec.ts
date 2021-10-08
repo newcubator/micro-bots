@@ -4,7 +4,6 @@ import { interactionHandler } from "./interaction-handler";
 import axios from "axios";
 
 jest.mock("../clients/event-bridge");
-jest.mock("axios");
 const eventBridgeSendMock = eventBridgeSend as jest.Mock;
 const axiosPostMock = axios.post as jest.Mock;
 
@@ -33,7 +32,6 @@ const samplePayload = {
 
 it("handle interaction", async () => {
   eventBridgeSendMock.mockResolvedValueOnce({});
-  axiosPostMock.mockResolvedValueOnce({});
 
   const result = await interactionHandler(samplePayload);
 
@@ -44,12 +42,10 @@ it("handle interaction", async () => {
     channelId: "C02BBA8DWVD",
     messageTs: "1633540187.000600",
   });
-
   expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
     replace_original: "true",
     text: "Vielen Dank für deine Anfrage, ich werde mich sofort darum kümmern. ⏳",
   });
-
   expect(result.statusCode).toBe(200);
 });
 

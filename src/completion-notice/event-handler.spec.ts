@@ -18,6 +18,7 @@ const getProjectMock = getProject as jest.Mock;
 const getDealByIdMock = getDealById as jest.Mock;
 const getContactByIdMock = getContactById as jest.Mock;
 const renderCompletionNoticePdfMock = renderCompletionNoticePdf as jest.Mock;
+const conversationsJoinMock = slackClient.conversations.join as jest.Mock;
 const fileUploadMock = slackClient.files.upload as jest.Mock;
 const axiosPostMock = axios.post as jest.Mock;
 
@@ -44,8 +45,6 @@ test("handle event", async () => {
     gender: "M",
   });
   renderCompletionNoticePdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
-  fileUploadMock.mockResolvedValue({ ok: true });
-  axiosPostMock.mockResolvedValue({});
 
   await eventHandler({
     detail: {
@@ -73,7 +72,15 @@ test("handle event", async () => {
     },
     date: dayjs(),
   });
-  expect(fileUploadMock).toHaveBeenCalled();
+  expect(conversationsJoinMock).toHaveBeenCalledWith({ channel: "C02BBA8DWVD" });
+  expect(fileUploadMock).toHaveBeenCalledWith({
+    file: expect.anything(),
+    filename: "Fertigstellungsanzeige_B01.pdf",
+    initial_comment: "",
+    channels: "C02BBA8DWVD",
+    thread_ts: "1633540187.000600",
+    broadcast: "true",
+  });
   expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
     replace_original: "true",
     text: expect.stringContaining("Mars Cultivation Season Manager"),
