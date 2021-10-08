@@ -1,13 +1,8 @@
 import { getProjects } from "../moco/projects";
 import { commandHandler } from "./command-handler";
 
+jest.mock("../moco/projects");
 const getProjectsMock = getProjects as jest.Mock;
-
-jest.mock("../moco/projects", () => {
-  return {
-    getProjects: jest.fn(),
-  };
-});
 
 test("command handler", async () => {
   getProjectsMock.mockResolvedValueOnce([

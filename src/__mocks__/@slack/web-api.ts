@@ -2,8 +2,11 @@ export const WebClient = jest.fn();
 
 WebClient.mockImplementation(() => {
   return {
+    conversations: {
+      join: jest.fn().mockResolvedValue({ ok: true }),
+    },
     files: {
-      upload: jest.fn(),
+      upload: jest.fn().mockResolvedValue({ ok: true }),
     },
   };
 });

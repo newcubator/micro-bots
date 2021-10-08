@@ -34,12 +34,13 @@ export const commandHandler = async (event: APIGatewayEvent) => {
     statusCode: 200,
     body: JSON.stringify({
       response_type: "in_channel",
+      text: "Fertigstellungsanzeige angefragt",
       blocks: [
         {
           type: "section",
           text: {
             type: "mrkdwn",
-            text: "Ich erstelle dir gerne einen Stundenzettel. Wähle dazu bitte links das gewünschte Projekt aus und ich mache mich sofort an die Arbeit.",
+            text: "Ich erstelle dir gerne einen Fertigstellungsanzeige. Wähle dazu bitte links das gewünschte Projekt aus und ich mache mich sofort an die Arbeit.",
           },
           accessory: {
             type: "static_select",

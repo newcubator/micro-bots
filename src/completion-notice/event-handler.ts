@@ -29,12 +29,20 @@ export const eventHandler = async (event: EventBridgeEvent<string, CompletionNot
     date: dayjs(),
   });
 
+  // Only user/bots that have joined a channel can post fiels
+  console.log(
+    await slackClient.conversations.join({
+      channel: event.detail.channelId,
+    })
+  );
+
   let upload = await slackClient.files.upload({
     file: pdf,
     filename: `Fertigstellungsanzeige_${project.custom_properties.Bestellnummer}.pdf`,
     initial_comment: ``,
     channels: event.detail.channelId,
     thread_ts: event.detail.messageTs,
+    broadcast: "true",
   });
   console.log(upload);
   if (!upload.ok) throw new Error(upload.error);
@@ -42,7 +50,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, CompletionNot
   console.log(
     await axios.post(event.detail.responseUrl, {
       replace_original: "true",
-      text: `Die Fertigstellungsanzeige für '${project.name}' ist fertig und liegt für dich in diesem Slack Thread bereit 🙌`,
+      text: `Die Fertigstellungsanzeige für '${project.name}' ist fertig! 🙌`,
     })
   );
 };
