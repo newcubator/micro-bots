@@ -1,6 +1,7 @@
-import { jsPDF } from "jspdf";
-import { Dayjs } from "dayjs";
+import "dayjs/locale/de";
 import { base64 } from "./logo";
+import { Dayjs } from "dayjs";
+import { jsPDF } from "jspdf";
 
 export function renderCompletionNoticePdf(content: PdfContent) {
   const { project, recipient, date } = content;
