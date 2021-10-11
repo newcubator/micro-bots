@@ -25,6 +25,8 @@ provider:
     # https://www.serverless.com/framework/docs/deprecations/#AWS_EVENT_BRIDGE_CUSTOM_RESOURCE
     useCloudFormation: true
   environment:
+    GITLAB_BOOK_PROJECT_ID: ${env:GITLAB_BOOK_PROJECT_ID}
+    GITLAB_TOKEN: ${env:GITLAB_TOKEN}
     MOCO_TOKEN: ${env:MOCO_TOKEN}
     SLACK_TOKEN: ${env:SLACK_TOKEN}
     WORKLOAD_CHANNEL: ${env:WORKLOAD_CHANNEL}
@@ -129,6 +131,13 @@ functions:
           method: post
           path: unlockProject
     handler: src/functions/unlock-project.handler
+    memorySize: 128
+  vacationHandover:
+    events:
+      - schedule:
+          enabled: true
+          rate: cron(5 4 * * ? *)
+    handler: src/functions/vacation-handover.handler
     memorySize: 128
   workload:
     events:
