@@ -4,7 +4,7 @@ frameworkVersion: "2"
 
 provider:
   name: aws
-  runtime: nodejs12.x
+  runtime: nodejs14.x
   region: eu-central-1
   stage: production
   iam:
@@ -58,7 +58,6 @@ functions:
 
   completionNoticeCommand:
     handler: src/completion-notice/command-handler.commandHandler
-    runtime: nodejs14.x
     timeout: 3
     events:
       - http:
@@ -66,7 +65,6 @@ functions:
           path: completion-notice-command
   completionNoticeInteraction:
     handler: src/completion-notice/interaction-handler.interactionHandler
-    runtime: nodejs14.x
     timeout: 3
     environment:
       EVENT_BUS: ${self:service}-${sls:stage}
