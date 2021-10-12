@@ -1,10 +1,7 @@
 import dayjs, { Dayjs } from "dayjs";
 import { WorkloadType } from "../moco/types/workload-types";
 
-const employeeNames = process.env.EMPLOYEE_NAMES ?? "";
 const workloadPercentage: number = parseInt(process.env.WORKLOAD_PERCENTAGE) ?? 95;
-
-const project_employees = employeeNames.split(",").map((name: string) => name.trim());
 
 export const createSlackResponseWorkload = (workload: WorkloadType, duration: number, from: string, to: string) => {
   let response;
@@ -49,48 +46,7 @@ export const createSlackResponseWorkload = (workload: WorkloadType, duration: nu
 };
 
 export const createSlackResponseWorkloadAll = (workload: WorkloadType[], from: Dayjs, to: Dayjs) => {
-  let responseEmployeeArray = [];
-
   workload.sort((firstElement, secondElement) => firstElement.user.lastname.localeCompare(secondElement.user.lastname));
-
-  const projectEmployeesArray = workload.filter((workloadElement) =>
-    project_employees.find((s) => s === workloadElement?.user.firstname)
-  );
-  const nonProjectEmployeesArray = workload.filter(
-    (workloadElement) => !project_employees.find((s) => s === workloadElement?.user.firstname)
-  );
-
-  let projectEmployeesArrayBlocks = createFields(projectEmployeesArray);
-  let nonProjectEmployeesArrayBlocks = createFields(nonProjectEmployeesArray);
-
-  responseEmployeeArray.push(
-    {
-      type: "section",
-      fields: [
-        {
-          type: "mrkdwn",
-          text: "*Projektmitarbeiter*",
-        },
-      ],
-    },
-    {
-      type: "divider",
-    },
-    ...projectEmployeesArrayBlocks.content,
-    {
-      type: "section",
-      fields: [
-        {
-          type: "mrkdwn",
-          text: "*nicht-Projektmitarbeiter*",
-        },
-      ],
-    },
-    {
-      type: "divider",
-    },
-    ...nonProjectEmployeesArrayBlocks.content
-  );
 
   return {
     blocks: [
@@ -111,7 +67,6 @@ export const createSlackResponseWorkloadAll = (workload: WorkloadType[], from: D
             )}. ` + `Schaut doch bitte mal ob ihr alle eure Stunden richtig erfasst habt.`,
         },
       },
-      ...projectEmployeesArrayBlocks.headline,
       {
         type: "section",
         fields: [
@@ -128,7 +83,7 @@ export const createSlackResponseWorkloadAll = (workload: WorkloadType[], from: D
       {
         type: "divider",
       },
-      ...responseEmployeeArray,
+      ...createFields(workload),
       {
         type: "context",
         elements: [
@@ -143,7 +98,6 @@ export const createSlackResponseWorkloadAll = (workload: WorkloadType[], from: D
 };
 
 function createFields(employeeArray: WorkloadType[]) {
-  let headline;
   let responseEmployeeArray = [];
   let employeesOverThreshold = 0;
   let employeesWorked = employeeArray.length;
@@ -188,27 +142,5 @@ function createFields(employeeArray: WorkloadType[]) {
     );
   }
 
-  headline = [
-    {
-      type: "section",
-      fields: [
-        {
-          type: "plain_text",
-          text: `Projektmitarbeiter über ${workloadPercentage}%: ${employeesOverThreshold}/${employeesWorked}`,
-        },
-      ],
-    },
-    {
-      type: "section",
-      text: {
-        type: "plain_text",
-        text: " ",
-      },
-    },
-  ];
-
-  return {
-    headline: headline,
-    content: responseEmployeeArray,
-  };
+  return responseEmployeeArray;
 }
