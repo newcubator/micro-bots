@@ -25,7 +25,6 @@ provider:
     # https://www.serverless.com/framework/docs/deprecations/#AWS_EVENT_BRIDGE_CUSTOM_RESOURCE
     useCloudFormation: true
   environment:
-    COMPLETION_NOTICE_CHANNEL: ${env:COMPLETION_NOTICE_CHANNEL}
     EMPLOYEE_NAMES: ${env:EMPLOYEE_NAMES}
     MOCO_TOKEN: ${env:MOCO_TOKEN}
     SLACK_TOKEN: ${env:SLACK_TOKEN}
