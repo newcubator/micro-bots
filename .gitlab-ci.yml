@@ -24,5 +24,6 @@ deploy:
   stage: deploy
   script:
     - npm run deploy:prod
+  resource_group: production
   only:
     - main
