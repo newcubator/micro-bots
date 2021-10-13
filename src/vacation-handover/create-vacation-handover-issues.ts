@@ -1,9 +1,11 @@
 import dayjs from "dayjs";
 import { GitlabIssue } from "../gitlab/gitlab";
 import { postIssue } from "../gitlab/issues";
+import { getIssueTemplateByName } from "../gitlab/templates";
 import { getUserEmployments } from "../moco/employments";
 import { getSchedules, getUserSchedules } from "../moco/schedules";
-import { vacationHandoverDescription } from "./description-template";
+
+const MIN_VACATION_DURATION = 3;
 
 export const createVacationHandoverIssues = async (vacationIssues: GitlabIssue[]) => {
   // get scheduled vacations in 7 days
@@ -61,15 +63,18 @@ export const createVacationHandoverIssues = async (vacationIssues: GitlabIssue[]
       }
       return {
         user: value.user,
-        // only use those sets which are 3 or more days and the day is in between
+        // only use those sets which are MIN_VACATION_DURATION or more days and the day is in between start and end date
         dates: arr
-          .filter((value) => -dayjs(value[0]).diff(value[1], "day") >= 2)
+          .filter((value) => -dayjs(value[0]).diff(value[1], "day") >= MIN_VACATION_DURATION - 1)
           .filter((value) => day.isBetween(dayjs(value[0]), dayjs(value[1])))
           .flat(),
       };
     })
     .filter((user) => user.dates.length > 0);
 
+  const vacationHandoverDescription = (
+    await getIssueTemplateByName(process.env.GITLAB_BOOK_PROJECT_ID, "Urlaubsübergabe")
+  ).data.content;
   // open new issues if no closed issues were found with the expected title
   await Promise.all(
     usersWithStartAndEndDates.map((user) => {
