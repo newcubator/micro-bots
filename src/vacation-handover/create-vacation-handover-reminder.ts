@@ -1,9 +1,10 @@
-import dayjs from "dayjs";
-import { GitlabIssue } from "../gitlab/gitlab";
-import { slackChatPostMessage } from "../slack/slack";
+import dayjs from 'dayjs';
+import { getToday } from '../_shared/getToday';
+import { GitlabIssue } from '../gitlab/gitlab';
+import { slackChatPostMessage } from '../slack/slack';
 
 export const createVacationHandoverReminder = async (vacationIssues: GitlabIssue[]) => {
-  const tomorrow = dayjs().add(1, "day");
+  const tomorrow = dayjs(getToday()).add(1, "day");
 
   const dueVacationIssues = vacationIssues.filter((issue) => issue.due_date == tomorrow.format("YYYY-MM-DD"));
 

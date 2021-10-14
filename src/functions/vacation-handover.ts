@@ -1,10 +1,6 @@
-import dayjs from "dayjs";
-import isBetween from "dayjs/plugin/isBetween";
-import { getIssues } from "../gitlab/issues";
-import { createVacationHandoverIssues } from "../vacation-handover/create-vacation-handover-issues";
-import { createVacationHandoverReminder } from "../vacation-handover/create-vacation-handover-reminder";
-
-dayjs.extend(isBetween);
+import { getIssues } from '../gitlab/issues';
+import { createVacationHandoverIssues } from '../vacation-handover/create-vacation-handover-issues';
+import { createVacationHandoverReminder } from '../vacation-handover/create-vacation-handover-reminder';
 
 export const handler = async () => {
   // get all issues with "Urlaubsübergabe" in the title

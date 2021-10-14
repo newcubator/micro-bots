@@ -1,79 +1,32 @@
-import dayjs from "dayjs";
-import { GitlabIssue } from "../gitlab/gitlab";
-import { postIssue } from "../gitlab/issues";
-import { getIssueTemplateByName } from "../gitlab/templates";
-import { getUserEmployments } from "../moco/employments";
-import { getSchedules, getUserSchedules } from "../moco/schedules";
+import dayjs from 'dayjs';
+import isBetween from 'dayjs/plugin/isBetween';
+import { getToday } from '../_shared/getToday';
+import { GitlabIssue } from '../gitlab/gitlab';
+import { postIssue } from '../gitlab/issues';
+import { getIssueTemplateByName } from '../gitlab/templates';
+import { getSchedules } from '../moco/schedules';
+import { filterUsersWithoutOpenVacationHandoverIssues } from './filter-users-without-open-vacation-handover-issues';
+import { getUsersWithStartAndEndDate } from './get-users-with-start-and-end-date';
+import { getUsersWithVacationDatesAndEmployment } from './get-users-with-vacation-dates-and-employment';
 
 const MIN_VACATION_DURATION = 3;
 
+dayjs.extend(isBetween);
+
 export const createVacationHandoverIssues = async (vacationIssues: GitlabIssue[]) => {
   // get scheduled vacations in 7 days
-  const day = dayjs().add(7, "day");
+  const day = dayjs(getToday()).add(7, "day");
   const schedules = await getSchedules(day.format("YYYY-MM-DD"), day.format("YYYY-MM-DD"), 4);
 
   // filter users to only have users with no open Urlaubsübergabe issues
-  let usersWithVacationsScheduled = schedules
-    .map((schedule) => schedule.user)
-    .filter(
-      (user) =>
-        !vacationIssues.some(
-          (issue) => issue.state === "opened" && issue.title.includes(`${user.firstname} ${user.lastname}`)
-        )
-    );
+  let usersWithVacationsScheduled = filterUsersWithoutOpenVacationHandoverIssues(schedules, vacationIssues);
   // get users with sorted vacation dates and current employment
-  let vacationUsers = await Promise.all(
-    usersWithVacationsScheduled.map(async (user) => {
-      return {
-        user,
-        vacationDates: (
-          await getUserSchedules(format(day.subtract(28, "day")), format(day.add(28, "day")), user.id, 4)
-        ).data
-          .map((e) => e.date)
-          .sort((a, b) => a.localeCompare(b)),
-        employment: (
-          await getUserEmployments(format(day.subtract(28, "day")), format(day.add(28, "day")), user.id)
-        ).data.find(
-          (employment) => day.isBetween(dayjs(employment.from), dayjs(employment.to)) || employment.to == undefined
-        ),
-      };
-    })
-  );
+  let vacationUsers = await getUsersWithVacationDatesAndEmployment(usersWithVacationsScheduled, day);
   // map vacation users to user with start and end dates of detected vacations
-  let usersWithStartAndEndDates = vacationUsers
-    .map((value) => {
-      let arr: string[][] = [],
-        startDate: string = value.vacationDates[0],
-        endDate: string;
-      for (let i = 0; i < value.vacationDates.length; i++) {
-        if (value.vacationDates[i + 1] != undefined) {
-          // max difference is calculated by getting non working days in a week + 1 to skip weekends
-          if (
-            -dayjs(value.vacationDates[i]).diff(value.vacationDates[i + 1], "day") >
-            7 - value.employment.weekly_target_hours / 8 + 1
-          ) {
-            endDate = value.vacationDates[i];
-            arr.push([startDate, endDate]);
-            startDate = value.vacationDates[i + 1];
-          }
-        } else {
-          endDate = value.vacationDates[i];
-          arr.push([startDate, endDate]);
-        }
-      }
-      return {
-        user: value.user,
-        // only use those sets which are MIN_VACATION_DURATION or more days and the day is in between start and end date
-        dates: arr
-          .filter((value) => -dayjs(value[0]).diff(value[1], "day") >= MIN_VACATION_DURATION - 1)
-          .filter((value) => day.isBetween(dayjs(value[0]), dayjs(value[1])))
-          .flat(),
-      };
-    })
-    .filter((user) => user.dates.length > 0);
-
+  let usersWithStartAndEndDates = getUsersWithStartAndEndDate(vacationUsers, day, MIN_VACATION_DURATION);
+  //
   const vacationHandoverDescription = (
-    await getIssueTemplateByName(process.env.GITLAB_BOOK_PROJECT_ID, "Urlaubsübergabe")
+    await getIssueTemplateByName(process.env.GITLAB_BOOK_PROJECT_ID, "Urlaubsuebergabe")
   ).data.content;
   // open new issues if no closed issues were found with the expected title
   await Promise.all(
@@ -103,4 +56,4 @@ export const createVacationHandoverIssues = async (vacationIssues: GitlabIssue[]
   );
 };
 
-const format = (day: dayjs.Dayjs) => day.format("YYYY-MM-DD");
+export const format = (day: dayjs.Dayjs) => day.format("YYYY-MM-DD");
