@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import isBetween from 'dayjs/plugin/isBetween';
-import { getToday } from '../_shared/getToday';
 import { GitlabIssue } from '../gitlab/gitlab';
 import { postIssue } from '../gitlab/issues';
 import { getIssueTemplateByName } from '../gitlab/templates';
@@ -15,7 +14,7 @@ dayjs.extend(isBetween);
 
 export const createVacationHandoverIssues = async (vacationIssues: GitlabIssue[]) => {
   // get scheduled vacations in 7 days
-  const day = dayjs(getToday()).add(7, "day");
+  const day = dayjs().add(7, "day");
   const schedules = await getSchedules(day.format("YYYY-MM-DD"), day.format("YYYY-MM-DD"), 4);
 
   // filter users to only have users with no open Urlaubsübergabe issues
@@ -24,9 +23,9 @@ export const createVacationHandoverIssues = async (vacationIssues: GitlabIssue[]
   let vacationUsers = await getUsersWithVacationDatesAndEmployment(usersWithVacationsScheduled, day);
   // map vacation users to user with start and end dates of detected vacations
   let usersWithStartAndEndDates = getUsersWithStartAndEndDate(vacationUsers, day, MIN_VACATION_DURATION);
-  //
+
   const vacationHandoverDescription = (
-    await getIssueTemplateByName(process.env.GITLAB_BOOK_PROJECT_ID, "Urlaubsuebergabe")
+    await getIssueTemplateByName(process.env.GITLAB_BOOK_PROJECT_ID, "Urlaubsübergabe")
   ).data.content;
   // open new issues if no closed issues were found with the expected title
   await Promise.all(

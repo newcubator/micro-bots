@@ -7,8 +7,5 @@ export const filterUsersWithoutOpenVacationHandoverIssues = (
 ): MocoUserType[] => {
   return schedules
     .map((schedule) => schedule.user)
-    .filter(
-      (user) =>
-        !issues.some((issue) => issue.state === "opened" && issue.title.includes(`${user.firstname} ${user.lastname}`))
-    );
+    .filter((user) => !issues.some((issue) => issue.state === "opened" && issue.title.includes(`${user.firstname}`)));
 };

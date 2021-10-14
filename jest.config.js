@@ -8,6 +8,7 @@ process.env.MOCO_TOKEN = "not a real moco token";
 process.env.GITLAB_TOKEN = "not a real gitlab token";
 process.env.GITLAB_PROJECT = 1111111;
 process.env.SLACK_CHANNEL = 1111111;
+process.env.GITLAB_BOOK_PROJECT_ID = 11111111;
 
 module.exports = {
   preset: "ts-jest",

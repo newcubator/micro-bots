@@ -9,7 +9,7 @@ WebClient.mockImplementation(() => {
       upload: jest.fn().mockResolvedValue({ ok: true }),
     },
     chat: {
-      postMessage: jest.fn().mockResolvedValue(Promise.resolve({})),
+      postMessage: jest.fn().mockResolvedValue({ ok: true }),
     },
   };
 });
