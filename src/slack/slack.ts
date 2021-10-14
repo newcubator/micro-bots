@@ -58,7 +58,7 @@ export const slackUsersList = async () => {
   return (await slack.users.list()) as SlackUsersListResponse;
 };
 
-export const slackChatPostMessage = async (text: string, channelId: string, username: string, icon_emoji: string) => {
+export const slackChatPostMessage = async (text: string, channelId: string, username: string, icon_emoji?: string) => {
   return (await slack.chat.postMessage({
     text: text,
     channel: channelId,
