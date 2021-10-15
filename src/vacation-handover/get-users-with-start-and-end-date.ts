@@ -1,5 +1,5 @@
-import dayjs from 'dayjs';
-import { MocoEmployment, MocoUserType } from '../moco/types/moco-types';
+import dayjs from "dayjs";
+import { MocoEmployment, MocoUserType } from "../moco/types/moco-types";
 
 interface UserWithDates {
   user: MocoUserType;

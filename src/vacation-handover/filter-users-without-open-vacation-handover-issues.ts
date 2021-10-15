@@ -1,5 +1,5 @@
-import { GitlabIssue } from '../gitlab/gitlab';
-import { MocoSchedule, MocoUserType } from '../moco/types/moco-types';
+import { GitlabIssue } from "../gitlab/gitlab";
+import { MocoSchedule, MocoUserType } from "../moco/types/moco-types";
 
 export const filterUsersWithoutOpenVacationHandoverIssues = (
   schedules: MocoSchedule[],

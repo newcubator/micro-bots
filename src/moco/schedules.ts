@@ -12,7 +12,7 @@ export async function getSchedules(from: string, to: string, absence_code?: numb
 }
 
 const getSchedulesPaged = (from: string, to: string, page: number, absence_code?: number) =>
-  axios.get("https://newcubator.mocoapp.com/api/v1/schedules", {
+  axios.get<any>("https://newcubator.mocoapp.com/api/v1/schedules", {
     headers: {
       Authorization: "Token token=" + MOCO_TOKEN,
     },

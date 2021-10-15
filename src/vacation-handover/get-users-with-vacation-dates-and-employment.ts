@@ -1,8 +1,8 @@
-import dayjs from 'dayjs';
-import { getUserEmployments } from '../moco/employments';
-import { getUserSchedules } from '../moco/schedules';
-import { MocoUserType } from '../moco/types/moco-types';
-import { format } from './create-vacation-handover-issues';
+import dayjs from "dayjs";
+import { getUserEmployments } from "../moco/employments";
+import { getUserSchedules } from "../moco/schedules";
+import { MocoUserType } from "../moco/types/moco-types";
+import { format } from "./create-vacation-handover-issues";
 
 export const getUsersWithVacationDatesAndEmployment = async (users: MocoUserType[], date: dayjs.Dayjs) => {
   return await Promise.all(

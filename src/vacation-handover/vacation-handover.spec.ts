@@ -1,6 +1,6 @@
-import axios from 'axios';
-import MockDate from 'mockdate';
-import { createVacationHandoverIssues } from './create-vacation-handover-issues';
+import axios from "axios";
+import MockDate from "mockdate";
+import { createVacationHandoverIssues } from "./create-vacation-handover-issues";
 
 MockDate.set("2021-08-24");
 

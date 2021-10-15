@@ -1,12 +1,12 @@
-import dayjs from 'dayjs';
-import isBetween from 'dayjs/plugin/isBetween';
-import { GitlabIssue } from '../gitlab/gitlab';
-import { postIssue } from '../gitlab/issues';
-import { getIssueTemplateByName } from '../gitlab/templates';
-import { getSchedules } from '../moco/schedules';
-import { filterUsersWithoutOpenVacationHandoverIssues } from './filter-users-without-open-vacation-handover-issues';
-import { getUsersWithStartAndEndDate } from './get-users-with-start-and-end-date';
-import { getUsersWithVacationDatesAndEmployment } from './get-users-with-vacation-dates-and-employment';
+import dayjs from "dayjs";
+import isBetween from "dayjs/plugin/isBetween";
+import { GitlabIssue } from "../gitlab/gitlab";
+import { postIssue } from "../gitlab/issues";
+import { getIssueTemplateByName } from "../gitlab/templates";
+import { getSchedules } from "../moco/schedules";
+import { filterUsersWithoutOpenVacationHandoverIssues } from "./filter-users-without-open-vacation-handover-issues";
+import { getUsersWithStartAndEndDate } from "./get-users-with-start-and-end-date";
+import { getUsersWithVacationDatesAndEmployment } from "./get-users-with-vacation-dates-and-employment";
 
 const MIN_VACATION_DURATION = 3;
 
@@ -17,16 +17,16 @@ export const createVacationHandoverIssues = async (vacationIssues: GitlabIssue[]
   const day = dayjs().add(7, "day");
   const schedules = await getSchedules(day.format("YYYY-MM-DD"), day.format("YYYY-MM-DD"), 4);
 
-  // filter users to only have users with no open Urlaubsübergabe issues
   let usersWithVacationsScheduled = filterUsersWithoutOpenVacationHandoverIssues(schedules, vacationIssues);
-  // get users with sorted vacation dates and current employment
+
   let vacationUsers = await getUsersWithVacationDatesAndEmployment(usersWithVacationsScheduled, day);
-  // map vacation users to user with start and end dates of detected vacations
+
   let usersWithStartAndEndDates = getUsersWithStartAndEndDate(vacationUsers, day, MIN_VACATION_DURATION);
 
   const vacationHandoverDescription = (
     await getIssueTemplateByName(process.env.GITLAB_BOOK_PROJECT_ID, "Urlaubsübergabe")
   ).data.content;
+
   // open new issues if no closed issues were found with the expected title
   await Promise.all(
     usersWithStartAndEndDates.map((user) => {

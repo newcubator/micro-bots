@@ -51,6 +51,15 @@ functions:
     handler: src/functions/birthday.handler
     memorySize: 128
     timeout: 10
+  bookIssuereminder:
+    environment:
+      GITLAB_PROJECT: ${env:GITLAB_BOOK_PROJECT_ID}
+    events:
+      - schedule:
+          enabled: true
+          rate: cron(5 4 * * ? * )
+    handler: src/functions/gitlab-issue-reminder.handler
+    memorySize: 128
 
   ##
   ## Completion Notice
