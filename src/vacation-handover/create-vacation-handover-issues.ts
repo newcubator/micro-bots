@@ -4,6 +4,7 @@ import { GitlabIssue } from "../gitlab/gitlab";
 import { postIssue } from "../gitlab/issues";
 import { getIssueTemplateByName } from "../gitlab/templates";
 import { getSchedules } from "../moco/schedules";
+import { calculateDueDate } from "./calculate-due-date";
 import { filterUsersWithoutOpenVacationHandoverIssues } from "./filter-users-without-open-vacation-handover-issues";
 import { getUsersWithStartAndEndDate } from "./get-users-with-start-and-end-date";
 import { getUsersWithVacationDatesAndEmployment } from "./get-users-with-vacation-dates-and-employment";
@@ -33,14 +34,14 @@ export const createVacationHandoverIssues = async (vacationIssues: GitlabIssue[]
       let issueTitle = `Urlaubsübergabe ${user.user.firstname} (${dayjs(user.dates[0]).format("DD.MM.YYYY")} - ${dayjs(
         user.dates[1]
       ).format("DD.MM.YYYY")})`;
-      let issue = vacationIssues.find((issue) => issue.title == issueTitle);
-      if (issue == undefined) {
+      let issue = vacationIssues.find((issue) => issue.title === issueTitle);
+      if (issue === undefined) {
         return postIssue(
           process.env.GITLAB_BOOK_PROJECT_ID,
           issueTitle,
           vacationHandoverDescription,
           ["Urlaubsübergabe"],
-          user.dates[0]
+          calculateDueDate(dayjs(user.dates[0]), user.employment).format("YYYY-MM-DD")
         ).then((res) => {
           console.log(
             `New issue for vacation of ${user.user.firstname} for vacation from ${user.dates[0]} to ${user.dates[1]} was created at ${res.data.web_url}`
@@ -54,5 +55,3 @@ export const createVacationHandoverIssues = async (vacationIssues: GitlabIssue[]
     })
   );
 };
-
-export const format = (day: dayjs.Dayjs) => day.format("YYYY-MM-DD");

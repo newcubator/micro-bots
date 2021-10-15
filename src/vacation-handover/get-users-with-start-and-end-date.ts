@@ -1,28 +1,33 @@
 import dayjs from "dayjs";
+import dayjsBusinessTimes from "dayjs-business-time";
 import { MocoEmployment, MocoUserType } from "../moco/types/moco-types";
+import { setUpBusinessTimes } from "./set-up-business-times";
+
+dayjs.extend(dayjsBusinessTimes);
 
 interface UserWithDates {
   user: MocoUserType;
   vacationDates: string[];
-  employment?: MocoEmployment;
+  employment: MocoEmployment;
 }
 
 export const getUsersWithStartAndEndDate = (
   users: UserWithDates[],
   date: dayjs.Dayjs,
   MIN_VACATION_DURATION: number
-): { dates: string[]; user: MocoUserType }[] => {
+) => {
   return users
     .map((value) => {
+      setUpBusinessTimes(value.employment);
       let arr: string[][] = [],
         startDate: string = value.vacationDates[0],
         endDate: string;
       for (let i = 0; i < value.vacationDates.length; i++) {
-        if (value.vacationDates[i + 1] != undefined) {
-          // max difference is calculated by getting non working days in a week + 1 to skip weekends
+        if (value.vacationDates[i + 1] !== undefined) {
           if (
-            -dayjs(value.vacationDates[i]).diff(value.vacationDates[i + 1], "day") >
-            7 - value.employment.weekly_target_hours / 8 + 1
+            dayjs(value.vacationDates[i])
+              .nextBusinessDay()
+              .diff(dayjs(value.vacationDates[i + 1]), "day") !== 0
           ) {
             endDate = value.vacationDates[i];
             arr.push([startDate, endDate]);
@@ -40,6 +45,7 @@ export const getUsersWithStartAndEndDate = (
           .filter((value) => -dayjs(value[0]).diff(value[1], "day") >= MIN_VACATION_DURATION - 1)
           .filter((value) => date.isBetween(dayjs(value[0]), dayjs(value[1])))
           .flat(),
+        employment: value.employment,
       };
     })
     .filter((user) => user.dates.length > 0);

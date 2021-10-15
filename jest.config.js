@@ -17,10 +17,10 @@ module.exports = {
   coverageReporters: ["text-summary", "html", "cobertura"],
   coverageThreshold: {
     global: {
-      statements: 85.8,
-      branches: 71.8,
-      functions: 64.0,
-      lines: 84.8,
+      statements: 90.4,
+      branches: 81.9,
+      functions: 74.4,
+      lines: 90.1,
     },
   },
 };

@@ -8,10 +8,8 @@ MockDate.set("2021-12-31");
 global.console = { log: jest.fn() } as unknown as Console;
 
 describe("gitlab-issue-reminder", () => {
-  let slackClientMock: jest.Mock;
-
   beforeEach(() => {
-    slackClientMock = slackClient.chat.postMessage as jest.Mock;
+    jest.clearAllMocks();
   });
 
   it("should send a reminder for due issue", async () => {
@@ -34,7 +32,7 @@ describe("gitlab-issue-reminder", () => {
 
     expect(console.log as jest.Mock).not.toHaveBeenCalled();
 
-    expect(slackClientMock as jest.Mock).toHaveBeenCalledWith({
+    expect(slackClient.chat.postMessage as jest.Mock).toHaveBeenCalledWith({
       channel: "1111111",
       text: "Das Issue 'Im due today' aus dem Projekt 'im-a-cool-project' ist heute fällig!",
       username: "Micro Bots",
@@ -61,10 +59,6 @@ describe("gitlab-issue-reminder", () => {
 
     expect(console.log as jest.Mock).toHaveBeenCalledWith("No due issues were found for 2021-12-31");
 
-    expect(slackClientMock as jest.Mock).not.toHaveBeenCalledWith({
-      channel: "1111111",
-      text: "Das Issue 'Im not due today' aus dem Projekt 'im-a-cool-project' ist heute fällig!",
-      username: "Micro Bots",
-    });
+    expect(slackClient.chat.postMessage as jest.Mock).not.toHaveBeenCalled();
   });
 });

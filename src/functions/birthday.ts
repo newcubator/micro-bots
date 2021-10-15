@@ -20,7 +20,7 @@ export const handler = async () => {
       Authorization: "Token token=" + MOCO_TOKEN,
     },
   });
-  const users: BirthdayType[] = response.data;
+  const users: BirthdayType[] = response.data as BirthdayType[];
 
   console.log(
     `Searching for birthdays from ${today.format("MM-DD")} to ${birthdayDate.format("MM-DD")} to open channel`
