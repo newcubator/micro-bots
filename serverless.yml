@@ -25,9 +25,11 @@ provider:
     # https://www.serverless.com/framework/docs/deprecations/#AWS_EVENT_BRIDGE_CUSTOM_RESOURCE
     useCloudFormation: true
   environment:
+    GITLAB_BOOK_PROJECT_ID: ${env:GITLAB_BOOK_PROJECT_ID}
+    GITLAB_TOKEN: ${env:GITLAB_TOKEN}
     MOCO_TOKEN: ${env:MOCO_TOKEN}
     SLACK_TOKEN: ${env:SLACK_TOKEN}
-    WORKLOAD_CHANNEL: ${env:WORKLOAD_CHANNEL}
+    GENERAL_CHANNEL: ${env:GENERAL_CHANNEL}
     WORKLOAD_PERCENTAGE: ${env:WORKLOAD_PERCENTAGE}
 
 plugins:
@@ -45,10 +47,19 @@ functions:
     events:
       - schedule:
           enabled: true
-          rate: cron(5 4 * * ? *)
+          rate: cron(5 4 * * ? *) # at 4:05 AM (UTC) every day
     handler: src/functions/birthday.handler
     memorySize: 128
     timeout: 10
+  bookIssuereminder:
+    environment:
+      GITLAB_PROJECT: ${env:GITLAB_BOOK_PROJECT_ID}
+    events:
+      - schedule:
+          enabled: true
+          rate: cron(5 4 * * ? * ) # at 4:05 AM (UTC) every day
+    handler: src/functions/gitlab-issue-reminder.handler
+    memorySize: 128
 
   ##
   ## Completion Notice
@@ -130,6 +141,13 @@ functions:
           path: unlockProject
     handler: src/functions/unlock-project.handler
     memorySize: 128
+  vacationHandover:
+    events:
+      - schedule:
+          enabled: true
+          rate: cron(5 4 * * ? *) # at 4:05 AM (UTC) every day
+    handler: src/functions/vacation-handover.handler
+    memorySize: 128
   workload:
     events:
       - http:
@@ -144,6 +162,6 @@ functions:
           path: workloadAll
       - schedule:
           enabled: true
-          rate: cron(0 16 ? * FRI *)
+          rate: cron(0 16 ? * FRI *) # At 04:00PM (UTC) on Friday
     handler: src/functions/workload-all.handler
     memorySize: 128

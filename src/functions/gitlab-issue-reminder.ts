@@ -18,9 +18,9 @@ export const handler = async () => {
 
   const today = dayjs();
 
-  const dueIssues = issues.filter((issue) => issue.due_date == today.format("YYYY-MM-DD"));
+  const dueIssues = issues.filter((issue) => issue.due_date === today.format("YYYY-MM-DD"));
 
-  if (dueIssues.length == 0) {
+  if (dueIssues.length === 0) {
     console.log(`No due issues were found for ${today.format("YYYY-MM-DD")}`);
     return;
   }

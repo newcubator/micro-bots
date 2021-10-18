@@ -84,7 +84,7 @@ export const handler = async (event: APIGatewayEvent | ScheduledEvent) => {
   } else if (eventIsScheduledEvent(event)) {
     await slack?.chat.postMessage({
       text: "Wöchentliche Auslastung",
-      channel: process.env.WORKLOAD_CHANNEL,
+      channel: process.env.GENERAL_CHANNEL,
       username: "Moco Bot",
       ...createSlackResponseWorkloadAll(workload, from, to),
     });

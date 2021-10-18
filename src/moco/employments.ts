@@ -12,7 +12,7 @@ export async function getEmployments(from: string, to: string) {
 }
 
 const getEmploymentsPaged = (from: string, to: string, page: number) =>
-  axios.get("https://newcubator.mocoapp.com/api/v1/users/employments", {
+  axios.get<any>("https://newcubator.mocoapp.com/api/v1/users/employments", {
     headers: {
       Authorization: "Token token=" + MOCO_TOKEN,
     },

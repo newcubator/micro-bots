@@ -6,8 +6,9 @@ process.env.EVENT_BUS = "test-event-bus";
 process.env.SLACK_TOKEN = "not a real slack token";
 process.env.MOCO_TOKEN = "not a real moco token";
 process.env.GITLAB_TOKEN = "not a real gitlab token";
-process.env.GITLAB_PROJECT = 1111111;
-process.env.SLACK_CHANNEL = 1111111;
+process.env.GITLAB_PROJECT = "1111111";
+process.env.SLACK_CHANNEL = "1111111";
+process.env.GITLAB_BOOK_PROJECT_ID = "11111111";
 
 module.exports = {
   preset: "ts-jest",
@@ -16,10 +17,10 @@ module.exports = {
   coverageReporters: ["text-summary", "html", "cobertura"],
   coverageThreshold: {
     global: {
-      statements: 85.8,
-      branches: 71.8,
-      functions: 64.0,
-      lines: 84.8,
+      statements: 90.4,
+      branches: 81.9,
+      functions: 74.4,
+      lines: 90.1,
     },
   },
 };
