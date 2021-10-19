@@ -70,9 +70,21 @@ function replaceUmlauts(str: string): string {
 }
 
 function addCTA(user: MocoUserType): string {
-  if (user.custom_properties.CTA_Text && user.custom_properties.CTA_Link) {
-    return `<span style="display: block; text-align: left"><a target="_blank" rel="noopener noreferrer" href="${user.custom_properties.CTA_Link}"
-  } color="#6A78D1" style="border-width: 6px 12px; border-style: solid; border-color: #405780; display: inline-block; background-color: #405780; color: rgb(255, 255, 255); font-weight: 700; text-decoration: none; text-align: center; line-height: 40px; font-size: 12px; border-radius: 3px;">${user.custom_properties.CTA_Text}</a></span>`;
+  if (user.custom_properties.CTA_Teaser && user.custom_properties.CTA_Link && user.custom_properties.CTA_Button) {
+    return `<table style="max-width: 626px">
+              <tbody>
+                <tr style="display: flex; flex-direction: row; color: #50505e; justify-content: space-around; align-items: center">
+                  <td style="flex: 3;">${user.custom_properties.CTA_Teaser}</td>
+                  <td style="flex: 1;">
+                    <span style="display: block; text-align: left;">
+                      <a target="_blank" rel="noopener noreferrer" href="${user.custom_properties.CTA_Link}" color="#6A78D1" style="box-sizing: border-box; width: 100%; border-width: 6px 12px; border-style: solid; border-color: #405780; display: inline-block; background-color: #405780; color: rgb(255, 255, 255); font-weight: 700; text-decoration: none; text-align: center; line-height: 40px; font-size: 12px; border-radius: 3px;">
+                        ${user.custom_properties.CTA_Button}
+                      </a>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>`;
   } else {
     return "";
   }
