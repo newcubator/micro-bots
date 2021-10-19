@@ -69,6 +69,27 @@ function replaceUmlauts(str: string): string {
     .replace(/\u00df/g, "ss");
 }
 
+function addCTA(user: MocoUserType): string {
+  if (user.custom_properties.CTA_Teaser && user.custom_properties.CTA_Link && user.custom_properties.CTA_Button) {
+    return `<table style="max-width: 626px">
+              <tbody>
+                <tr style="display: flex; flex-direction: row; color: #50505e; justify-content: space-around; align-items: center">
+                  <td style="flex: 3;">${user.custom_properties.CTA_Teaser}</td>
+                  <td style="flex: 1;">
+                    <span style="display: block; text-align: left;">
+                      <a target="_blank" rel="noopener noreferrer" href="${user.custom_properties.CTA_Link}" color="#6A78D1" style="box-sizing: border-box; width: 100%; border-width: 6px 12px; border-style: solid; border-color: #405780; display: inline-block; background-color: #405780; color: rgb(255, 255, 255); font-weight: 700; text-decoration: none; text-align: center; line-height: 40px; font-size: 12px; border-radius: 3px;">
+                        ${user.custom_properties.CTA_Button}
+                      </a>
+                    </span>
+                  </td>
+                </tr>
+              </tbody>
+            </table>`;
+  } else {
+    return "";
+  }
+}
+
 function createMailSignature(user: MocoUserType): string {
   const addressHannover = `Bödekerstraße 22, 30161 Hannover`;
   const addressDortmund = `Freie-Vogel-Straße 369, 44269 Dortmund`;
@@ -93,6 +114,8 @@ function createMailSignature(user: MocoUserType): string {
     user.email
   }</span> </a> </td></tr><tr height="25" style="vertical-align: middle;"> <td width="30" style="vertical-align: middle;"> <table cellpadding="0" cellspacing="0" style="vertical-align: -webkit-baseline-middle; font-size: medium; font-family: Arial;"> <tbody> <tr> <td style="vertical-align: bottom;"> <span color="#405780" width="11" style="display: block; background-color: rgba(255, 255, 255, 0);"> <img src="https://newcubator.com/images/mailsignature/link-icon-2x.png" color="#405780" width="13" style="display: block; background-color: rgba(255, 255, 255, 0);"> </span> </td></tr></tbody> </table> </td><td style="padding: 0px;"> <a href="//newcubator.com" color="#50505e" style="text-decoration: none; color: rgb(80, 80, 94); font-size: 12px;"> <span>newcubator.com</span> </a> </td></tr><tr height="25" style="vertical-align: middle;"> <td width="30" style="vertical-align: middle;"> <table cellpadding="0" cellspacing="0" style="vertical-align: -webkit-baseline-middle; font-size: medium; font-family: Arial;"> <tbody> <tr> <td style="vertical-align: bottom;"> <span color="#405780" width="11" style="display: block; background-color: rgba(255, 255, 255, 0);"> <img src="https://newcubator.com/images/mailsignature/address-icon-2x.png" color="#405780" width="13" style="display: block; background-color: rgba(255, 255, 255, 0);"> </span> </td></tr></tbody> </table> </td><td style="padding: 0px;"> <span color="#50505e" style="font-size: 12px; color: rgb(80, 80, 94);"> <span>${
     user.custom_properties.Standort === "Dortmund" ? addressDortmund : addressHannover
-  }, Amtsgericht Hannover HRB 221930</span> </span> </td></tr></tbody> </table> <table cellpadding="0" cellspacing="0" style="vertical-align: -webkit-baseline-middle; font-size: medium; font-family: Arial;"> <tbody> <tr> <td height="30"></td></tr></tbody> </table> </td></tr></tbody> </table> </td></tr></tbody></table>
+  }, Amtsgericht Hannover HRB 221930</span> </span> </td></tr></tbody> </table> ${addCTA(
+    user
+  )} <table cellpadding="0" cellspacing="0" style="vertical-align: -webkit-baseline-middle; font-size: medium; font-family: Arial;"> <tbody> <tr> <td height="30"></td></tr></tbody> </table> </td></tr></tbody> </table> </td></tr></tbody></table>
 `;
 }
