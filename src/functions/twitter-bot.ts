@@ -1,11 +1,11 @@
-import Parser from 'rss-parser';
-import { TweetV2 } from 'twitter-api-v2';
-import { createNewTweet } from '../twitter-bot/createNewTweet';
-import { fetchLatestTweets } from '../twitter-bot/fetchLatestTweets';
-import { fetchRssFeed } from '../twitter-bot/fetchRssFeed';
-import { filterUntweetedFeed } from '../twitter-bot/filterUntweetedFeed';
-import { sendTweet } from '../twitter-bot/sendTweet';
-import { unEscape } from '../twitter-bot/unEscape';
+import Parser from "rss-parser";
+import { TweetV2 } from "twitter-api-v2";
+import { createNewTweet } from "../twitter-bot/createNewTweet";
+import { fetchLatestTweets } from "../twitter-bot/fetchLatestTweets";
+import { fetchRssFeed } from "../twitter-bot/fetchRssFeed";
+import { filterUntweetedFeed } from "../twitter-bot/filterUntweetedFeed";
+import { sendTweet } from "../twitter-bot/sendTweet";
+import { unEscape } from "../twitter-bot/unEscape";
 
 export const parser = new Parser();
 
@@ -22,7 +22,6 @@ export const handler = async () => {
     console.error(ex);
   }
 };
-
 
 export interface RssFeedItem {
   creator: string;

@@ -1,11 +1,11 @@
 import Parser from "rss-parser";
 import { twitterClient } from "../clients/twitter";
-import { createNewTweet } from '../twitter-bot/createNewTweet';
-import { fetchLatestTweets } from '../twitter-bot/fetchLatestTweets';
-import { fetchRssFeed } from '../twitter-bot/fetchRssFeed';
-import { filterUntweetedFeed } from '../twitter-bot/filterUntweetedFeed';
-import { sendTweet } from '../twitter-bot/sendTweet';
-import { unEscape } from '../twitter-bot/unEscape';
+import { createNewTweet } from "../twitter-bot/createNewTweet";
+import { fetchLatestTweets } from "../twitter-bot/fetchLatestTweets";
+import { fetchRssFeed } from "../twitter-bot/fetchRssFeed";
+import { filterUntweetedFeed } from "../twitter-bot/filterUntweetedFeed";
+import { sendTweet } from "../twitter-bot/sendTweet";
+import { unEscape } from "../twitter-bot/unEscape";
 
 import {
   fakeRssFeedItemLong,
