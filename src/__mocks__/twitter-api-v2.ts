@@ -96,4 +96,8 @@ export const fakeTwitterTimeline = [
     id: "111112",
     text: "How to do something",
   },
+  {
+    id: "111113",
+    text: "Das ist ein random Tweet",
+  },
 ];

@@ -1,20 +1,18 @@
 import Parser from "rss-parser";
 import { twitterClient } from "../clients/twitter";
-import {
-  createNewTweet,
-  fetchLatestTweets,
-  unEscape,
-  filterUntweetedFeed,
-  fetchRssFeed,
-  sendTweet,
-} from "./twitter-bot";
+import { createNewTweet } from '../twitter-bot/createNewTweet';
+import { fetchLatestTweets } from '../twitter-bot/fetchLatestTweets';
+import { fetchRssFeed } from '../twitter-bot/fetchRssFeed';
+import { filterUntweetedFeed } from '../twitter-bot/filterUntweetedFeed';
+import { sendTweet } from '../twitter-bot/sendTweet';
+import { unEscape } from '../twitter-bot/unEscape';
+
 import {
   fakeRssFeedItemLong,
   fakeRssFeedItemShort,
   fakeRssFeed,
   fakeTwitterTimeline,
 } from "../__mocks__/twitter-api-v2";
-
 jest.mock("rss-parser");
 const ParserMock = Parser as jest.MockedClass<typeof Parser>;
 const twitterUserByUsernameMock = twitterClient.v2.userByUsername as jest.Mock;
