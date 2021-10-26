@@ -1,6 +1,6 @@
 import Parser from "rss-parser";
 import { TweetUserTimelineV2Paginator, TweetV2, UserV2 } from "twitter-api-v2";
-import { twitterClient } from '../clients/twitter';
+import { twitterClient } from "../clients/twitter";
 
 const parser = new Parser();
 
@@ -67,7 +67,7 @@ async function sendTweet(message: string) {
   console.log("Tweet", createdTweet.id_str, ":", createdTweet.full_text);
 }
 
- export function tweetedRssGuids(feed: RssFeedItem[], tweets: TweetV2[]) {
+export function tweetedRssGuids(feed: RssFeedItem[], tweets: TweetV2[]) {
   //filter alle
   const tweetedRss = feed
     .filter((feedItems) => tweets.some((tweet) => tweet.text.includes(feedItems.title)))
