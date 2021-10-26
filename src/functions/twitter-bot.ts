@@ -1,14 +1,8 @@
 import Parser from "rss-parser";
-import { TweetUserTimelineV2Paginator, TweetV2, TwitterApi, UserV2 } from "twitter-api-v2";
+import { TweetUserTimelineV2Paginator, TweetV2, UserV2 } from "twitter-api-v2";
+import { twitterClient } from '../clients/twitter';
 
 const parser = new Parser();
-
-const twitterClient = new TwitterApi({
-  appKey: process.env.TWITTER_APP_KEY,
-  appSecret: process.env.TWITTER_APP_SECRET,
-  accessToken: process.env.TWITTER_ACCESS_TOKEN,
-  accessSecret: process.env.TWITTER_ACCESS_SECRET,
-});
 
 export const handler = async () => {
   try {
@@ -16,14 +10,15 @@ export const handler = async () => {
     const tweets = await fetchLatestTweets();
     const betterTweets: TweetV2[] = tweets.map((tweet) => ({ ...tweet, text: unEscape(tweet.text) }));
     const notYetTweeted = tweetedRssGuids(feed, betterTweets);
-    createNewTweet(notYetTweeted[0]);
+    const newPost = createNewTweet(notYetTweeted[0]);
+    await sendTweet(newPost);
   } catch (ex) {
     console.error(ex);
   }
 };
 
 //RssFeed auslesen:
-async function fetchRssFeed(): Promise<RssFeedItem[]> {
+export async function fetchRssFeed(): Promise<RssFeedItem[]> {
   try {
     const feed = await parser.parseURL("https://newcubator.com/devsquad/rss.xml");
     return feed.items as RssFeedItem[];
@@ -33,7 +28,7 @@ async function fetchRssFeed(): Promise<RssFeedItem[]> {
 }
 
 //Twittertimeline abfragen:
-async function fetchLatestTweets(): Promise<TweetV2[]> {
+export async function fetchLatestTweets(): Promise<TweetV2[]> {
   const user: UserV2 = (await twitterClient.v2.userByUsername("newcubator")).data;
   const newcubatorTweets: TweetUserTimelineV2Paginator = await twitterClient.v2.userTimeline(user.id, {
     exclude: ["replies", "retweets"],
@@ -43,7 +38,7 @@ async function fetchLatestTweets(): Promise<TweetV2[]> {
 }
 
 //HTML umwandeln
-function unEscape(htmlStr: string) {
+export function unEscape(htmlStr: string) {
   return htmlStr
     .replace(/&lt;/g, "<")
     .replace(/&gt;/g, ">")
@@ -53,15 +48,17 @@ function unEscape(htmlStr: string) {
 }
 
 //Tweet formatieren
-function createNewTweet(feedItem: RssFeedItem) {
+export function createNewTweet(feedItem: RssFeedItem) {
   let statusUpdate = `Neues aus dem Entwicklerteam: ${feedItem.title} ${feedItem.link} #devsquad`;
   if (statusUpdate.length > 280) {
     statusUpdate = `Neues aus dem Entwicklerteam: ${feedItem.title.substr(
       0,
       feedItem.title.length - (statusUpdate.length - 277)
     )}... ${feedItem.link} #devsquad`;
-    sendTweet(statusUpdate);
-  } else sendTweet(statusUpdate);
+    return statusUpdate;
+    //sendTweet(statusUpdate);
+  } else return statusUpdate;
+  //else sendTweet(statusUpdate);
 }
 
 //Tweets absenden:
@@ -70,7 +67,7 @@ async function sendTweet(message: string) {
   console.log("Tweet", createdTweet.id_str, ":", createdTweet.full_text);
 }
 
-function tweetedRssGuids(feed: RssFeedItem[], tweets: TweetV2[]) {
+ export function tweetedRssGuids(feed: RssFeedItem[], tweets: TweetV2[]) {
   //filter alle
   const tweetedRss = feed
     .filter((feedItems) => tweets.some((tweet) => tweet.text.includes(feedItems.title)))
@@ -79,7 +76,7 @@ function tweetedRssGuids(feed: RssFeedItem[], tweets: TweetV2[]) {
   return feed.filter((feedItems) => !tweetedRss.includes(feedItems.guid));
 }
 
-interface RssFeedItem {
+export interface RssFeedItem {
   creator: string;
   title: string;
   link: string;
