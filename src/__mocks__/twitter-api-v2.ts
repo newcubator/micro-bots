@@ -2,6 +2,9 @@ export const TwitterApi = jest.fn();
 
 TwitterApi.mockImplementation(() => {
   return {
+    v1: {
+      tweet: jest.fn().mockReturnValue({ id_str: "", full_text: "" }),
+    },
     v2: {
       userByUsername: jest.fn(),
       userTimeline: jest.fn(),
@@ -34,22 +37,22 @@ export const fakeRssFeedItemShort = {
 export const fakeRssFeed = [
   {
     creator: "Max Mustermann",
-    title: "hallihallo",
-    link: "FakeLink",
-    pubDate: "FakeDate",
-    content: "FakeContent",
-    contentSnippet: "FakeSnippetContent",
-    guid: "FakeGuid1",
-    isoDate: "FakeIsoDate",
-  },
-  {
-    creator: "Max Mustermann",
     title: "Wie teste ich Rust und Java",
     link: "FakeLink",
     pubDate: "FakeDate",
     content: "FakeContent",
     contentSnippet: "FakeSnippetContent",
     guid: "Wie-teste-ich-Rust-und-Java",
+    isoDate: "FakeIsoDate",
+  },
+  {
+    creator: "Max Mustermann",
+    title: "Wie teste ich Rust und Java 2",
+    link: "FakeLink",
+    pubDate: "FakeDate",
+    content: "FakeContent",
+    contentSnippet: "FakeSnippetContent",
+    guid: "Wie-teste-ich-Rust-und-Java-2",
     isoDate: "FakeIsoDate",
   },
   {
@@ -88,5 +91,9 @@ export const fakeTwitterTimeline = [
   {
     id: "111111",
     text: "Wie teste ich Rust und Java",
+  },
+  {
+    id: "111112",
+    text: "How to do something",
   },
 ];

@@ -1,6 +1,13 @@
 import Parser from "rss-parser";
 import { twitterClient } from "../clients/twitter";
-import { createNewTweet, fetchLatestTweets, unEscape, tweetedRssGuids, fetchRssFeed } from "./twitter-bot";
+import {
+  createNewTweet,
+  fetchLatestTweets,
+  unEscape,
+  filterUntweetedFeed,
+  fetchRssFeed,
+  sendTweet,
+} from "./twitter-bot";
 import {
   fakeRssFeedItemLong,
   fakeRssFeedItemShort,
@@ -10,12 +17,11 @@ import {
 
 jest.mock("rss-parser");
 const ParserMock = Parser as jest.MockedClass<typeof Parser>;
-// const parserUrlMock = ParserMock.parseURL as jest.Mock;
 const twitterUserByUsernameMock = twitterClient.v2.userByUsername as jest.Mock;
 const twitterUserTimelineMock = twitterClient.v2.userTimeline as jest.Mock;
 
-describe("fetchLatestTweets", () => {
-  test("successful tweets", async () => {
+describe("TwitterBot", () => {
+  it("successful tweets", async () => {
     twitterUserByUsernameMock.mockResolvedValueOnce({
       data: {
         id: 123456,
@@ -33,45 +39,33 @@ describe("fetchLatestTweets", () => {
     });
     expect(twitterUserTimelineMock).toHaveBeenCalledTimes(1);
   });
-  /*test("failed to fetch tweets", async () => {
-    twitterUserByUsernameMock.mockResolvedValueOnce({
-      data: {
-        id: "newcubator",
-      },
-    });
-    twitterUserTimelineMock.mockResolvedValueOnce({
-      tweets: [],
-    });
+  it("failed tweets", async () => {});
 
-    await expect(fetchLatestTweets()).rejects;
-    expect(twitterUserByUsernameMock).toHaveBeenCalledWith("newcubator");
-  }); */
-});
-
-describe.each([
-  ["test &amp; test", "test & test"],
-  ["test &gt; test", "test > test"],
-  ["test &lt; test", "test < test"],
-  ["test &quot; test", 'test " test'],
-  ["test &#39; test", "test ' test"],
-])("HTML unescape", (a, expected) => {
-  test(`returns ${expected}`, () => {
+  it.each([
+    ["test &amp; test", "test & test"],
+    ["test &gt; test", "test > test"],
+    ["test &lt; test", "test < test"],
+    ["test &quot; test", 'test " test'],
+    ["test &#39; test", "test ' test"],
+  ])("HTML unescape", (a, expected) => {
     expect(unEscape(a)).toEqual(expected);
   });
-});
 
-describe("Shorten Tweets", () => {
-  it("Tweet longer than 280 chars", () => {
+  it("Shorten tweets longer than 280 chars", () => {
     const result = createNewTweet(fakeRssFeedItemLong);
     expect(result).toHaveLength(280);
   });
-  it("Tweet shorter than 280 chars", () => {
+  it("Not shorten tweets shorter than 280 chars", () => {
     const result = createNewTweet(fakeRssFeedItemShort);
     expect(result.length).toBeLessThanOrEqual(280);
   });
-});
+  it("Always start with 'Neues aus dem Entwicklerteam:' and end with #devsquad", () => {
+    const result1 = createNewTweet(fakeRssFeedItemLong);
+    const result2 = createNewTweet(fakeRssFeedItemShort);
+    expect(result1).toContain("Neues aus dem Entwicklerteam:" && "#devsquad");
+    expect(result2).toContain("Neues aus dem Entwicklerteam:" && "#devsquad");
+  });
 
-describe("Fetch Rss-Feed", () => {
   it("Calling Rss-Parser", async () => {
     expect(ParserMock).toHaveBeenCalledTimes(1);
   });
@@ -80,11 +74,15 @@ describe("Fetch Rss-Feed", () => {
     expect(data).toEqual([]);
     expect(ParserMock.prototype.parseURL).toBeCalledWith("https://newcubator.com/devsquad/rss.xml");
   });
-});
 
-describe("Filter Rss-Feed", () => {
   it("Dont filter similar Feed Item", () => {
-    const result = tweetedRssGuids(fakeRssFeed, fakeTwitterTimeline);
-    expect(result[0]).toBe(fakeRssFeed[0]);
+    const result = filterUntweetedFeed(fakeRssFeed, fakeTwitterTimeline);
+    expect(result[0]).toBe(fakeRssFeed[1]);
+  });
+
+  it("should send a tweet", async () => {
+    const message = "This is a tweet";
+    await sendTweet(message);
+    expect(twitterClient.v1.tweet).toBeCalledWith(message);
   });
 });

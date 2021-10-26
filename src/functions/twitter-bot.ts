@@ -9,7 +9,7 @@ export const handler = async () => {
     const feed = await fetchRssFeed();
     const tweets = await fetchLatestTweets();
     const betterTweets: TweetV2[] = tweets.map((tweet) => ({ ...tweet, text: unEscape(tweet.text) }));
-    const notYetTweeted = tweetedRssGuids(feed, betterTweets);
+    const notYetTweeted = filterUntweetedFeed(feed, betterTweets);
     const newPost = createNewTweet(notYetTweeted[0]);
     await sendTweet(newPost);
   } catch (ex) {
@@ -49,31 +49,29 @@ export function unEscape(htmlStr: string) {
 
 //Tweet formatieren
 export function createNewTweet(feedItem: RssFeedItem) {
-  let statusUpdate = `Neues aus dem Entwicklerteam: ${feedItem.title} ${feedItem.link} #devsquad`;
-  if (statusUpdate.length > 280) {
-    statusUpdate = `Neues aus dem Entwicklerteam: ${feedItem.title.substr(
-      0,
-      feedItem.title.length - (statusUpdate.length - 277)
-    )}... ${feedItem.link} #devsquad`;
-    return statusUpdate;
-    //sendTweet(statusUpdate);
-  } else return statusUpdate;
-  //else sendTweet(statusUpdate);
+  let tweetText = `Neues aus dem Entwicklerteam: ${feedItem.title} ${feedItem.link} #devsquad`;
+  if (tweetText.length > 280) {
+    tweetText = `Neues aus dem Entwicklerteam: ${shortenFeedTitle(feedItem.title, tweetText.length)}... ${
+      feedItem.link
+    } #devsquad`;
+  }
+  return tweetText;
 }
 
 //Tweets absenden:
-async function sendTweet(message: string) {
+export async function sendTweet(message: string) {
   const createdTweet = await twitterClient.v1.tweet(message);
   console.log("Tweet", createdTweet.id_str, ":", createdTweet.full_text);
 }
 
-export function tweetedRssGuids(feed: RssFeedItem[], tweets: TweetV2[]) {
-  //filter alle
-  const tweetedRss = feed
-    .filter((feedItems) => tweets.some((tweet) => tweet.text.includes(feedItems.title)))
-    //neues Array von allen guids
-    .map((feedItems) => feedItems.guid);
-  return feed.filter((feedItems) => !tweetedRss.includes(feedItems.guid));
+export function filterUntweetedFeed(feed: RssFeedItem[], tweets: TweetV2[]) {
+  return feed.filter(
+    (feedItem) => !tweets.some((tweet) => tweet.text.includes(shortenFeedTitle(feedItem.title, tweet.text.length)))
+  );
+}
+
+function shortenFeedTitle(title: string, tweetTextLength: number): string {
+  return title.substr(0, title.length - (tweetTextLength - 277));
 }
 
 export interface RssFeedItem {
