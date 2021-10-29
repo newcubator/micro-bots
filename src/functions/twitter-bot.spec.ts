@@ -83,4 +83,10 @@ describe("TwitterBot", () => {
     await sendTweet(message);
     expect(twitterClient.v1.tweet).toBeCalledWith(message);
   });
+  it('should log out "Tweet: something"', async () => {
+      console.log = jest.fn();
+      const message = "This is a tweet";
+      await sendTweet(message);
+      expect(console.log).toHaveBeenCalledWith("Tweet", "", ":", "");
+  })
 });
