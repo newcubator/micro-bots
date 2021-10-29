@@ -20,6 +20,6 @@ export const handler = async () => {
   }
 };
 
-function saveToSpreadsheet(accessor: GoogleSheetsAccessor, tweet: Tweet) {
+async function saveToSpreadsheet(accessor: GoogleSheetsAccessor, tweet: Tweet) {
 
 }

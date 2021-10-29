@@ -39,6 +39,16 @@ export class GoogleSheetsAccessor {
     });
   }
 
+  async addRows(spreadsheetId: string, range: string, rows: string[][]): Promise<any> {
+    return this.googleSheets.spreadsheets.values.append({
+      auth: this.googleAuth,
+      valueInputOption: "RAW",
+      spreadsheetId,
+      range,
+      requestBody: { values: rows },
+    });
+  }
+
   private setGoogleAuth(): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
       this.googleAuth = new google.auth.GoogleAuth({
