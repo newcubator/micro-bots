@@ -1,9 +1,5 @@
-import { TweetV2 } from "twitter-api-v2";
-import { RssFeedItem } from "../functions/twitter-bot";
-import { shortenFeedTitle } from "./shortenFeedTitle";
+import { RssFeedItem, Tweet } from "./twitter-bot";
 
-export function filterUntweetedFeed(feed: RssFeedItem[], tweets: TweetV2[]) {
-  return feed.filter(
-    (feedItem) => !tweets.some((tweet) => tweet.text.includes(shortenFeedTitle(feedItem.title, tweet.text.length)))
-  );
+export function filterUntweetedFeed(feed: RssFeedItem[], tweets: Tweet[]) {
+  return feed.filter((feedItem) => !tweets.some((tweet) => tweet.guid === feedItem.guid));
 }

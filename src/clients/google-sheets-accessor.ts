@@ -2,6 +2,7 @@ import { GaxiosResponse } from "gaxios/build/src/common";
 import { google, sheets_v4 } from "googleapis";
 import { GoogleAuth } from "googleapis-common";
 import Schema$ValueRange = sheets_v4.Schema$ValueRange;
+import Sheets = sheets_v4.Sheets;
 
 export class GoogleSheetsAccessor {
   private googleAuth: GoogleAuth;
@@ -10,7 +11,7 @@ export class GoogleSheetsAccessor {
 
   private client: any;
 
-  private googleSheets: any;
+  private googleSheets: Sheets;
 
   public setupGoogle(credentials: any): Promise<boolean> {
     this.GOOGLE_CREDENTIALS = credentials;
@@ -56,7 +57,7 @@ export class GoogleSheetsAccessor {
       .getClient()
       .then((client) => {
         this.client = client;
-        this.googleSheets = google.sheets({ version: "v4", auth: this.client });
+        this.googleSheets = google.sheets({ version: "v4", auth: this.client }) as Sheets;
       })
       .catch((err) => {
         console.log(err);
