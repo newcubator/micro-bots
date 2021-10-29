@@ -1,5 +1,7 @@
 import Parser from "rss-parser";
 import { TweetV2 } from "twitter-api-v2";
+import { AwsSecretsManager } from "../clients/aws-secrets-manager";
+import { GoogleSheetsAccessor } from "../clients/google-sheets-accessor";
 import { createNewTweet } from "../twitter-bot/createNewTweet";
 import { fetchLatestTweets } from "../twitter-bot/fetchLatestTweets";
 import { fetchRssFeed } from "../twitter-bot/fetchRssFeed";
