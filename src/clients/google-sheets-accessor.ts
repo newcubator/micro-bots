@@ -45,7 +45,7 @@ export class GoogleSheetsAccessor {
       valueInputOption: "RAW",
       spreadsheetId,
       range,
-      requestBody: { values: rows },
+      requestBody: { values: rows, majorDimension: "COLUMNS" },
     });
   }
 

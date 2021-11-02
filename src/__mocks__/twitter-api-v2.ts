@@ -42,7 +42,7 @@ export const fakeRssFeed = [
     pubDate: "FakeDate",
     content: "FakeContent",
     contentSnippet: "FakeSnippetContent",
-    guid: "Wie-teste-ich-Rust-und-Java",
+    guid: "111111",
     isoDate: "FakeIsoDate",
   },
   {
@@ -52,7 +52,7 @@ export const fakeRssFeed = [
     pubDate: "FakeDate",
     content: "FakeContent",
     contentSnippet: "FakeSnippetContent",
-    guid: "Wie-teste-ich-Rust-und-Java-2",
+    guid: "111112",
     isoDate: "FakeIsoDate",
   },
   {
@@ -62,7 +62,7 @@ export const fakeRssFeed = [
     pubDate: "FakeDate",
     content: "FakeContent",
     contentSnippet: "FakeSnippetContent",
-    guid: "Wie-teste-ich-Python",
+    guid: "111113",
     isoDate: "FakeIsoDate",
   },
   {
@@ -72,7 +72,7 @@ export const fakeRssFeed = [
     pubDate: "FakeDate",
     content: "FakeContent",
     contentSnippet: "FakeSnippetContent",
-    guid: "How-to-do-something-3",
+    guid: "111114",
     isoDate: "FakeIsoDate",
   },
   {
@@ -82,22 +82,18 @@ export const fakeRssFeed = [
     pubDate: "FakeDate",
     content: "FakeContent",
     contentSnippet: "FakeSnippetContent",
-    guid: "How-to-do-something",
+    guid: "111115",
     isoDate: "FakeIsoDate",
   },
 ];
 
-export const fakeTwitterTimeline = [
+export const fakeGoogleSheet = [
   {
-    id: "111111",
-    text: "Wie teste ich Rust und Java",
+    guid: "111111",
+    title: "Wie teste ich Rust und Java",
   },
   {
-    id: "111112",
-    text: "How to do something",
-  },
-  {
-    id: "111113",
-    text: "Das ist ein random Tweet",
+    guid: "111115",
+    title: "How to do something",
   },
 ];
