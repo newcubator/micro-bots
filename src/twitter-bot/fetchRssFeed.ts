@@ -1,6 +1,6 @@
 //RssFeed auslesen:
-import Parser from 'rss-parser';
-import { RssFeedItem } from './twitter-bot';
+import Parser from "rss-parser";
+import { RssFeedItem } from "./twitter-bot";
 export const parser = new Parser();
 
 export async function fetchRssFeed(): Promise<RssFeedItem[]> {
