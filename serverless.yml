@@ -52,16 +52,16 @@ functions:
     memorySize: 128
     timeout: 10
   bookIssueReminder:
-    handler: src/functions/gitlab-issue-reminder.handler
     environment:
       GITLAB_PROJECT_ID: ${env:GITLAB_BOOK_PROJECT_ID}
       SLACK_CHANNEL_ID: ${env:GENERAL_CHANNEL}
-    memorySize: 128
-    timeout: 20
     events:
       - schedule:
           enabled: true
           rate: cron(5 4 * * ? *) # at 4:05 AM (UTC) every day
+    handler: src/functions/gitlab-issue-reminder.handler
+    memorySize: 128
+    timeout: 20
 
   ##
   ## Completion Notice
