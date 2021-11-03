@@ -15,12 +15,4 @@ module.exports = {
   testEnvironment: "node",
   collectCoverage: true,
   coverageReporters: ["text-summary", "html", "cobertura"],
-  coverageThreshold: {
-    global: {
-      statements: 90.4,
-      branches: 81.9,
-      functions: 74.4,
-      lines: 90.1,
-    },
-  },
 };
