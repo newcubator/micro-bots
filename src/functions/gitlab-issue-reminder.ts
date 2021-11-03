@@ -11,14 +11,10 @@ export const handler = async () => {
   }
 
   const issues = await getOpenIssuesDueToday();
-
-  if (issues.length === 0) {
-    console.log(`No due issues found.`);
-    return;
-  }
+  console.log(`Found ${issues.length} issues due today`);
 
   await Promise.all(
-    issues.map((issue) => postSlackMessage(`Das Ticket [${issue.title}](${issue.web_url}) ist heute fällig!`))
+    issues.map((issue) => postSlackMessage(`⚠️ Das Ticket [${issue.title}](${issue.web_url}) ist heute fällig!`))
   ).catch((error) => {
     console.error(error);
   });
