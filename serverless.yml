@@ -34,11 +34,14 @@ provider:
 
 plugins:
   - serverless-esbuild
+  - serverless-sentry
 
 custom:
   esbuild:
     bundle: true
     sourcemap: true
+  sentry:
+    dsn: ${env:SENTRY_DSN}
 
 functions:
   birthday:
