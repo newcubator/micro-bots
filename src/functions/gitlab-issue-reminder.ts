@@ -1,37 +1,40 @@
 import dayjs from "dayjs";
 import { slackClient } from "../clients/slack";
 import { getIssues } from "../gitlab/issues";
-import { getProject } from "../gitlab/projects";
-import { slackChatPostMessage } from "../slack/slack";
-
-const GITLAB_PROJECT = process.env.GITLAB_PROJECT;
-const SLACK_CHANNEL = process.env.SLACK_CHANNEL || process.env.GENERAL_CHANNEL;
 
 export const handler = async () => {
-  if (!GITLAB_PROJECT) {
-    throw new Error("No gitlab Project was provided. Please provide a project id in the environment variables.");
+  if (typeof process.env.GITLAB_PROJECT_ID === "undefined") {
+    throw new Error("No GitLab Project ID given to search for due issues in!");
+  }
+  if (typeof process.env.SLACK_CHANNEL_ID === "undefined") {
+    throw new Error("No Slack Channel given to post the message in!");
   }
 
-  const project = (await getProject(GITLAB_PROJECT)).data;
-
-  const issues = (await getIssues(GITLAB_PROJECT)).data;
-
-  const today = dayjs();
-
-  const dueIssues = issues.filter((issue) => issue.due_date === today.format("YYYY-MM-DD"));
-
-  if (dueIssues.length === 0) {
-    console.log(`No due issues were found for ${today.format("YYYY-MM-DD")}`);
-    return;
-  }
+  const issues = await getOpenIssuesDueToday();
+  console.log(`Found ${issues.length} issues due today`);
 
   await Promise.all(
-    dueIssues.map((issue) => {
-      return slackClient.chat.postMessage({
-        text: `Das Issue '${issue.title}' aus dem Projekt '${project.name}' ist heute fällig!`,
-        channel: SLACK_CHANNEL,
-        username: "Micro Bots",
-      });
-    })
-  );
+    issues.map((issue) => postSlackMessage(`⚠️ Das Ticket [${issue.title}](${issue.web_url}) ist heute fällig!`))
+  ).catch((error) => {
+    console.error(error);
+  });
 };
+
+async function getOpenIssuesDueToday() {
+  const today = dayjs().format("YYYY-MM-DD");
+  console.log(`Searching for open issues due '${today}'`);
+
+  const issues = await getIssues(process.env.GITLAB_PROJECT_ID, { due_date: "week", state: "opened" });
+
+  // API can only filter by due this week so we additionally filter by day
+  return issues.data.filter((issue) => issue.due_date === today);
+}
+
+async function postSlackMessage(message: string) {
+  console.log(`Posting '${message}'`);
+  return slackClient.chat.postMessage({
+    channel: process.env.SLACK_CHANNEL_ID,
+    text: message,
+    mrkdwn: true,
+  });
+}

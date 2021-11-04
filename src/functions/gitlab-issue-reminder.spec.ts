@@ -5,60 +5,80 @@ import { handler } from "./gitlab-issue-reminder";
 
 MockDate.set("2021-12-31");
 
-global.console = { log: jest.fn() } as unknown as Console;
+const axiosGetMock = axios.get as jest.Mock;
+const slackPostMessageMock = slackClient.chat.postMessage as jest.Mock;
 
 describe("gitlab-issue-reminder", () => {
   beforeEach(() => {
     jest.clearAllMocks();
+
+    process.env.GITLAB_PROJECT_ID = "1";
+    process.env.SLACK_CHANNEL_ID = "1";
   });
 
-  it("should send a reminder for due issue", async () => {
-    (axios.get as jest.Mock)
-      .mockReturnValueOnce({
-        data: {
-          name: "im-a-cool-project",
+  it("send a reminder for due issue", async () => {
+    axiosGetMock.mockReturnValueOnce({
+      data: [
+        {
+          due_date: "2021-12-31",
+          title: "Im due today",
+          web_url: "https://gitlab.test/issue/1",
         },
-      })
-      .mockReturnValueOnce({
-        data: [
-          {
-            title: "Im due today",
-            due_date: "2021-12-31",
-          },
-        ],
-      });
+        {
+          due_date: "2022-01-01",
+          title: "Im not due today",
+          web_url: "https://gitlab.test/issue/2",
+        },
+      ],
+    });
 
     await handler();
 
-    expect(console.log as jest.Mock).not.toHaveBeenCalled();
+    expect(axiosGetMock).toHaveBeenCalledWith("https://gitlab.com/api/v4/projects/1/issues", {
+      headers: expect.anything(),
+      params: {
+        due_date: "week",
+        state: "opened",
+      },
+    });
 
-    expect(slackClient.chat.postMessage as jest.Mock).toHaveBeenCalledWith({
-      channel: "1111111",
-      text: "Das Issue 'Im due today' aus dem Projekt 'im-a-cool-project' ist heute fällig!",
-      username: "Micro Bots",
+    expect(slackPostMessageMock).toHaveBeenCalledWith({
+      channel: "1",
+      text: "⚠️ Das Ticket [Im due today](https://gitlab.test/issue/1) ist heute fällig!",
+      mrkdwn: true,
     });
   });
 
-  it("should not send a reminder", async () => {
-    (axios.get as jest.Mock)
-      .mockReturnValueOnce({
-        data: {
-          name: "im-a-cool-project",
-        },
-      })
-      .mockReturnValueOnce({
-        data: [
-          {
-            title: "Im not due today",
-            due_date: "2022-01-01",
-          },
-        ],
-      });
+  it("send no reminder when no due issues found", async () => {
+    axiosGetMock.mockReturnValueOnce({
+      data: [],
+    });
 
     await handler();
 
-    expect(console.log as jest.Mock).toHaveBeenCalledWith("No due issues were found for 2021-12-31");
+    expect(slackPostMessageMock).toBeCalledTimes(0);
+  });
 
-    expect(slackClient.chat.postMessage as jest.Mock).not.toHaveBeenCalled();
+  it("handle error on posting messages", async () => {
+    axiosGetMock.mockReturnValueOnce({
+      data: [
+        {
+          due_date: "2021-12-31",
+          title: "Im due today",
+          web_url: "https://gitlab.test/issue/1",
+        },
+        {
+          due_date: "2021-12-31",
+          title: "Im due today aswell",
+          web_url: "https://gitlab.test/issue/2",
+        },
+      ],
+    });
+
+    slackPostMessageMock.mockRejectedValueOnce({});
+
+    await handler();
+
+    expect(slackPostMessageMock).toBeCalledTimes(2);
   });
 });
