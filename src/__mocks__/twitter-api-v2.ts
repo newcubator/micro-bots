@@ -12,6 +12,21 @@ TwitterApi.mockImplementation(() => {
   };
 });
 
+export const secretsExample = {
+  client_email: "email@email.com",
+  private_key: "privatekey123",
+};
+
+export const getRowsExample = {
+  data: {
+    values: [
+      ["Guid", "Title"],
+      ["111111", "Wie teste ich Rust und Java"],
+      ["111115", "How to do something"],
+    ],
+  },
+};
+
 export const fakeRssFeedItemLong = {
   creator: "Max Mustermann",
   title:
@@ -20,7 +35,7 @@ export const fakeRssFeedItemLong = {
   pubDate: "FakeDate",
   content: "FakeContent",
   contentSnippet: "FakeSnippetContent",
-  guid: "FakeGuid",
+  guid: "1234",
   isoDate: "FakeIsoDate",
 };
 
@@ -31,7 +46,7 @@ export const fakeRssFeedItemShort = {
   pubDate: "FakeDate",
   content: "FakeContent",
   contentSnippet: "FakeSnippetContent",
-  guid: "FakeGuid",
+  guid: "1234",
   isoDate: "FakeIsoDate",
 };
 
