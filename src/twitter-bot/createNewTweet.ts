@@ -1,4 +1,4 @@
-import { shortenFeedTitle } from "./shortenFeedTitle";
+import { shortenFeedTitle } from "./shorten-feed-title";
 import { RssFeedItem, Tweet } from "./twitter-bot";
 
 export function createNewTweet(feedItem: RssFeedItem): Tweet {

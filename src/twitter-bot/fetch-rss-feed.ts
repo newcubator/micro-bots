@@ -1,4 +1,3 @@
-//RssFeed auslesen:
 import Parser from "rss-parser";
 import { RssFeedItem } from "./twitter-bot";
 export const parser = new Parser();

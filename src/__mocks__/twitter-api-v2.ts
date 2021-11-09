@@ -11,6 +11,7 @@ TwitterApi.mockImplementation(() => {
     },
   };
 });
+
 export const fakeRssFeedItemLong = {
   creator: "Max Mustermann",
   title:
@@ -33,6 +34,8 @@ export const fakeRssFeedItemShort = {
   guid: "FakeGuid",
   isoDate: "FakeIsoDate",
 };
+
+//export const emptyFeedArray = [{}];
 
 export const fakeRssFeed = [
   {
