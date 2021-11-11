@@ -5,8 +5,7 @@ import { decode, ParsedUrlQuery } from "querystring";
 export interface ContactRequest extends ParsedUrlQuery {
   title: string;
   message: string;
-  firstname: string;
-  lastname: string;
+  name: string;
   email: string;
 }
 
@@ -18,7 +17,7 @@ const ALLOWED_ORIGINS = ["https://newcubator.com", "http://localhost:8000", "htt
 export const handler = async (event: APIGatewayEvent) => {
   const command: ContactRequest = decode(event.body) as ContactRequest;
   console.log(
-    `Contact Request from ${command?.title} ${command.firstname} ${command.lastname} (${command.email}) with message: "${command.message}"`
+    `Contact Request from ${command?.title} ${command.name} (${command.email}) with message: "${command.message}"`
   );
 
   const requestOrigin = event.headers?.["origin"];
@@ -32,15 +31,14 @@ export const handler = async (event: APIGatewayEvent) => {
   const emailRequest: SendEmailRequest = {
     Message: {
       Subject: {
-        Data: `Kontaktanfrage von ${command.firstname} ${command.lastname}`,
+        Data: `Kontaktanfrage von ${command.name}`,
         Charset: "utf8",
       },
       Body: {
         Text: {
           Data: `
 Anrede: ${command?.title}
-Vorname: ${command.firstname}
-Nachname: ${command.lastname}
+Name: ${command.name}
 Email: ${command.email}
 Nachricht: ${command.message}
                     `,
