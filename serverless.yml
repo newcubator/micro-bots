@@ -167,6 +167,6 @@ functions:
           path: workloadAll
       - schedule:
           enabled: true
-          rate: cron(0 16 ? * FRI *) # At 04:00PM (UTC) on Friday
+          rate: cron(0 18 ? * FRI *) # At 06:00PM (UTC) on Friday
     handler: src/functions/workload-all.handler
     memorySize: 128
