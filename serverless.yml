@@ -38,7 +38,6 @@ provider:
     TWITTER_APP_KEY: ${env:TWITTER_APP_KEY}
     TWITTER_APP_SECRET: ${env:TWITTER_APP_SECRET}
     TWITTER_BOT_SPREADSHEET_ID: ${env:TWITTER_BOT_SPREADSHEET_ID}
-    WORKLOAD_CHANNEL: ${env:WORKLOAD_CHANNEL}
     WORKLOAD_PERCENTAGE: ${env:WORKLOAD_PERCENTAGE}
 
 plugins:
@@ -152,7 +151,7 @@ functions:
     events:
       - schedule:
           enabled: true
-          rate: cron(0 18 * * ? *)
+          rate: cron(0 17 * * ? *)
     handler: src/functions/twitter-bot.handler
     memorySize: 128
   unlockProject:
