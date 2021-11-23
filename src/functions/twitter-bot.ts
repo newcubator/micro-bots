@@ -13,8 +13,8 @@ export const handler = async () => {
     const tweets = await fetchTweetsFromSpreadsheet(googleSheetsAccessor);
     const notYetTweeted = filterUntweetedFeed(feed, tweets);
     const newTweet = createNewTweet(notYetTweeted[0]);
-    sendTweet(newTweet.message)
-      .then(async () => await saveToSpreadsheet(googleSheetsAccessor, newTweet))
+    saveToSpreadsheet(googleSheetsAccessor, newTweet)
+      .then(async () => await sendTweet(newTweet.message))
       .catch((err) => {
         throw new Error(err);
       });

@@ -1,13 +1,5 @@
 import Parser from "rss-parser";
 import { TweetV1 } from "twitter-api-v2";
-import {
-  fakeGoogleSheet,
-  fakeRssFeed,
-  fakeRssFeedItemLong,
-  fakeRssFeedItemShort,
-  getRowsExample,
-  secretsExample,
-} from "../__mocks__/twitter-api-v2";
 import { AwsSecretsManager } from "../clients/aws-secrets-manager";
 import { GoogleSheetsAccessor } from "../clients/google-sheets-accessor";
 import { twitterClient } from "../clients/twitter";
@@ -31,6 +23,110 @@ jest.mock("../clients/google-sheets-accessor", () => {
     })),
   };
 });
+
+const secretsExample = {
+  client_email: "email@email.com",
+  private_key: "privatekey123",
+};
+
+const getRowsExample = {
+  data: {
+    values: [
+      ["Guid", "Title"],
+      ["111111", "Wie teste ich Rust und Java"],
+      ["111115", "How to do something"],
+    ],
+  },
+};
+
+const fakeRssFeedItemLong = {
+  creator: "Max Mustermann",
+  title:
+    "j4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAURj4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAURj4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAURj4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAURj4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAURj4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAUR",
+  link: "FakeLink",
+  pubDate: "FakeDate",
+  content: "FakeContent",
+  contentSnippet: "FakeSnippetContent",
+  guid: "1234",
+  isoDate: "FakeIsoDate",
+};
+
+const fakeRssFeedItemShort = {
+  creator: "Max Mustermann",
+  title: "j4RkRKjmHoV3iR",
+  link: "FakeLink",
+  pubDate: "FakeDate",
+  content: "FakeContent",
+  contentSnippet: "FakeSnippetContent",
+  guid: "1234",
+  isoDate: "FakeIsoDate",
+};
+
+//export const emptyFeedArray = [{}];
+
+const fakeRssFeed = [
+  {
+    creator: "Max Mustermann",
+    title: "Wie teste ich Rust und Java",
+    link: "FakeLink",
+    pubDate: "FakeDate",
+    content: "FakeContent",
+    contentSnippet: "FakeSnippetContent",
+    guid: "111111",
+    isoDate: "FakeIsoDate",
+  },
+  {
+    creator: "Max Mustermann",
+    title: "Wie teste ich Rust und Java 2",
+    link: "FakeLink",
+    pubDate: "FakeDate",
+    content: "FakeContent",
+    contentSnippet: "FakeSnippetContent",
+    guid: "111112",
+    isoDate: "FakeIsoDate",
+  },
+  {
+    creator: "Max Mustermann",
+    title: "Wie teste ich Python",
+    link: "FakeLink",
+    pubDate: "FakeDate",
+    content: "FakeContent",
+    contentSnippet: "FakeSnippetContent",
+    guid: "111113",
+    isoDate: "FakeIsoDate",
+  },
+  {
+    creator: "Max Mustermann",
+    title: "How to do something 3",
+    link: "FakeLink",
+    pubDate: "FakeDate",
+    content: "FakeContent",
+    contentSnippet: "FakeSnippetContent",
+    guid: "111114",
+    isoDate: "FakeIsoDate",
+  },
+  {
+    creator: "Max Mustermann",
+    title: "How to do something",
+    link: "FakeLink",
+    pubDate: "FakeDate",
+    content: "FakeContent",
+    contentSnippet: "FakeSnippetContent",
+    guid: "111115",
+    isoDate: "FakeIsoDate",
+  },
+];
+
+const fakeGoogleSheet = [
+  {
+    guid: "111111",
+    title: "Wie teste ich Rust und Java",
+  },
+  {
+    guid: "111115",
+    title: "How to do something",
+  },
+];
 
 describe("TwitterBot", () => {
   beforeEach(() => {
@@ -97,10 +193,10 @@ describe("TwitterBot", () => {
       .mockResolvedValueOnce({ addRows: jest.fn() } as unknown as GoogleSheetsAccessor);
     jest.spyOn(fetchTweetsFromSpreadsheet, "fetchTweetsFromSpreadsheet").mockResolvedValue(fakeGoogleSheet);
     jest.spyOn(fetchRssFeed, "fetchRssFeed").mockResolvedValue(fakeRssFeed);
-    const saveToSpreadsheetMock = jest.spyOn(saveToSpreadsheet, "saveToSpreadsheet");
     const sendTweetMock = jest.spyOn(sendTweet, "sendTweet").mockResolvedValue({} as TweetV1);
+    const saveToSpreadsheetMock = jest.spyOn(saveToSpreadsheet, "saveToSpreadsheet").mockResolvedValue();
     await handler();
-    expect(sendTweetMock).toHaveBeenCalled();
+    expect(sendTweetMock).toHaveBeenCalledTimes(1);
     expect(saveToSpreadsheetMock).toHaveBeenCalled();
   });
 

@@ -33,11 +33,6 @@ provider:
     MOCO_TOKEN: ${env:MOCO_TOKEN}
     SLACK_TOKEN: ${env:SLACK_TOKEN}
     GENERAL_CHANNEL: ${env:GENERAL_CHANNEL}
-    TWITTER_ACCESS_SECRET: ${env:TWITTER_ACCESS_SECRET}
-    TWITTER_ACCESS_TOKEN: ${env:TWITTER_ACCESS_TOKEN}
-    TWITTER_APP_KEY: ${env:TWITTER_APP_KEY}
-    TWITTER_APP_SECRET: ${env:TWITTER_APP_SECRET}
-    TWITTER_BOT_SPREADSHEET_ID: ${env:TWITTER_BOT_SPREADSHEET_ID}
     WORKLOAD_PERCENTAGE: ${env:WORKLOAD_PERCENTAGE}
 
 plugins:
@@ -148,10 +143,16 @@ functions:
     handler: src/functions/private-channel.handler
     memorySize: 128
   twitterBot:
+    environment:
+      TWITTER_ACCESS_SECRET: ${env:TWITTER_ACCESS_SECRET}
+      TWITTER_ACCESS_TOKEN: ${env:TWITTER_ACCESS_TOKEN}
+      TWITTER_APP_KEY: ${env:TWITTER_APP_KEY}
+      TWITTER_APP_SECRET: ${env:TWITTER_APP_SECRET}
+      TWITTER_BOT_SPREADSHEET_ID: ${env:TWITTER_BOT_SPREADSHEET_ID}
     events:
       - schedule:
           enabled: true
-          rate: cron(0 17 * * ? *)
+          rate: cron(0 16 * * ? *)
     handler: src/functions/twitter-bot.handler
     memorySize: 128
   unlockProject:
