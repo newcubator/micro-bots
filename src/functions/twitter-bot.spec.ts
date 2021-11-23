@@ -3,12 +3,12 @@ import { TweetV1 } from "twitter-api-v2";
 import { AwsSecretsManager } from "../clients/aws-secrets-manager";
 import { GoogleSheetsAccessor } from "../clients/google-sheets-accessor";
 import { twitterClient } from "../clients/twitter";
-import { createNewTweet } from "../twitter-bot/createNewTweet";
-import * as fetchRssFeed from "../twitter-bot/fetch-rss-feed";
-import * as fetchTweetsFromSpreadsheet from "../twitter-bot/fetch-tweets-from-spreadsheet";
-import { filterUntweetedFeed } from "../twitter-bot/filter-untweeted-feed";
-import * as saveToSpreadsheet from "../twitter-bot/save-to-spreadsheet";
-import * as sendTweet from "../twitter-bot/send-tweet";
+import { composeTweetFromPost } from "../twitter-bot/composeTweetFromPost";
+import * as fetchRssFeed from "../twitter-bot/get-dev-squad-posts";
+import * as fetchTweetsFromSpreadsheet from "../twitter-bot/get-already-tweeted-dev-squad-posts";
+import { filterUntweetedDevSquadPosts } from "../twitter-bot/filter-untweeted-dev-squad-posts";
+import * as saveToSpreadsheet from "../twitter-bot/save-tweeted-post";
+import * as sendTweet from "../twitter-bot/tweet";
 import * as setUpSheetsAccessor from "../twitter-bot/set-up-sheets-accessor";
 import { Tweet } from "../twitter-bot/twitter-bot";
 import { handler } from "./twitter-bot";
@@ -134,48 +134,48 @@ describe("TwitterBot", () => {
   });
 
   it("should shorten tweets longer than 280 chars", () => {
-    const result = createNewTweet(fakeRssFeedItemLong);
+    const result = composeTweetFromPost(fakeRssFeedItemLong);
     expect(result.message).toHaveLength(280);
   });
 
   it("should not shorten tweets shorter than 280 chars", () => {
-    const result = createNewTweet(fakeRssFeedItemShort);
+    const result = composeTweetFromPost(fakeRssFeedItemShort);
     expect(result.message.length).toBeLessThanOrEqual(280);
   });
 
   it("should always start with 'Neues aus dem Entwicklerteam:' and end with #devsquad", () => {
-    const result1 = createNewTweet(fakeRssFeedItemLong);
-    const result2 = createNewTweet(fakeRssFeedItemShort);
+    const result1 = composeTweetFromPost(fakeRssFeedItemLong);
+    const result2 = composeTweetFromPost(fakeRssFeedItemShort);
     expect(result1.message).toContain("Neues aus dem Entwicklerteam:" && "#devsquad");
     expect(result2.message).toContain("Neues aus dem Entwicklerteam:" && "#devsquad");
   });
 
   it("should call Newcubator Website", async () => {
-    const data = await fetchRssFeed.fetchRssFeed();
+    const data = await fetchRssFeed.getDevSquadPosts();
     expect(data).toEqual([]);
     expect(ParserMock.prototype.parseURL).toBeCalledWith("https://newcubator.com/devsquad/rss.xml");
   });
 
   it("should not filter similar Feed Item", () => {
-    const result = filterUntweetedFeed(fakeRssFeed, fakeGoogleSheet);
+    const result = filterUntweetedDevSquadPosts(fakeRssFeed, fakeGoogleSheet);
     expect(result[0]).toBe(fakeRssFeed[1]);
   });
 
   it("should send a tweet", async () => {
     const message = "This is a tweet";
-    await sendTweet.sendTweet(message);
+    await sendTweet.tweet(message);
     expect(twitterClient.v1.tweet).toBeCalledWith(message);
   });
 
   it('should log out "Tweet: something"', async () => {
     console.log = jest.fn();
     const message = "This is a tweet";
-    await sendTweet.sendTweet(message);
+    await sendTweet.tweet(message);
     expect(console.log).toHaveBeenCalledWith("Tweet", "", ":", "");
   });
 
   it("should fetch tweets from google sheet", async () => {
-    const result = await fetchTweetsFromSpreadsheet.fetchTweetsFromSpreadsheet(new GoogleSheetsAccessor());
+    const result = await fetchTweetsFromSpreadsheet.getAlreadyTweetedDevSquadPosts(new GoogleSheetsAccessor());
     expect(result).toMatchSnapshot();
   });
 
@@ -191,10 +191,10 @@ describe("TwitterBot", () => {
     jest
       .spyOn(setUpSheetsAccessor, "setUpSheetsAccessor")
       .mockResolvedValueOnce({ addRows: jest.fn() } as unknown as GoogleSheetsAccessor);
-    jest.spyOn(fetchTweetsFromSpreadsheet, "fetchTweetsFromSpreadsheet").mockResolvedValue(fakeGoogleSheet);
-    jest.spyOn(fetchRssFeed, "fetchRssFeed").mockResolvedValue(fakeRssFeed);
-    const sendTweetMock = jest.spyOn(sendTweet, "sendTweet").mockResolvedValue({} as TweetV1);
-    const saveToSpreadsheetMock = jest.spyOn(saveToSpreadsheet, "saveToSpreadsheet").mockResolvedValue();
+    jest.spyOn(fetchTweetsFromSpreadsheet, "getAlreadyTweetedDevSquadPosts").mockResolvedValue(fakeGoogleSheet);
+    jest.spyOn(fetchRssFeed, "getDevSquadPosts").mockResolvedValue(fakeRssFeed);
+    const sendTweetMock = jest.spyOn(sendTweet, "tweet").mockResolvedValue({} as TweetV1);
+    const saveToSpreadsheetMock = jest.spyOn(saveToSpreadsheet, "saveTweetedPost").mockResolvedValue();
     await handler();
     expect(sendTweetMock).toHaveBeenCalledTimes(1);
     expect(saveToSpreadsheetMock).toHaveBeenCalled();
@@ -204,11 +204,11 @@ describe("TwitterBot", () => {
     jest
       .spyOn(setUpSheetsAccessor, "setUpSheetsAccessor")
       .mockResolvedValueOnce({ addRows: jest.fn() } as unknown as GoogleSheetsAccessor);
-    jest.spyOn(fetchTweetsFromSpreadsheet, "fetchTweetsFromSpreadsheet").mockResolvedValue(fakeGoogleSheet);
-    jest.spyOn(fetchRssFeed, "fetchRssFeed").mockResolvedValueOnce([]);
-    jest.spyOn(fetchTweetsFromSpreadsheet, "fetchTweetsFromSpreadsheet").mockResolvedValueOnce([]);
-    const saveToSpreadsheetMock = jest.spyOn(saveToSpreadsheet, "saveToSpreadsheet");
-    const sendTweetMock = jest.spyOn(sendTweet, "sendTweet").mockResolvedValue({} as TweetV1);
+    jest.spyOn(fetchTweetsFromSpreadsheet, "getAlreadyTweetedDevSquadPosts").mockResolvedValue(fakeGoogleSheet);
+    jest.spyOn(fetchRssFeed, "getDevSquadPosts").mockResolvedValueOnce([]);
+    jest.spyOn(fetchTweetsFromSpreadsheet, "getAlreadyTweetedDevSquadPosts").mockResolvedValueOnce([]);
+    const saveToSpreadsheetMock = jest.spyOn(saveToSpreadsheet, "saveTweetedPost");
+    const sendTweetMock = jest.spyOn(sendTweet, "tweet").mockResolvedValue({} as TweetV1);
     await handler();
     expect(sendTweetMock).toHaveBeenCalledTimes(0);
     expect(saveToSpreadsheetMock).toHaveBeenCalledTimes(0);
