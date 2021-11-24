@@ -22,10 +22,10 @@
     "test": "jest"
   },
   "dependencies": {
-    "@aws-sdk/client-eventbridge": "3.41.0",
-    "@aws-sdk/client-ses": "3.41.0",
-    "@sentry/node": "6.14.3",
-    "@slack/web-api": "6.5.0",
+    "@aws-sdk/client-eventbridge": "3.42.0",
+    "@aws-sdk/client-ses": "3.42.0",
+    "@sentry/node": "6.15.0",
+    "@slack/web-api": "6.5.1",
     "axios": "0.24.0",
     "dayjs": "1.10.7",
     "dayjs-business-time": "1.0.4",
@@ -34,18 +34,18 @@
   },
   "devDependencies": {
     "@types/aws-lambda": "8.10.85",
-    "@types/jest": "27.0.2",
-    "@types/node": "16.11.7",
+    "@types/jest": "27.0.3",
+    "@types/node": "16.11.10",
     "dotenv": "10.0.0",
-    "esbuild": "0.13.13",
+    "esbuild": "0.13.15",
     "jest": "27.3.1",
     "jest-file-snapshot": "0.5.0",
     "mockdate": "3.0.5",
     "prettier": "2.4.1",
-    "serverless": "2.66.1",
-    "serverless-esbuild": "1.21.2",
+    "serverless": "2.66.2",
+    "serverless-esbuild": "1.22.0",
     "serverless-sentry": "2.3.0",
     "ts-jest": "27.0.7",
-    "typescript": "4.4.4"
+    "typescript": "4.5.2"
   }
 }
