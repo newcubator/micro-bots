@@ -1,0 +1,21 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`TwitterBot should fetch tweets from google sheet 1`] = `
+Array [
+  Object {
+    "guid": "111111",
+    "title": "Wie teste ich Rust und Java",
+  },
+  Object {
+    "guid": "111115",
+    "title": "How to do something",
+  },
+]
+`;
+
+exports[`TwitterBot should set up Sheetsaccessor 1`] = `
+Object {
+  "getRows": [Function],
+  "setupGoogle": [Function],
+}
+`;
