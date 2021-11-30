@@ -3,8 +3,9 @@ import { getAlreadyTweetedDevSquadPosts } from "../twitter-bot/get-already-tweet
 import { getDevSquadPosts } from "../twitter-bot/get-dev-squad-posts";
 import { filterUntweetedDevSquadPosts } from "../twitter-bot/filter-untweeted-dev-squad-posts";
 import { saveTweetedPost } from "../twitter-bot/save-tweeted-post";
-import { tweet } from "../twitter-bot/tweet";
 import { setUpSheetsAccessor } from "../twitter-bot/set-up-sheets-accessor";
+import { TweetV1 } from "twitter-api-v2";
+import { twitterClient } from "../clients/twitter";
 
 export const handler = async () => {
   try {
@@ -12,12 +13,16 @@ export const handler = async () => {
     const feed = await getDevSquadPosts();
     const tweets = await getAlreadyTweetedDevSquadPosts(googleSheetsAccessor);
     const notYetTweeted = filterUntweetedDevSquadPosts(feed, tweets);
-    const newTweet = composeTweetFromPost(notYetTweeted[0]);
-    saveTweetedPost(googleSheetsAccessor, newTweet)
-      .then(async () => await tweet(newTweet.message))
-      .catch((err) => {
-        throw new Error(err);
-      });
+    console.info(`Found ${notYetTweeted.length} possible Tweets.`);
+
+    const plannedTweet = composeTweetFromPost(notYetTweeted[0]);
+    console.info(`Planned Tweeting ${plannedTweet.guid}: ${plannedTweet.message}`);
+
+    await saveTweetedPost(googleSheetsAccessor, plannedTweet);
+    console.info("Saved new Tweet.");
+
+    const createdTweet = await twitterClient.v1.tweet(plannedTweet.message);
+    console.info(`Tweeted ${createdTweet.id_str}: ${createdTweet.full_text}`);
   } catch (err) {
     console.error(err);
   }
