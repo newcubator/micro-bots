@@ -1,5 +1,4 @@
 import Parser from "rss-parser";
-import { TweetV1 } from "twitter-api-v2";
 import { AwsSecretsManager } from "../clients/aws-secrets-manager";
 import { GoogleSheetsAccessor } from "../clients/google-sheets-accessor";
 import { twitterClient } from "../clients/twitter";
@@ -8,7 +7,6 @@ import * as fetchRssFeed from "../twitter-bot/get-dev-squad-posts";
 import * as fetchTweetsFromSpreadsheet from "../twitter-bot/get-already-tweeted-dev-squad-posts";
 import { filterUntweetedDevSquadPosts } from "../twitter-bot/filter-untweeted-dev-squad-posts";
 import * as saveToSpreadsheet from "../twitter-bot/save-tweeted-post";
-import * as sendTweet from "../twitter-bot/tweet";
 import * as setUpSheetsAccessor from "../twitter-bot/set-up-sheets-accessor";
 import { Tweet } from "../twitter-bot/twitter-bot";
 import { handler } from "./twitter-bot";
@@ -161,19 +159,6 @@ describe("TwitterBot", () => {
     expect(result[0]).toBe(fakeRssFeed[1]);
   });
 
-  it("should send a tweet", async () => {
-    const message = "This is a tweet";
-    await sendTweet.tweet(message);
-    expect(twitterClient.v1.tweet).toBeCalledWith(message);
-  });
-
-  it('should log out "Tweet: something"', async () => {
-    console.log = jest.fn();
-    const message = "This is a tweet";
-    await sendTweet.tweet(message);
-    expect(console.log).toHaveBeenCalledWith("Tweet", "", ":", "");
-  });
-
   it("should fetch tweets from google sheet", async () => {
     const result = await fetchTweetsFromSpreadsheet.getAlreadyTweetedDevSquadPosts(new GoogleSheetsAccessor());
     expect(result).toMatchSnapshot();
@@ -193,11 +178,12 @@ describe("TwitterBot", () => {
       .mockResolvedValueOnce({ addRows: jest.fn() } as unknown as GoogleSheetsAccessor);
     jest.spyOn(fetchTweetsFromSpreadsheet, "getAlreadyTweetedDevSquadPosts").mockResolvedValue(fakeGoogleSheet);
     jest.spyOn(fetchRssFeed, "getDevSquadPosts").mockResolvedValue(fakeRssFeed);
-    const sendTweetMock = jest.spyOn(sendTweet, "tweet").mockResolvedValue({} as TweetV1);
-    const saveToSpreadsheetMock = jest.spyOn(saveToSpreadsheet, "saveTweetedPost").mockResolvedValue();
+    const saveToSpreadsheetMock = jest.spyOn(saveToSpreadsheet, "saveTweetedPost").mockResolvedValue({});
+
     await handler();
-    expect(sendTweetMock).toHaveBeenCalledTimes(1);
+
     expect(saveToSpreadsheetMock).toHaveBeenCalled();
+    expect(twitterClient.v1.tweet).toHaveBeenCalled();
   });
 
   it("should not send", async () => {
@@ -208,9 +194,10 @@ describe("TwitterBot", () => {
     jest.spyOn(fetchRssFeed, "getDevSquadPosts").mockResolvedValueOnce([]);
     jest.spyOn(fetchTweetsFromSpreadsheet, "getAlreadyTweetedDevSquadPosts").mockResolvedValueOnce([]);
     const saveToSpreadsheetMock = jest.spyOn(saveToSpreadsheet, "saveTweetedPost");
-    const sendTweetMock = jest.spyOn(sendTweet, "tweet").mockResolvedValue({} as TweetV1);
+
     await handler();
-    expect(sendTweetMock).toHaveBeenCalledTimes(0);
-    expect(saveToSpreadsheetMock).toHaveBeenCalledTimes(0);
+
+    expect(saveToSpreadsheetMock).not.toHaveBeenCalled();
+    expect(twitterClient.v1.tweet).not.toHaveBeenCalled();
   });
 });
