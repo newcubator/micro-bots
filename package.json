@@ -38,7 +38,7 @@
     "twitter-api-v2": "1.7.1"
   },
   "devDependencies": {
-    "@types/aws-lambda": "8.10.85",
+    "@types/aws-lambda": "8.10.86",
     "@types/jest": "27.0.3",
     "@types/node": "16.11.11",
     "dotenv": "10.0.0",
