@@ -12,10 +12,10 @@ export const getUsersWithVacationDatesAndEmployment = async (users: MocoUserType
           await getUserSchedules(
             date.subtract(28, "day").format("YYYY-MM-DD"),
             date.add(28, "day").format("YYYY-MM-DD"),
-            user.id,
-            4
+            user.id
           )
         ).data
+          .filter((schedule) => ["Feiertag", "Urlaub"].includes(schedule.assignment.name))
           .map((e) => e.date)
           .sort((a, b) => a.localeCompare(b)),
         employment: (

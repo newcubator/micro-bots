@@ -15,7 +15,11 @@ dayjs.extend(isBetween);
 export const createVacationHandoverIssues = async (vacationIssues: GitlabIssue[]) => {
   // get scheduled vacations in 7 days
   const day = dayjs().add(7, "day");
-  const schedules = await getSchedules(day.format("YYYY-MM-DD"), day.format("YYYY-MM-DD"), 4);
+  const dayFormatted = day.format("YYYY-MM-DD");
+
+  const schedules = (await getSchedules(dayFormatted, dayFormatted)).filter((schedule) =>
+    ["Feiertag", "Urlaub"].includes(schedule.assignment.name)
+  );
 
   const usersWithVacationsScheduled = filterUsersWithoutOpenVacationHandoverIssues(schedules, vacationIssues);
 

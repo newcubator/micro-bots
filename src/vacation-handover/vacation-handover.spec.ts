@@ -20,6 +20,9 @@ const exampleSchedulesResponse = {
         firstname: "Peter",
         lastname: "Silie",
       },
+      assignment: {
+        name: "Urlaub",
+      },
     },
   ],
   headers: { link: "" },
@@ -29,33 +32,63 @@ const exampleUserSchedulesResponse = {
   data: [
     {
       date: "2021-08-19",
+      assignment: {
+        name: "Urlaub",
+      },
     },
     {
       date: "2021-08-20",
+      assignment: {
+        name: "Urlaub",
+      },
     },
     {
       date: "2021-08-23",
+      assignment: {
+        name: "Urlaub",
+      },
     },
     {
       date: "2021-08-24",
+      assignment: {
+        name: "Urlaub",
+      },
     },
     {
       date: "2021-08-25",
+      assignment: {
+        name: "Urlaub",
+      },
     },
     {
       date: "2021-08-26",
+      assignment: {
+        name: "Feiertag",
+      },
     },
     {
       date: "2021-08-27",
+      assignment: {
+        name: "Urlaub",
+      },
     },
     {
       date: "2021-08-30",
+      assignment: {
+        name: "Urlaub",
+      },
     },
     {
       date: "2021-08-31",
+      assignment: {
+        name: "Urlaub",
+      },
     },
     {
       date: "2021-09-01",
+      assignment: {
+        name: "Urlaub",
+      },
     },
   ],
 };
@@ -106,11 +139,11 @@ describe("vacation-handover", () => {
 
     expect(axios.get).nthCalledWith(1, "https://newcubator.mocoapp.com/api/v1/schedules", {
       headers: { Authorization: "Token token=not a real moco token" },
-      params: { absence_code: 4, from: "2021-08-31", page: 1, to: "2021-08-31" },
+      params: { from: "2021-08-31", page: 1, to: "2021-08-31" },
     });
     expect(axios.get).nthCalledWith(2, "https://newcubator.mocoapp.com/api/v1/schedules", {
       headers: { Authorization: "Token token=not a real moco token" },
-      params: { absence_code: 4, from: "2021-08-03", to: "2021-09-28", user_id: 444555666 },
+      params: { from: "2021-08-03", to: "2021-09-28", user_id: 444555666 },
     });
     expect(axios.get).nthCalledWith(3, "https://newcubator.mocoapp.com/api/v1/users/employments", {
       headers: { Authorization: "Token token=not a real moco token" },
@@ -137,12 +170,21 @@ describe("vacation-handover", () => {
         data: [
           {
             date: "2021-08-23",
+            assignment: {
+              name: "Urlaub",
+            },
           },
           {
             date: "2021-08-24",
+            assignment: {
+              name: "Feiertag",
+            },
           },
           {
             date: "2021-08-25",
+            assignment: {
+              name: "Urlaub",
+            },
           },
         ],
       })

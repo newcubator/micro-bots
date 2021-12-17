@@ -3,7 +3,9 @@ import { createVacationHandoverIssues } from "../vacation-handover/create-vacati
 
 export const handler = async () => {
   // get all issues with "Urlaubsübergabe" in the title
-  const vacationIssues = (await getIssues(process.env.GITLAB_BOOK_PROJECT_ID, "Urlaubsübergabe", "title")).data;
+  const vacationIssues = (
+    await getIssues(process.env.GITLAB_BOOK_PROJECT_ID, { search: "Urlaubsübergabe", in: "title" })
+  ).data;
 
   await Promise.all([createVacationHandoverIssues(vacationIssues)]);
 };
