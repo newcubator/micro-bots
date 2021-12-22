@@ -1,6 +1,6 @@
 import { AxiosResponse } from "axios";
 import dayjs from "dayjs";
-import { GitlabIssue, GitlabIssueTemplate } from "../gitlab/gitlab";
+import { GitlabIssue } from "../gitlab/gitlab";
 import { postIssue } from "../gitlab/issues";
 import { MocoEmployment, MocoUserType } from "../moco/types/moco-types";
 import { calculateDueDate } from "./calculate-due-date";
