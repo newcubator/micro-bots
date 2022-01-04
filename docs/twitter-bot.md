@@ -7,6 +7,8 @@ Right now, the source url is hardcoded. If you wish to change the RSS source, yo
 
 The bot saves published tweets in Google Sheets. The tweets are saved line by line. The issue number is stored in the first column and the title in the second column.
 
+![Twitter Bot](docs/twitter-bot.mp4)
+
 ## Prerequisites
 
 - [(free) Twitter Developer Account](https://developer.twitter.com/)
@@ -16,7 +18,7 @@ The bot saves published tweets in Google Sheets. The tweets are saved line by li
 
 ## How to Use
 
-1. Get the following Twitter developer keys
+1. Get the following Twitter developer keys :key:
 
 - TWITTER_ACCESS_SECRET
 - TWITTER_ACCESS_TOKEN
@@ -25,7 +27,30 @@ The bot saves published tweets in Google Sheets. The tweets are saved line by li
 
 Add the keys to the environment variables in Gitlab (Settings > CI/CD > Variables).
 
-2. Get the [Google Sheets accessor key](https://developers.google.com/sheets/api/guides/authorizing#APIKey)
+2. Get the corresponding information for your google sheet:
+
+| Information                 | Value                                         |
+| --------------------------- | --------------------------------------------- |
+| type                        | your account type                             |
+| project_id                  | your project id                               |
+| private_key_id              | your private key id                           |
+| private_key                 | your private key                              |
+| client_email                | the mail adress you use for your google sheet |
+| client_id                   | your client id                                |
+| auth_uri                    | https://accounts.google.com/o/oauth2/auth     |
+| token_uri                   | https://oauth2.googleapis.com/token           |
+| auth_provider_x509_cert_url | https://www.googleapis.com/oauth2/v1/certs    |
+| client_x509_cert_url        | your personal client url                      |
+
+Then add this information as a secret to **the aws secret manager**.
+
+Also add the concrete sheet id (TWITTER_BOT_SPREADSHEET_ID) to the gitlab variables (Settings > CI/CD > Variables).
+You get it here: `https://docs.google.com/spreadsheets/d/TWITTER_BOT_SPREADSHEET_ID/`
+
+3. Get the keys for your AWS secret manager :key:
+
+- AWS_ACCESS_KEY_ID_GOOGLE
+- AWS_SECRET_ACCESS_KEY_GOOGLE
 
 Add the key to the environment variables in Gitlab (Settings > CI/CD > Variables).
 
@@ -36,13 +61,3 @@ To start the Twitter bot locally, run the following command:
 ```
 npm run invoke:twitterBot
 ```
-
-## Testing
-
-To run the Twitter bot tests, run the following command:
-
-```
-npm run test
-```
-
-![Twitter Bot](docs/twitter-bot.mp4)
