@@ -59,5 +59,5 @@ Add the key to the environment variables in Gitlab (Settings > CI/CD > Variables
 To start the Twitter bot locally, run the following command:
 
 ```
-npm run invoke:twitterBot
+npm run invoke --function=twitterBot
 ```
