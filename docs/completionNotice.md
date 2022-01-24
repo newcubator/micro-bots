@@ -1,24 +1,41 @@
-# Project Completion Notice
+# About the Project Completion Notice Bot
 
 A Slack Slash Command that maks it easy to generate project completion notices that are then send to the client. After calling command all ather the needed information for the PDF can be entered interactivly. The final pdf is then posted in the slack thread of the command.
 
+## Prerequisites
+
+- create a [slack app](https://api.slack.com/authentication/basics)
+- add the completion-notice [Slash Command](https://api.slack.com/interactivity/slash-commands) to your app
+- get the SLACK_TOKEN
+- get your [MOCO_TOKEN](https://www.mocoapp.com/funktionen/20-connect/inhalt/52-schnittstellen)
+- add the tokens to the environment variables in Gitlab (Settings > CI/CD > Variables).
+
 ## Technical Flow
 
-```mermaid
-seqdiag {
-  //activation = none;
-
-  Slack  -> commandHandler [label = "Slash Command"];
-  Slack <-- commandHandler [label = "Message Projekt Dropdown"];
-  Slack -> interactivityHandler [label = "Dropdown Selection"];
-           interactivityHandler -> eventHandler [label = "AWS Event"];
-           interactivityHandler -> Slack [label = "Update Message"];
-  Slack <-- interactivityHandler
-  eventHandler -> Slack [label = "Upload PDF"];
-  eventHandler -> Slack [label = "Update Message"];
-}
-```
+[![](https://mermaid.ink/img/pako:eNqNkc1qwzAQhF9l2XPyAjoESp3SSyFgSi-6LNI2Ua2fVJJTQsi7V3JtN4ZQKtBl9puZhb2gCppRYOLPnr3ixtA-kgPpAVpLqgNYbzaggnPk9XP5lqOoo3SAxx-1sksA1tU0-AW8cEq0Z9jF8MFdhiaGow5f_reiwsZnjqSyOZl8nnsmFlq2XIZhcM3vnmlI4xP7PKc8vLWwrcr_zOPer0dNmaf1pb_P3xhq-m3xMswG0rBrnv6mlpWVxRU6jo6MLme6VEViPrBjiaUSNcVOovTXwvWDfatNDhHFO9nEK6Q-h_bsFYoce56g8c4jdf0GCu-w0A)](https://mermaid.live/edit#pako:eNqNkc1qwzAQhF9l2XPyAjoESp3SSyFgSi-6LNI2Ua2fVJJTQsi7V3JtN4ZQKtBl9puZhb2gCppRYOLPnr3ixtA-kgPpAVpLqgNYbzaggnPk9XP5lqOoo3SAxx-1sksA1tU0-AW8cEq0Z9jF8MFdhiaGow5f_reiwsZnjqSyOZl8nnsmFlq2XIZhcM3vnmlI4xP7PKc8vLWwrcr_zOPer0dNmaf1pb_P3xhq-m3xMswG0rBrnv6mlpWVxRU6jo6MLme6VEViPrBjiaUSNcVOovTXwvWDfatNDhHFO9nEK6Q-h_bsFYoce56g8c4jdf0GCu-w0A)
 
 As Slack only gives 3 seconds for handling interactions the geatering and generation of the PDF is done decoupled via Amazon EventBridge.
 
-This implementation uses [Slack user interactions](https://api.slack.com/interactivity/handling). For this only one endpoint for all implementations can be configured. Fos now this is done only for this functionality.
+This implementation uses [Slack user interactions](https://api.slack.com/interactivity/handling). For this only one endpoint for all implementations can be configured. For now this is done only for this functionality.
+
+## How to Use
+
+To use the completion notice bot, just type /completion-notice in any chat.
+
+```
+/completion-notice
+```
+
+![Completion-Notice](completionNotice1.png)
+
+Then select the project for which you want to create the completion notice from the drop-down menu.
+
+![Completion-Notice](completionNotice2.png)
+
+The bot gives you feedback that it is creating the completion notice:
+
+![Completion-Notice](completionNotice3.png)
+
+Then the bot will reply in the thread with the completion notice as a PDF to download, just like this:
+
+![Completion-Notice](completionNotice4.png)
