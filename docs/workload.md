@@ -1,6 +1,6 @@
 # About the Workload Bots
 
-The workload bots are used to gain an overview over the employees tracked times for customer projects. Newcubator employees should work a
+The workload bots are used to gain an overview over the employees' tracked times for customer projects. Newcubator employees should work a
 certain percentage of their time for a customer.
 We have 2 different workload bots. For both you need to:
 
