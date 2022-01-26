@@ -2,13 +2,12 @@ import Parser from "rss-parser";
 import { AwsSecretsManager } from "../clients/aws-secrets-manager";
 import { GoogleSheetsAccessor } from "../clients/google-sheets-accessor";
 import { twitterClient } from "../clients/twitter";
-import { composeTweetFromPost } from "../twitter-bot/composeTweetFromPost";
+import { composeTweetFromPost, creatorTemplate } from "../twitter-bot/composeTweetFromPost";
 import * as fetchRssFeed from "../twitter-bot/get-dev-squad-posts";
 import * as fetchTweetsFromSpreadsheet from "../twitter-bot/get-already-tweeted-dev-squad-posts";
 import { filterUntweetedDevSquadPosts } from "../twitter-bot/filter-untweeted-dev-squad-posts";
 import * as saveToSpreadsheet from "../twitter-bot/save-tweeted-post";
 import * as setUpSheetsAccessor from "../twitter-bot/set-up-sheets-accessor";
-import { Tweet } from "../twitter-bot/twitter-bot";
 import { handler } from "./twitter-bot";
 
 jest.mock("rss-parser");
@@ -38,7 +37,7 @@ const getRowsExample = {
 };
 
 const fakeRssFeedItemLong = {
-  creator: "Max Mustermann",
+  creator: "https://twitter.com/newcubator",
   title:
     "j4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAURj4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAURj4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAURj4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAURj4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAURj4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAUR",
   link: "FakeLink",
@@ -50,7 +49,17 @@ const fakeRssFeedItemLong = {
 };
 
 const fakeRssFeedItemShort = {
-  creator: "Max Mustermann",
+  creator: undefined,
+  title: "j4RkRKjmHoV3iR",
+  link: "FakeLink",
+  pubDate: "FakeDate",
+  content: "FakeContent",
+  contentSnippet: "FakeSnippetContent",
+  guid: "1234",
+  isoDate: "FakeIsoDate",
+};
+const fakeRssFeedItemTwitter = {
+  creator: "https://twitter.com/max_mustermann",
   title: "j4RkRKjmHoV3iR",
   link: "FakeLink",
   pubDate: "FakeDate",
@@ -64,7 +73,7 @@ const fakeRssFeedItemShort = {
 
 const fakeRssFeed = [
   {
-    creator: "Max Mustermann",
+    creator: "https://twitter.com/max_mustermann",
     title: "Wie teste ich Rust und Java",
     link: "FakeLink",
     pubDate: "FakeDate",
@@ -74,7 +83,7 @@ const fakeRssFeed = [
     isoDate: "FakeIsoDate",
   },
   {
-    creator: "Max Mustermann",
+    creator: "https://twitter.com/max_mustermann",
     title: "Wie teste ich Rust und Java 2",
     link: "FakeLink",
     pubDate: "FakeDate",
@@ -84,7 +93,7 @@ const fakeRssFeed = [
     isoDate: "FakeIsoDate",
   },
   {
-    creator: "Max Mustermann",
+    creator: "https://twitter.com/max_mustermann",
     title: "Wie teste ich Python",
     link: "FakeLink",
     pubDate: "FakeDate",
@@ -94,7 +103,7 @@ const fakeRssFeed = [
     isoDate: "FakeIsoDate",
   },
   {
-    creator: "Max Mustermann",
+    creator: "https://twitter.com/max_mustermann",
     title: "How to do something 3",
     link: "FakeLink",
     pubDate: "FakeDate",
@@ -104,7 +113,7 @@ const fakeRssFeed = [
     isoDate: "FakeIsoDate",
   },
   {
-    creator: "Max Mustermann",
+    creator: "https://twitter.com/max_mustermann",
     title: "How to do something",
     link: "FakeLink",
     pubDate: "FakeDate",
@@ -141,13 +150,26 @@ describe("TwitterBot", () => {
     expect(result.message.length).toBeLessThanOrEqual(280);
   });
 
-  it("should always start with 'Neues aus dem Entwicklerteam:' and end with #devsquad", () => {
+  it("should always start with 'Neues aus dem Entwicklerteam:'and end with #devsquad when no twitter username is given", () => {
     const result1 = composeTweetFromPost(fakeRssFeedItemLong);
     const result2 = composeTweetFromPost(fakeRssFeedItemShort);
     expect(result1.message).toContain("Neues aus dem Entwicklerteam:" && "#devsquad");
     expect(result2.message).toContain("Neues aus dem Entwicklerteam:" && "#devsquad");
   });
 
+  it("should always start with 'Neues von @max_mustermann:'and end with #devsquad", () => {
+    const result = composeTweetFromPost(fakeRssFeedItemTwitter);
+    expect(result.message.startsWith("Neues von @max_mustermann:")).toBeTruthy();
+    expect(result.message.endsWith("#devsquad")).toBeTruthy();
+  });
+  it("should return 'creator_name' ", () => {
+    const result = creatorTemplate("https://twitter.com/creator_name");
+    expect(result).toEqual("creator_name");
+  });
+  it("should return 'newcubator' if there is no creator ", () => {
+    const result = creatorTemplate(undefined);
+    expect(result).toEqual("newcubator");
+  });
   it("should call Newcubator Website", async () => {
     const data = await fetchRssFeed.getDevSquadPosts();
     expect(data).toEqual([]);
