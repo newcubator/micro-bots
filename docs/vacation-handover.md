@@ -4,7 +4,7 @@ To help us keep things running smoothly, the vacation handover bot always remind
 This could look like this:
 ![Vacation-Handover](vacation-handover-image.png)
 
-Currently, it runs at 4:05 AM (UTC) every day and always let us know 7 days before the vacation, but you can simply adjust that [here](https://gitlab.com/newcubator/micro-bots/-/blob/main/src/vacation-handover/create-vacation-handover-issues.ts) by changing the day value.
+Currently, it runs at 4:05 AM (UTC) every day and always lets us know 7 days before the vacation. You can simply adjust that [here](https://gitlab.com/newcubator/micro-bots/-/blob/main/src/vacation-handover/create-vacation-handover-issues.ts) by changing the day value.
 To adjust this, you can simply change the execution time of the [AWS EventBridge](https://docs.aws.amazon.com/eventbridge/) [here](https://gitlab.com/newcubator/micro-bots/-/blob/main/serverless.yml).
 
 ### Prerequisites
