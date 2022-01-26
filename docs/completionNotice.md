@@ -1,6 +1,6 @@
 # About the Project Completion Notice Bot
 
-A Slack Slash Command that maks it easy to generate project completion notices that are then send to the client. After calling command all ather the needed information for the PDF can be entered interactivly. The final pdf is then posted in the slack thread of the command.
+A Slack Slash Command that makes it easy to generate project completion notices. You can send these to the client. After calling the command `/completion-notice`, you can interactively enter the remaining needed information. You will receive the final PDF in the slack thread of the command.
 
 ## Prerequisites
 
