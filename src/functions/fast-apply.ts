@@ -15,9 +15,7 @@ const ALLOWED_ORIGINS = ["https://newcubator.com", "http://localhost:8000", "htt
 
 export const handler = async (event: APIGatewayEvent) => {
   const command: FastApply = decode(event.body) as FastApply;
-  console.log(
-    `Contact Request from ${command.name} (${command.email}) with message: "${command.message}"`
-  );
+  console.log(`Contact Request from ${command.name} (${command.email}) with message: "${command.message}"`);
 
   const requestOrigin = event.headers?.["origin"];
   if (!requestOrigin || !ALLOWED_ORIGINS.includes(requestOrigin)) {
