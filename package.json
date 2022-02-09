@@ -5,6 +5,7 @@
   "scripts": {
     "lint": "npm run lint:prettier",
     "lint:prettier": "prettier --check .",
+    "lint:prettier-fix": "prettier --write .",
     "deploy:dev": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless deploy --stage dev",
     "deploy:prod": "NODE_OPTIONS='-r dotenv/config' serverless deploy",
     "invoke": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f $npm_config_function",
