@@ -33,7 +33,6 @@ provider:
     MOCO_TOKEN: ${env:MOCO_TOKEN}
     SLACK_TOKEN: ${env:SLACK_TOKEN}
     GENERAL_CHANNEL: ${env:GENERAL_CHANNEL}
-    WORKLOAD_PERCENTAGE: ${env:WORKLOAD_PERCENTAGE}
 
 plugins:
   - serverless-esbuild
@@ -168,21 +167,4 @@ functions:
           enabled: true
           rate: cron(5 4 * * ? *) # at 4:05 AM (UTC) every day
     handler: src/functions/vacation-handover.handler
-    memorySize: 128
-  workload:
-    events:
-      - http:
-          method: post
-          path: workload
-    handler: src/functions/workload.handler
-    memorySize: 128
-  workloadAll:
-    events:
-      - http:
-          method: post
-          path: workloadAll
-      - schedule:
-          enabled: true
-          rate: cron(0 18 ? * FRI *) # At 06:00PM (UTC) on Friday
-    handler: src/functions/workload-all.handler
     memorySize: 128
