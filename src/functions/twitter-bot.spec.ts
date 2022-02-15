@@ -195,6 +195,7 @@ describe("TwitterBot", () => {
   //TODO: mocking in this test leads to failing all tests below
 
   it("should send tweet", async () => {
+    process.env.AWS_LAMBDA_FUNCTION_NAME = "micro-bots-production-twitterBot";
     jest
       .spyOn(setUpSheetsAccessor, "setUpSheetsAccessor")
       .mockResolvedValueOnce({ addRows: jest.fn() } as unknown as GoogleSheetsAccessor);
@@ -208,7 +209,23 @@ describe("TwitterBot", () => {
     expect(twitterClient.v1.tweet).toHaveBeenCalled();
   });
 
+  it("should not send tweet", async () => {
+    process.env.AWS_LAMBDA_FUNCTION_NAME = "micro-bots-dev-twitterBot";
+    jest
+      .spyOn(setUpSheetsAccessor, "setUpSheetsAccessor")
+      .mockResolvedValueOnce({ addRows: jest.fn() } as unknown as GoogleSheetsAccessor);
+    jest.spyOn(fetchTweetsFromSpreadsheet, "getAlreadyTweetedDevSquadPosts").mockResolvedValue(fakeGoogleSheet);
+    jest.spyOn(fetchRssFeed, "getDevSquadPosts").mockResolvedValue(fakeRssFeed);
+    const saveToSpreadsheetMock = jest.spyOn(saveToSpreadsheet, "saveTweetedPost").mockResolvedValue({});
+
+    await handler();
+
+    expect(saveToSpreadsheetMock).not.toHaveBeenCalled();
+    expect(twitterClient.v1.tweet).not.toHaveBeenCalled();
+  });
+
   it("should not send", async () => {
+    process.env.AWS_LAMBDA_FUNCTION_NAME = "micro-bots-production-twitterBot";
     jest
       .spyOn(setUpSheetsAccessor, "setUpSheetsAccessor")
       .mockResolvedValueOnce({ addRows: jest.fn() } as unknown as GoogleSheetsAccessor);
