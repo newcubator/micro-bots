@@ -106,7 +106,6 @@ functions:
     handler: src/functions/event-application.handler
     memorySize: 128
 
-
   lockProject:
     events:
       - http:
@@ -199,10 +198,6 @@ functions:
           pattern:
             detail-type:
               - "UnLockProjectRequestedEvent"
-
-
-
-
 
   unlockProject:
     events:
