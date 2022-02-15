@@ -1,6 +1,12 @@
 import { PlainTextElement, WebAPICallResult } from "@slack/web-api";
 import { ParsedUrlQuery } from "querystring";
 
+export enum ActionType {
+  LOCK_PROJECT = "LOCK_PROJECT",
+  UNLOCK_PROJECT = "UNLOCK_PROJECT",
+  COMPLETION_NOTICE = "COMPLETION_NOTICE",
+}
+
 export interface SlackCommandType extends ParsedUrlQuery {
   token: string;
   team_id: string;
@@ -33,6 +39,7 @@ interface ElementAction {
     text: PlainTextElement;
     value: string;
   };
+  action_id: ActionType;
 }
 
 export interface Channel {

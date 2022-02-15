@@ -1,4 +1,4 @@
-import { CompletionNoticeRequestedEvent } from "./interaction-handler";
+import { CompletionNoticeRequestedEvent } from "../slack/interaction-handler";
 import { renderCompletionNoticePdf } from "./pdf";
 import { EventBridgeEvent } from "aws-lambda";
 import { getContactById } from "../moco/contacts";
