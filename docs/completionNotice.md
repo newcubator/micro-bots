@@ -14,7 +14,7 @@ A Slack Slash Command that makes it easy to generate project completion notices.
 
 [![](https://mermaid.ink/img/pako:eNqNkc1qwzAQhF9l2XPyAjoESp3SSyFgSi-6LNI2Ua2fVJJTQsi7V3JtN4ZQKtBl9puZhb2gCppRYOLPnr3ixtA-kgPpAVpLqgNYbzaggnPk9XP5lqOoo3SAxx-1sksA1tU0-AW8cEq0Z9jF8MFdhiaGow5f_reiwsZnjqSyOZl8nnsmFlq2XIZhcM3vnmlI4xP7PKc8vLWwrcr_zOPer0dNmaf1pb_P3xhq-m3xMswG0rBrnv6mlpWVxRU6jo6MLme6VEViPrBjiaUSNcVOovTXwvWDfatNDhHFO9nEK6Q-h_bsFYoce56g8c4jdf0GCu-w0A)](https://mermaid.live/edit#pako:eNqNkc1qwzAQhF9l2XPyAjoESp3SSyFgSi-6LNI2Ua2fVJJTQsi7V3JtN4ZQKtBl9puZhb2gCppRYOLPnr3ixtA-kgPpAVpLqgNYbzaggnPk9XP5lqOoo3SAxx-1sksA1tU0-AW8cEq0Z9jF8MFdhiaGow5f_reiwsZnjqSyOZl8nnsmFlq2XIZhcM3vnmlI4xP7PKc8vLWwrcr_zOPer0dNmaf1pb_P3xhq-m3xMswG0rBrnv6mlpWVxRU6jo6MLme6VEViPrBjiaUSNcVOovTXwvWDfatNDhHFO9nEK6Q-h_bsFYoce56g8c4jdf0GCu-w0A)
 
-As Slack only gives 3 seconds for handling interactions the geatering and generation of the PDF is done decoupled via Amazon EventBridge.
+Slack only gives 3 seconds for handling interactions, that's why we decoupled the information gathering and generation of the PDF with Amazon EventBridge.
 
 This implementation uses [Slack user interactions](https://api.slack.com/interactivity/handling). For this only one endpoint for all implementations can be configured. For now this is done only for this functionality.
 
