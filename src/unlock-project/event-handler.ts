@@ -28,7 +28,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, UnLockProject
   console.log(
     await axios.post(event.detail.responseUrl, {
       replace_original: "true",
-      text: `Das Projekt '${project.name}' ist jetzt entgesperrt!`,
+      text: `Das Projekt '${project.name}' ist jetzt entsperrt!`,
     })
   );
 };
