@@ -13,10 +13,17 @@ The lock-project bot is a slack command that can be used to close a MOCO project
 ## How to Use
 
 To use the lock-project bot, just type /lock-project in any chat.
-The expected parameters for the command is the specific MOCO project-id.
 
 General syntax:
 
 ```
-/lock-project <project-id>
+/lock-project
 ```
+
+Then select the project which you want to lock from the drop-down menu.
+
+![lock-project](lock-project.png)
+
+The bot gives you feedback that the project is locked.
+
+![lock-project](lock-project2.png)

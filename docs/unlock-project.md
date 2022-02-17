@@ -13,10 +13,17 @@ The unlock-project bot is a slack command that can be used to re-open a closed M
 ## How to Use
 
 To use the unlock-project bot, just type /unlock-project in any chat.
-The expected parameters for the command is the specific MOCO project-id of the project you want to re-open.
 
 General syntax:
 
 ```
-/unlock-project <project-id>
+/unlock-project
 ```
+
+Then select the project which you want to unlock from the drop-down menu.
+
+![lock-project](unlock-project.png)
+
+The bot gives you feedback that the project is unlocked.
+
+![lock-project](unlock-project2.png)
