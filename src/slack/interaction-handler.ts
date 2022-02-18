@@ -1,8 +1,8 @@
 import { APIGatewayEvent } from "aws-lambda";
-import { ActionType, BlockAction } from "./types/slack-types";
+import axios from "axios";
 import { decode } from "querystring";
 import { eventBridgeSend } from "../clients/event-bridge";
-import axios from "axios";
+import { ActionType, BlockAction } from "./types/slack-types";
 
 export const interactionHandler = async (event: APIGatewayEvent) => {
   const blockAction: BlockAction = JSON.parse(decode(event.body).payload as string) as BlockAction;
@@ -21,7 +21,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
     | LockProjectRequestedEvent
     | UnLockProjectRequestedEvent {
     switch (actionType) {
-      case "LOCK_PROJECT":
+      case ActionType.LOCK_PROJECT:
         return new LockProjectRequestedEvent(
           projectId,
           projectName,
@@ -30,7 +30,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
           blockAction.container.channel_id,
           actionType
         );
-      case "UNLOCK_PROJECT":
+      case ActionType.UNLOCK_PROJECT:
         return new UnLockProjectRequestedEvent(
           projectId,
           projectName,
@@ -39,7 +39,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
           blockAction.container.channel_id,
           actionType
         );
-      case "COMPLETION_NOTICE":
+      case ActionType.COMPLETION_NOTICE:
         return new CompletionNoticeRequestedEvent(
           projectId,
           projectName,
