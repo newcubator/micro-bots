@@ -38,12 +38,6 @@ test("handle event", async () => {
     ],
   });
 
-  // putProjectContractMock.mockResolvedValueOnce({
-  //   firstname: "Elon",
-  //   lastname: "Musk",
-  //   active: false,
-  // });
-
   await eventHandler({
     detail: {
       responseUrl: "https://slack.com/response_url",
