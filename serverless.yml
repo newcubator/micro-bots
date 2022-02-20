@@ -106,14 +106,6 @@ functions:
     handler: src/functions/event-application.handler
     memorySize: 128
 
-  lockProject:
-    events:
-      - http:
-          method: post
-          path: lockProject
-    handler: src/functions/lock-project.handler
-    memorySize: 128
-
   ##
   ## Lock Project
   ##
@@ -199,13 +191,6 @@ functions:
             detail-type:
               - "UnLockProjectRequestedEvent"
 
-  unlockProject:
-    events:
-      - http:
-          method: post
-          path: unlockProject
-    handler: src/functions/unlock-project.handler
-    memorySize: 128
   vacationHandover:
     events:
       - schedule:
