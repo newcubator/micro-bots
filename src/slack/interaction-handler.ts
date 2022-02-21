@@ -33,7 +33,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
       case ActionType.UNLOCK_PROJECT:
         return new UnLockProjectRequestedEvent({
           projectId: projectId,
-          projectName: projectName,
+          projectName,
           responseUrl: blockAction.response_url,
           messageTs: blockAction.container.message_ts,
           channelId: blockAction.container.channel_id,
