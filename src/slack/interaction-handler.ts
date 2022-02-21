@@ -22,32 +22,32 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
     | UnLockProjectRequestedEvent {
     switch (actionType) {
       case ActionType.LOCK_PROJECT:
-        return new LockProjectRequestedEvent(
-          projectId,
-          projectName,
-          blockAction.response_url,
-          blockAction.container.message_ts,
-          blockAction.container.channel_id,
-          actionType
-        );
+        return new LockProjectRequestedEvent({
+          projectId: projectId,
+          projectName: projectName,
+          responseUrl: blockAction.response_url,
+          messageTs: blockAction.container.message_ts,
+          channelId: blockAction.container.channel_id,
+          actionType: actionType,
+        });
       case ActionType.UNLOCK_PROJECT:
-        return new UnLockProjectRequestedEvent(
-          projectId,
-          projectName,
-          blockAction.response_url,
-          blockAction.container.message_ts,
-          blockAction.container.channel_id,
-          actionType
-        );
+        return new UnLockProjectRequestedEvent({
+          projectId: projectId,
+          projectName: projectName,
+          responseUrl: blockAction.response_url,
+          messageTs: blockAction.container.message_ts,
+          channelId: blockAction.container.channel_id,
+          actionType: actionType,
+        });
       case ActionType.COMPLETION_NOTICE:
-        return new CompletionNoticeRequestedEvent(
-          projectId,
-          projectName,
-          blockAction.response_url,
-          blockAction.container.message_ts,
-          blockAction.container.channel_id,
-          actionType
-        );
+        return new CompletionNoticeRequestedEvent({
+          projectId: projectId,
+          projectName: projectName,
+          responseUrl: blockAction.response_url,
+          messageTs: blockAction.container.message_ts,
+          channelId: blockAction.container.channel_id,
+          actionType: actionType,
+        });
     }
   }
 
@@ -71,7 +71,7 @@ export class LockProjectRequestedEvent {
   channelId: string;
   actionId: ActionType;
 
-  constructor(projectId, projectName, responseUrl, messageTs, channelId, actionType) {
+  constructor({ projectId, projectName, responseUrl, messageTs, channelId, actionType }) {
     this.projectId = projectId;
     this.projectName = projectName;
     this.responseUrl = responseUrl;
@@ -89,7 +89,7 @@ export class CompletionNoticeRequestedEvent {
   channelId: string;
   actionId: ActionType;
 
-  constructor(projectId, projectName, responseUrl, messageTs, channelId, actionType) {
+  constructor({ projectId, projectName, responseUrl, messageTs, channelId, actionType }) {
     this.projectId = projectId;
     this.projectName = projectName;
     this.responseUrl = responseUrl;
@@ -107,7 +107,7 @@ export class UnLockProjectRequestedEvent {
   channelId: string;
   actionId: ActionType;
 
-  constructor(projectId, projectName, responseUrl, messageTs, channelId, actionType) {
+  constructor({ projectId, projectName, responseUrl, messageTs, channelId, actionType }) {
     this.projectId = projectId;
     this.projectName = projectName;
     this.responseUrl = responseUrl;
