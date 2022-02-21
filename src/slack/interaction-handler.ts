@@ -42,7 +42,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
       case ActionType.COMPLETION_NOTICE:
         return new CompletionNoticeRequestedEvent({
           projectId,
-          projectName: projectName,
+          projectName,
           responseUrl: blockAction.response_url,
           messageTs: blockAction.container.message_ts,
           channelId: blockAction.container.channel_id,
