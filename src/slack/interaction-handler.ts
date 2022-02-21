@@ -23,7 +23,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
     switch (actionType) {
       case ActionType.LOCK_PROJECT:
         return new LockProjectRequestedEvent({
-          projectId: projectId,
+          projectId,
           projectName: projectName,
           responseUrl: blockAction.response_url,
           messageTs: blockAction.container.message_ts,
