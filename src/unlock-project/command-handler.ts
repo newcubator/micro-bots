@@ -1,10 +1,7 @@
-import { APIGatewayEvent } from "aws-lambda";
 import { getProjects } from "../moco/projects";
 import { ActionType } from "../slack/types/slack-types";
 
-export const commandHandler = async (event: APIGatewayEvent) => {
-  // no need to parse the command input
-
+export const commandHandler = async () => {
   const projects = await getProjects({ include_archived: false });
   const options = projects
     .slice(0, 100) // slack allows 100 options max
