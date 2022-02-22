@@ -79,20 +79,12 @@ functions:
       - http:
           method: post
           path: completion-notice-command
-  completionNoticeInteraction:
-    handler: src/completion-notice/interaction-handler.interactionHandler
-    timeout: 3
-    environment:
-      EVENT_BUS: ${self:service}-${sls:stage}
-    events:
-      - http:
-          method: post
-          path: completion-notice-interaction
+
   completionNoticeEvent:
     handler: src/completion-notice/event-handler.eventHandler
     events:
       - eventBridge:
-          eventBus: ${self:service}-${sls:stage}
+          eventBus: micro-bots-event
           pattern:
             detail-type:
               - "CompletionNoticeRequestedEvent"
@@ -113,13 +105,28 @@ functions:
           path: eventApplication
     handler: src/functions/event-application.handler
     memorySize: 128
-  lockProject:
+
+  ##
+  ## Lock Project
+  ##
+
+  lockProjectCommand:
+    handler: src/lock-project/command-handler.commandHandler
+    timeout: 3
     events:
       - http:
           method: post
-          path: lockProject
-    handler: src/functions/lock-project.handler
-    memorySize: 128
+          path: lock-project-command
+
+  lockProjectEvent:
+    handler: src/lock-project/event-handler.eventHandler
+    events:
+      - eventBridge:
+          eventBus: micro-bots-event
+          pattern:
+            detail-type:
+              - "LockProjectRequestedEvent"
+
   mailSignature:
     events:
       - http:
@@ -154,13 +161,36 @@ functions:
           rate: cron(0 16 * * ? *)
     handler: src/functions/twitter-bot.handler
     memorySize: 128
-  unlockProject:
+
+  slackInteraction:
+    handler: src/slack/interaction-handler.interactionHandler
+    timeout: 3
+    environment:
+      EVENT_BUS: micro-bots-event
     events:
       - http:
           method: post
-          path: unlockProject
-    handler: src/functions/unlock-project.handler
-    memorySize: 128
+          path: slack-interaction
+  ##
+  ## Unlock Project
+  ##
+
+  unlockProjectCommand:
+    handler: src/unlock-project/command-handler.commandHandler
+    timeout: 3
+    events:
+      - http:
+          method: post
+          path: unlock-project-command
+  unlockProjectEvent:
+    handler: src/unlock-project/event-handler.eventHandler
+    events:
+      - eventBridge:
+          eventBus: micro-bots-event
+          pattern:
+            detail-type:
+              - "UnLockProjectRequestedEvent"
+
   vacationHandover:
     events:
       - schedule:
