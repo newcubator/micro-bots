@@ -26,7 +26,7 @@ export const createIssuesForUsers = (
       );
     } else {
       console.log(
-        `Issue for detected vacation of ${user.user.firstname} for vacation from ${user.dates[0]} to ${user.dates[1]} already exists`
+        `Issue for detected vacation of ${user.user.firstname} for vacation from ${user.dates[0]} to ${user.dates[1]} already exists with due date ${dueDate}`
       );
     }
   });

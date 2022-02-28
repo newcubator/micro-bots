@@ -209,7 +209,7 @@ describe("vacation-handover", () => {
     expect(axios.get).toHaveBeenCalledTimes(4);
     expect(axios.post).toHaveBeenCalledTimes(0);
     expect(console.log as jest.Mock).toHaveBeenCalledWith(
-      "Issue for detected vacation of Peter for vacation from 2021-08-19 to 2021-09-01 already exists"
+      "Issue for detected vacation of Peter for vacation from 2021-08-19 to 2021-09-01 already exists with due date 2021-08-18"
     );
   });
 
