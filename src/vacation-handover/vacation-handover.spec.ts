@@ -156,7 +156,7 @@ describe("vacation-handover", () => {
       {
         description: "This is some cool template",
         due_date: "2021-08-18",
-        labels: ["Urlaubsübergabe"],
+        labels: ["VacationHandover"],
         title: "Urlaubsübergabe Peter (19.08.2021 - 01.09.2021)",
       },
       { headers: { Authorization: "Bearer not a real gitlab token" } }

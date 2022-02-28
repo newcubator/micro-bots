@@ -17,7 +17,7 @@ export const createIssuesForUsers = (
     const dueDate = calculateDueDate(dayjs(user.dates[0]), user.employment).format("YYYY-MM-DD");
     const issue = issues.find((issue) => issue.title === issueTitle);
     if (issue === undefined) {
-      return postIssue(process.env.GITLAB_BOOK_PROJECT_ID, issueTitle, description, ["Urlaubsübergabe"], dueDate).then(
+      return postIssue(process.env.GITLAB_BOOK_PROJECT_ID, issueTitle, description, ["VacationHandover"], dueDate).then(
         (res) => {
           console.log(
             `New issue for vacation of ${user.user.firstname} for vacation from ${user.dates[0]} to ${user.dates[1]} was created at ${res.data.web_url}. Due date: ${dueDate}`
