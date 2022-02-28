@@ -19,7 +19,7 @@ export interface GitlabIssue {
   merge_requests_count: number;
   upvotes: number;
   downvotes: number;
-  due_date: null;
+  due_date: null | string;
   confidential: boolean;
   discussion_locked: null;
   issue_type: string;
