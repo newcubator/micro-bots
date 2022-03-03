@@ -26,16 +26,16 @@ To use the completion notice bot, just type /completion-notice in any chat.
 /completion-notice
 ```
 
-![Completion-Notice](completionNotice1.png)
+![Completion-Notice](completionNoticeImg1.png)
 
 Then select the project for which you want to create the completion notice from the drop-down menu.
 
-![Completion-Notice](completionNotice2.png)
+![Completion-Notice](completionNoticeImg2.png)
 
 The bot gives you feedback that it is creating the completion notice:
 
-![Completion-Notice](completionNotice3.png)
+![Completion-Notice](completionNoticeImg3.png)
 
 Then the bot will reply in the thread with the completion notice as a PDF to download, just like this:
 
-![Completion-Notice](completionNotice4.png)
+![Completion-Notice](completionNoticeImg4.png)
