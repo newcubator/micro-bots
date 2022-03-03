@@ -41,7 +41,7 @@ export const commandHandler = async (event: APIGatewayEvent) => {
           type: "section",
           text: {
             type: "mrkdwn",
-            text: "Ich erstelle dir gerne einen Fertigstellungsanzeige. Wähle dazu bitte rechts das gewünschte Projekt aus und ich mache mich sofort an die Arbeit.",
+            text: "Ich erstelle dir gerne eine Fertigstellungsanzeige. Wähle dazu bitte rechts das gewünschte Projekt aus und ich mache mich sofort an die Arbeit.",
           },
           accessory: {
             type: "static_select",
