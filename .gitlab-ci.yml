@@ -14,11 +14,9 @@ test:
   stage: test
   script:
     - npm run lint
-    - npm run test -- -u
+    - npm run test
   coverage: '/^Statements\s*:\s*([^%]+)/'
   artifacts:
-    paths:
-      - src
     reports:
       cobertura: coverage/cobertura-coverage.xml
 
