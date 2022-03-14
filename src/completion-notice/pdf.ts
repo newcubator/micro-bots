@@ -34,7 +34,7 @@ export function renderCompletionNoticePdf(content: PdfContent) {
     .text("mit freundlichen Grüßen\n\nnewcubator GmbH\n\n\nJörg Herbst", 68, 400)
     .setFontSize(8)
     .text(
-      "newcubator GmbH\nBödekerstraße 22\n\n30161 Hannover\n+49 (0) 511-95731300\ninfo@newcubator.com\nhttps://newcubator.com",
+      "newcubator GmbH\nBödekerstraße 22\n30161 Hannover\n+49 (0) 511-95731300\ninfo@newcubator.com\nhttps://newcubator.com",
       68,
       745
     )
