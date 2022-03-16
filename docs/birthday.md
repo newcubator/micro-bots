@@ -6,7 +6,7 @@ archives the channel on the following workday.
 
 This can look like this, for example:
 
-![Birthday Bot](birthday-bot-image.png)
+![Birthday Bot](birthday-bot.png)
 
 ## Prerequisites
 
