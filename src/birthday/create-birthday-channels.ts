@@ -8,6 +8,7 @@ import {
   slackUsersList,
 } from "../slack/slack";
 import { Channel } from "../slack/types/slack-types";
+import { createChannelName } from "./create-channel-name";
 import { getBirthdayChannels } from "./get-channels";
 import { BirthdayType } from "./types/birthday-bot-types";
 
@@ -26,7 +27,7 @@ export const createBirthdayChannels = async (birthdays: BirthdayType[]) => {
       )}`
     );
     let channel: Channel;
-    const channelName = `birthday-${birthday.firstname.toLowerCase()}`;
+    const channelName = createChannelName(birthday);
 
     const openedChannel = channels.find((channel) => channel.name === channelName && !channel.is_archived);
     if (openedChannel) {
