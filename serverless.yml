@@ -19,11 +19,6 @@ provider:
             - "events:PutEvents"
           Resource:
             - "*"
-        - Effect: "Allow"
-          Action:
-            - "lambda:ListTags"
-          Resource:
-            - "*"
   # https://www.serverless.com/framework/docs/deprecations/#LAMBDA_HASHING_VERSION_V2
   lambdaHashingVersion: 20201221
   eventBridge:
