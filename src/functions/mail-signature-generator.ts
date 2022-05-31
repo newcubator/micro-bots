@@ -41,9 +41,7 @@ function copy() {
     navigator.clipboard.writeText(replaceUmlautsWithHtml(document.getElementById('signature').innerHTML));
 }
 </script>`,
-    headers: {
-      "Content-Type": "text/html;charset=utf-8",
-    },
+    headers: { "Content-Type": "text/html;charset=utf-8" },
   };
 };
 
