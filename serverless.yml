@@ -22,7 +22,8 @@ provider:
         - Effect: "Allow"
           Action:
             - "lambda:ListTags"
-          Resource: "arn:aws:lambda:eu-central-1:931595285256:function:micro-bots-production-unlockProjectCommand"
+          Resource:
+            - "*"
   # https://www.serverless.com/framework/docs/deprecations/#LAMBDA_HASHING_VERSION_V2
   lambdaHashingVersion: 20201221
   eventBridge:
