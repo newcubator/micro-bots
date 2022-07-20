@@ -5,6 +5,7 @@ export enum ActionType {
   LOCK_PROJECT = "LOCK_PROJECT",
   UNLOCK_PROJECT = "UNLOCK_PROJECT",
   COMPLETION_NOTICE = "COMPLETION_NOTICE",
+  SHORT_MAIL = "SHORT_MAIL",
 }
 
 export interface SlackCommandType extends ParsedUrlQuery {
