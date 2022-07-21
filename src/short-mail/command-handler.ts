@@ -1,6 +1,6 @@
 import { APIGatewayEvent } from "aws-lambda";
 import { getContacts } from "../moco/contacts";
-import { ActionType } from "../slack/types/slack-types";
+import { ActionType, ShortMailFields } from "../slack/types/slack-types";
 
 export const commandHandler = async (event: APIGatewayEvent) => {
   // no need to parse the command input
@@ -8,6 +8,8 @@ export const commandHandler = async (event: APIGatewayEvent) => {
   const contacts = await getContacts();
   console.log(contacts);
   const options = contacts
+    .sort((a, b) => a.firstname.localeCompare(b.firstname))
+    .filter((contact) => contact.company || contact.work_address || contact.home_address)
     .slice(0, 100) // slack allows 100 options max
     .map((contact) => {
       return {
@@ -37,52 +39,54 @@ export const commandHandler = async (event: APIGatewayEvent) => {
       response_type: "in_channel",
       text: "Kurzbrief angefragt",
       blocks: [
-          {
-              type: "input",
-              label: {
-                  type: "plain_text",
-                  text: "Ich erstelle dir gerne einen Kurzbrief. Wähle dazu bitte den gewünschten Kontakt aus und gibt deine Nachricht ein.",
-              },
-              element: {
-                  type: "static_select",
-                  action_id: "selection",
-                  placeholder: {
-                      type: "plain_text",
-                      text: "Kontakt auswählen...",
-                      emoji: true,
-                  },
-                  options: options,
-              }
+        {
+          type: "input",
+          block_id: ShortMailFields.SHORT_MAIL_SELECTION,
+          label: {
+            type: "plain_text",
+            text: "Ich erstelle dir gerne einen Kurzbrief. Gibt dazu bitte deine Nachricht ein und wähle anschließend den gewünschten Kontakt aus.",
           },
-          {
-            type: "input",
-            element: {
-              type: "plain_text_input",
-              action_id: "plain_text_input-action",
-                multiline: true,
-
+          element: {
+            type: "static_select",
+            action_id: ShortMailFields.SHORT_MAIL_SELECTION,
+            placeholder: {
+              type: "plain_text",
+              text: "Kontakt auswählen...",
+              emoji: true,
+            },
+            options: options,
+          },
+        },
+        {
+          type: "input",
+          block_id: ShortMailFields.SHORT_MAIL_TEXT,
+          element: {
+            type: "plain_text_input",
+            action_id: ShortMailFields.SHORT_MAIL_TEXT,
+            multiline: true,
           },
           label: {
-              type: "plain_text",
-              text: "Deine Nachricht:",
-              emoji: true
-          }
+            type: "plain_text",
+            text: "Deine Nachricht:",
+            emoji: true,
+          },
         },
-          {
-              type: "actions",
-              elements: [
-                  {
-                      type: "button",
-                      text: {
-                          type: "plain_text",
-                          text: "Click Me",
-                          emoji: true
-                      },
-                      value: "click_me_123",
-                      action_id: "actionId-0"
-                  }
-              ]
-          }
+        {
+          type: "actions",
+          block_id: "confirmationButton",
+          elements: [
+            {
+              type: "button",
+              text: {
+                type: "plain_text",
+                text: "Generieren",
+              },
+              value: "Confirmation",
+              style: "primary",
+              action_id: ActionType.SHORT_MAIL,
+            },
+          ],
+        },
       ],
     }),
   };

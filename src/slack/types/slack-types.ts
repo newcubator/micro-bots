@@ -8,6 +8,11 @@ export enum ActionType {
   SHORT_MAIL = "SHORT_MAIL",
 }
 
+export enum ShortMailFields {
+  SHORT_MAIL_SELECTION = "SHORT_MAIL_SELECTION",
+  SHORT_MAIL_TEXT = "SHORT_MAIL_TEXT",
+}
+
 export interface SlackCommandType extends ParsedUrlQuery {
   token: string;
   team_id: string;
@@ -22,10 +27,23 @@ export interface SlackCommandType extends ParsedUrlQuery {
 }
 
 export interface BlockAction {
+  user: User;
+  state: State;
   type: "block_actions";
   container: Container;
   response_url: string;
   actions: ElementAction[];
+}
+
+interface User {
+  id: string;
+  username: string;
+  name: string;
+  team_id: string;
+}
+
+interface State {
+  values: any;
 }
 
 interface Container {
@@ -36,6 +54,7 @@ interface Container {
 }
 
 interface ElementAction {
+  text: any;
   selected_option: {
     text: PlainTextElement;
     value: string;

@@ -1,33 +1,53 @@
-import { channelLog } from "../slack/channel-log";
-import { CompletionNoticeRequestedEvent } from "../slack/interaction-handler";
-import { renderCompletionNoticePdf } from "./pdf";
 import { EventBridgeEvent } from "aws-lambda";
-import { getContactById } from "../moco/contacts";
-import { getDealById } from "../moco/deals";
-import { getProject } from "../moco/projects";
-import { slackClient } from "../clients/slack";
-import dayjs from "dayjs";
 import axios from "axios";
+import dayjs from "dayjs";
+import { slackClient } from "../clients/slack";
+import { getCompanyById } from "../moco/companies";
+import { getContactById } from "../moco/contacts";
+import { channelLog } from "../slack/channel-log";
+import { ShortMailRequestedEvent } from "../slack/interaction-handler";
+import { renderShortMailPdf } from "./pdf";
 
-export const eventHandler = async (event: EventBridgeEvent<string, CompletionNoticeRequestedEvent>) => {
+export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequestedEvent>) => {
   console.log(`Handling event ${JSON.stringify(event.detail)}`);
 
-  const project = await getProject(event.detail.projectId);
-  const deal = await getDealById(project.deal.id);
-  const contact = await getContactById(deal.person.id);
+  const recipient = await getContactById(event.detail.personId);
+  console.log(recipient);
 
-  const pdf = renderCompletionNoticePdf({
-    project: {
-      name: project.name,
-      orderNumber: project.custom_properties.Bestellnummer,
-    },
+  const recipientCompany = await getCompanyById(recipient.company.id);
+  let address = recipientCompany.address || recipient.work_address || recipient.home_address;
+  console.log(address);
+
+  if (address === "") {
+    console.log(
+      await axios.post(event.detail.responseUrl, {
+        replace_original: "true",
+        text: `Zu diesem Kontakt ist leider keine Adresse hinterlegt!`,
+      })
+    );
+    return;
+  }
+  const text = event.detail.message;
+
+  const formatSender = (s) => {
+    let fullName = s.split(".");
+    let firstName = fullName[0].charAt(0).toUpperCase() + fullName[0].substring(1);
+    let lastName = fullName[1].charAt(0).toUpperCase() + fullName[1].substring(1);
+    return firstName + " " + lastName;
+  };
+
+  const sender: string = formatSender(event.detail.sender);
+
+  const pdf = renderShortMailPdf({
+    sender: sender,
     recipient: {
-      salutation: contact.gender === "F" ? "geehrte Frau" : "geehrter Herr",
-      firstname: contact.firstname,
-      lastname: contact.lastname,
-      address: project.billing_address,
+      salutation: recipient.gender === "F" ? "geehrte Frau" : "H" ? "geehrter Herr" : "geehrte/r Frau/Herr",
+      firstname: recipient.firstname,
+      lastname: recipient.lastname,
+      address: address,
     },
     date: dayjs(),
+    text: text,
   });
 
   // Only user/bots that have joined a channel can post fiels
@@ -35,7 +55,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, CompletionNot
 
   let upload = await slackClient.files.upload({
     file: pdf,
-    filename: `Fertigstellungsanzeige_${project.custom_properties.Bestellnummer}.pdf`,
+    filename: `Kurzbrief ${recipient.lastname}.pdf`,
     initial_comment: ``,
     channels: event.detail.channelId,
     thread_ts: event.detail.messageTs,
@@ -47,7 +67,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, CompletionNot
   console.log(
     await axios.post(event.detail.responseUrl, {
       replace_original: "true",
-      text: `Die Fertigstellungsanzeige für '${project.name}' ist fertig! 🙌`,
+      text: `Der Kurzbrief für '${recipient.firstname} ${recipient.lastname}' ist fertig! 🙌`,
     })
   );
 };

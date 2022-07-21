@@ -169,6 +169,14 @@ functions:
       - http:
           method: post
           path: short-mail-command
+  shortMailEvent:
+    handler: src/short-mail/event-handler.eventHandler
+    events:
+      - eventBridge:
+          eventBus: micro-bots-event
+          pattern:
+            detail-type:
+              - "ShortMailRequestedEvent"
 
   slackInteraction:
     handler: src/slack/interaction-handler.interactionHandler

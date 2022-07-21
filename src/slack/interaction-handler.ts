@@ -6,34 +6,31 @@ import { ActionType, BlockAction } from "./types/slack-types";
 
 export const interactionHandler = async (event: APIGatewayEvent) => {
   const blockAction: BlockAction = JSON.parse(decode(event.body).payload as string) as BlockAction;
-  let projectId = blockAction.actions[0].selected_option.value;
-  let projectName = blockAction.actions[0].selected_option.text.text;
   let actionType = blockAction.actions[0].action_id;
-  console.log(`Lock-project requested for project '${projectName} (${projectId})'`);
-  console.log(blockAction);
-  console.log(projectId);
-  console.log(actionType);
+  console.log(`${actionType} requested`);
 
   let requestedEvent = createRequestedEvent();
+  console.log(requestedEvent);
 
   function createRequestedEvent():
     | CompletionNoticeRequestedEvent
     | LockProjectRequestedEvent
+    | ShortMailRequestedEvent
     | UnLockProjectRequestedEvent {
     switch (actionType) {
       case ActionType.LOCK_PROJECT:
         return new LockProjectRequestedEvent({
-          projectId,
-          projectName,
+          projectId: blockAction.actions[0].selected_option.value,
+          projectName: blockAction.actions[0].selected_option.text.text,
           responseUrl: blockAction.response_url,
           messageTs: blockAction.container.message_ts,
           channelId: blockAction.container.channel_id,
-          actionType,
+          actionType: blockAction.actions[0].action_id,
         });
       case ActionType.UNLOCK_PROJECT:
         return new UnLockProjectRequestedEvent({
-          projectId: projectId,
-          projectName,
+          projectId: blockAction.actions[0].selected_option.value,
+          projectName: blockAction.actions[0].selected_option.text.text,
           responseUrl: blockAction.response_url,
           messageTs: blockAction.container.message_ts,
           channelId: blockAction.container.channel_id,
@@ -41,11 +38,22 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
         });
       case ActionType.COMPLETION_NOTICE:
         return new CompletionNoticeRequestedEvent({
-          projectId,
-          projectName,
+          projectId: blockAction.actions[0].selected_option.value,
+          projectName: blockAction.actions[0].selected_option.text.text,
           responseUrl: blockAction.response_url,
           messageTs: blockAction.container.message_ts,
           channelId: blockAction.container.channel_id,
+          actionType,
+        });
+      case ActionType.SHORT_MAIL:
+        return new ShortMailRequestedEvent({
+          personId: blockAction.state.values.SHORT_MAIL_SELECTION.SHORT_MAIL_SELECTION.selected_option.value,
+          personName: blockAction.state.values.SHORT_MAIL_SELECTION.SHORT_MAIL_SELECTION.selected_option.text.text,
+          message: blockAction.state.values.SHORT_MAIL_TEXT.SHORT_MAIL_TEXT.value,
+          responseUrl: blockAction.response_url,
+          messageTs: blockAction.container.message_ts,
+          channelId: blockAction.container.channel_id,
+          sender: blockAction.user.name,
           actionType,
         });
     }
@@ -113,6 +121,28 @@ export class UnLockProjectRequestedEvent {
     this.responseUrl = responseUrl;
     this.messageTs = messageTs;
     this.channelId = channelId;
+    this.actionId = actionType;
+  }
+}
+
+export class ShortMailRequestedEvent {
+  personId: string;
+  personName: string;
+  message: string;
+  responseUrl: string;
+  messageTs: string;
+  channelId: string;
+  sender: string;
+  actionId: ActionType;
+
+  constructor({ personId, personName, message, responseUrl, messageTs, channelId, sender, actionType }) {
+    this.personId = personId;
+    this.personName = personName;
+    this.message = message;
+    this.responseUrl = responseUrl;
+    this.messageTs = messageTs;
+    this.channelId = channelId;
+    this.sender = sender;
     this.actionId = actionType;
   }
 }

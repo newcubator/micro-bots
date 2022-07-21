@@ -3,8 +3,8 @@ import { base64 } from "./logo";
 import { Dayjs } from "dayjs";
 import { jsPDF } from "jspdf";
 
-export function renderCompletionNoticePdf(content: PdfContent) {
-  const { project, recipient, date } = content;
+export function renderShortMailPdf(content: PdfContent) {
+  const { sender, recipient, date, text } = content;
 
   const doc = new jsPDF({
     unit: "pt",
@@ -16,22 +16,20 @@ export function renderCompletionNoticePdf(content: PdfContent) {
     .setFontSize(7)
     .text("newcubator GmbH | Bödekerstraße 22 | 30161 Hannover", 68, 130)
     .setFontSize(10)
-    .text(recipient.address.replace("\n", `\n${recipient.firstname} ${recipient.lastname}\n`), 68, 160)
+    .text(
+      recipient.address
+        .replace(`${recipient.firstname} ${recipient.lastname}`, "")
+        .replace("\n", `\n${recipient.firstname} ${recipient.lastname}\n`),
+      68,
+      160
+    )
     .text(date.locale("de").format("D. MMMM YYYY"), 465, 220)
-    .setFont("helvetica", "bold")
-    .text("Fertigstellungsanzeige", 68, 275)
     .setFont("helvetica", "normal")
     .text(`Sehr ${recipient.salutation} ${recipient.lastname},`, 68, 300)
-    .text(
-      `hiermit zeigen wir Ihnen an, dass wir alle von uns zu erbringenden Leistungen im Projekt ${project.name} mit der Auftragsnummer ${project.orderNumber} zu erbringenden Leistungen erbracht haben.`,
-      68,
-      325,
-      {
-        maxWidth: 460,
-      }
-    )
-    .text("Wir bedanken uns für die gute Zusammenarbeit und verbleiben", 68, 360)
-    .text("mit freundlichen Grüßen\n\nnewcubator GmbH\n\n\nJörg Herbst", 68, 400)
+    .text(`${text}`, 68, 325, {
+      maxWidth: 460,
+    })
+    .text(`mit freundlichen Grüßen\n\nnewcubator GmbH\n\n\n${sender}`, 68, 400)
     .setFontSize(8)
     .text(
       "newcubator GmbH\nBödekerstraße 22\n30161 Hannover\n+49 (0) 511-95731300\ninfo@newcubator.com\nhttps://newcubator.com",
@@ -46,10 +44,7 @@ export function renderCompletionNoticePdf(content: PdfContent) {
 }
 
 export interface PdfContent {
-  project: {
-    name: String;
-    orderNumber: String;
-  };
+  sender: string;
   recipient: {
     salutation: String;
     firstname: String;
@@ -57,4 +52,5 @@ export interface PdfContent {
     address: String;
   };
   date: Dayjs;
+  text: string;
 }
