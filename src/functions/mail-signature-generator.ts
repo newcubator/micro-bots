@@ -69,7 +69,7 @@ function replaceUmlauts(str: string): string {
 
 function createMailSignature(user: MocoUserType): string {
   const addressHannover = `Bödekerstraße 22, 30161 Hannover`;
-  const addressDortmund = `Freie-Vogel-Straße 369, 44269 Dortmund`;
+  const addressDortmund = `Westenhellweg 85-89, 44137 Dortmund`;
 
   return `<table cellpadding="0" cellspacing="0" style="vertical-align: -webkit-baseline-middle; font-size: medium; font-family: Arial;"> <tbody> <tr> <td> <table cellpadding="0" cellspacing="0" style="vertical-align: -webkit-baseline-middle; font-size: medium; font-family: Arial;"> <tbody> <tr> <td style="vertical-align: top;"> <table cellpadding="0" cellspacing="0" style="vertical-align: -webkit-baseline-middle; font-size: medium; font-family: Arial;"> <tbody> <tr> <td style="text-align: center;"> <img src="https://newcubator.com/images/mailsignature/${replaceUmlauts(
     user.firstname.toLowerCase()
