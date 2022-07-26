@@ -53,21 +53,26 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
   // Only user/bots that have joined a channel can post fiels
   await channelLog(event.detail.channelId);
 
-  let upload = await slackClient.files.upload({
-    file: pdf,
-    filename: `Kurzbrief ${recipient.lastname}.pdf`,
-    initial_comment: ``,
-    channels: event.detail.channelId,
-    thread_ts: event.detail.messageTs,
-    broadcast: "true",
-  });
-  console.log(upload);
-  if (!upload.ok) throw new Error(upload.error);
-
-  console.log(
-    await axios.post(event.detail.responseUrl, {
-      replace_original: "true",
-      text: `Der Kurzbrief für '${recipient.firstname} ${recipient.lastname}' ist fertig! 🙌`,
-    })
-  );
+  try {
+    let upload = await slackClient.files.upload({
+      file: pdf,
+      filename: `Kurzbrief ${recipient.lastname}.pdf`,
+      initial_comment: ``,
+      channels: event.detail.channelId,
+      thread_ts: event.detail.messageTs,
+      broadcast: "true",
+    });
+    console.log(upload);
+    if (upload.ok) {
+      console.log(
+        await axios.post(event.detail.responseUrl, {
+          replace_original: "true",
+          text: `Der Kurzbrief für '${recipient.firstname} ${recipient.lastname}' ist fertig! 🙌`,
+        })
+      );
+    }
+  } catch (error) {
+    console.log(error);
+    throw new Error(error);
+  }
 };

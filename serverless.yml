@@ -171,6 +171,8 @@ functions:
           path: short-mail-command
   shortMailEvent:
     handler: src/short-mail/event-handler.eventHandler
+    timeout: 20
+    maximumRetryAttempts: 0
     events:
       - eventBridge:
           eventBus: micro-bots-event
