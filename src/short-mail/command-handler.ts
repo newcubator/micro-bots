@@ -21,6 +21,7 @@ export const commandHandler = async (event: APIGatewayEvent) => {
         },
       };
     });
+
   console.log(`Loaded ${options.length} projects to select from`);
 
   if (!options.length) {
@@ -41,14 +42,14 @@ export const commandHandler = async (event: APIGatewayEvent) => {
       blocks: [
         {
           type: "input",
-          block_id: ShortMailFields.SHORT_MAIL_SELECTION,
+          block_id: ShortMailFields.SHORT_MAIL_RECIPIENT,
           label: {
             type: "plain_text",
-            text: "Ich erstelle dir gerne einen Kurzbrief. Gibt dazu bitte deine Nachricht ein und wähle anschließend den gewünschten Kontakt aus.",
+            text: "Ich erstelle dir gerne einen Kurzbrief. Wähle dazu den Empfänger und deinen Standort aus und gibt deine Nachricht ein.",
           },
           element: {
             type: "static_select",
-            action_id: ShortMailFields.SHORT_MAIL_SELECTION,
+            action_id: ShortMailFields.SHORT_MAIL_RECIPIENT,
             placeholder: {
               type: "plain_text",
               text: "Kontakt auswählen...",
@@ -69,6 +70,41 @@ export const commandHandler = async (event: APIGatewayEvent) => {
             type: "plain_text",
             text: "Deine Nachricht:",
             emoji: true,
+          },
+        },
+        {
+          type: "input",
+          block_id: ShortMailFields.SHORT_MAIL_LOCATION,
+          label: {
+            type: "plain_text",
+            text: "Wähle deinen Standort aus:",
+          },
+          element: {
+            type: "static_select",
+            action_id: ShortMailFields.SHORT_MAIL_LOCATION,
+            placeholder: {
+              type: "plain_text",
+              text: "Standort auswählen...",
+              emoji: true,
+            },
+            options: [
+              {
+                text: {
+                  type: "plain_text",
+                  text: "Dortmund",
+                  emoji: true,
+                },
+                value: "D",
+              },
+              {
+                text: {
+                  type: "plain_text",
+                  text: "Hannover",
+                  emoji: true,
+                },
+                value: "H",
+              },
+            ],
           },
         },
         {

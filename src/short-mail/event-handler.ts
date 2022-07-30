@@ -13,11 +13,22 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
 
   const recipient = await getContactById(event.detail.personId);
   console.log(recipient);
-
-  const recipientCompany = await getCompanyById(recipient.company.id);
-  let address = recipientCompany.address || recipient.work_address || recipient.home_address;
+  let recipientCompanyAdress = "";
+  if(recipient.company != null){
+      const recipientCompany = await getCompanyById(recipient.company.id);
+      recipientCompanyAdress = recipientCompany.address;
+  }
+  let address = recipientCompanyAdress || recipient.work_address || recipient.home_address;
   console.log(address);
 
+  const senderAdressFooter =
+    event.detail.location === "D"
+      ? "\nWestenhellweg 85-89\n44137 Dortmund\n+49 (0) 231 58687380\n"
+      : "\nBödekerstraße 22\n30161 Hannover\n+49 (0) 511-95731300\n";
+  const senderAdressHeader =
+    event.detail.location === "D"
+      ? "newcubator GmbH | Westenhellweg 85-89 | 44137 Dortmund"
+      : "newcubator GmbH | Bödekerstraße 22 | 30161 Hannover";
   if (address === "") {
     console.log(
       await axios.post(event.detail.responseUrl, {
@@ -40,6 +51,8 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
 
   const pdf = renderShortMailPdf({
     sender: sender,
+    senderAdressHeader: senderAdressHeader,
+    senderAdressFooter: senderAdressFooter,
     recipient: {
       salutation: recipient.gender === "F" ? "geehrte Frau" : "H" ? "geehrter Herr" : "geehrte/r Frau/Herr",
       firstname: recipient.firstname,

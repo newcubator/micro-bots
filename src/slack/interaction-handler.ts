@@ -8,6 +8,8 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
   const blockAction: BlockAction = JSON.parse(decode(event.body).payload as string) as BlockAction;
   let actionType = blockAction.actions[0].action_id;
   console.log(`${actionType} requested`);
+  console.log(blockAction);
+  console.log(blockAction.state.values);
 
   let requestedEvent = createRequestedEvent();
   console.log(requestedEvent);
@@ -47,9 +49,10 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
         });
       case ActionType.SHORT_MAIL:
         return new ShortMailRequestedEvent({
-          personId: blockAction.state.values.SHORT_MAIL_SELECTION.SHORT_MAIL_SELECTION.selected_option.value,
-          personName: blockAction.state.values.SHORT_MAIL_SELECTION.SHORT_MAIL_SELECTION.selected_option.text.text,
+          personId: blockAction.state.values.SHORT_MAIL_RECIPIENT.SHORT_MAIL_RECIPIENT.selected_option.value,
+          personName: blockAction.state.values.SHORT_MAIL_RECIPIENT.SHORT_MAIL_RECIPIENT.selected_option.text.text,
           message: blockAction.state.values.SHORT_MAIL_TEXT.SHORT_MAIL_TEXT.value,
+          location: blockAction.state.values.SHORT_MAIL_LOCATION.SHORT_MAIL_LOCATION.selected_option.value,
           responseUrl: blockAction.response_url,
           messageTs: blockAction.container.message_ts,
           channelId: blockAction.container.channel_id,
@@ -129,16 +132,18 @@ export class ShortMailRequestedEvent {
   personId: string;
   personName: string;
   message: string;
+  location: string;
   responseUrl: string;
   messageTs: string;
   channelId: string;
   sender: string;
   actionId: ActionType;
 
-  constructor({ personId, personName, message, responseUrl, messageTs, channelId, sender, actionType }) {
+  constructor({ personId, personName, message, location, responseUrl, messageTs, channelId, sender, actionType }) {
     this.personId = personId;
     this.personName = personName;
     this.message = message;
+    this.location = location;
     this.responseUrl = responseUrl;
     this.messageTs = messageTs;
     this.channelId = channelId;

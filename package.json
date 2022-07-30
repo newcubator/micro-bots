@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@aws-sdk/client-eventbridge": "3.47.0",
-    "@aws-sdk/client-ses": "3.47.0",
     "@aws-sdk/client-secrets-manager": "3.47.0",
+    "@aws-sdk/client-ses": "3.47.0",
     "@sentry/node": "6.16.1",
     "@slack/web-api": "6.5.1",
     "axios": "0.25.0",
@@ -22,8 +22,8 @@
     "dayjs-business-time": "1.0.4",
     "googleapis": "92.0.0",
     "jspdf": "2.5.0",
-    "serverless-sentry-lib": "2.4.0",
     "rss-parser": "3.12.0",
+    "serverless-sentry-lib": "2.4.0",
     "twitter-api-v2": "1.9.1"
   },
   "devDependencies": {
