@@ -14,7 +14,7 @@ export function renderShortMailPdf(content: PdfContent) {
     .setCreationDate(new Date("1995-12-17T03:24:00"))
     .addImage(base64, 385, 45, 140, 28)
     .setFontSize(7)
-    .text(`${senderAdressHeader}`, 68, 130)
+    .text(`${senderAdressHeader}`, 68, 140)
     .setFontSize(10)
     .text(
       recipient.address

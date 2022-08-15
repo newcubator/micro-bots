@@ -1,22 +1,22 @@
-import { renderCompletionNoticePdf } from "./pdf";
+import { renderShortMailPdf } from "./pdf";
 import { toMatchFile } from "jest-file-snapshot";
 import dayjs from "dayjs";
 
 expect.extend({ toMatchFile });
 
 test("render pdf", async () => {
-  let pdf = renderCompletionNoticePdf({
-    project: {
-      name: "Mars Cultivation Season Manager",
-      orderNumber: "123456789",
-    },
+  let pdf = renderShortMailPdf({
+    sender: "Max Mustermann",
+    senderAdressHeader: "newcubator GmbH | Westenhellweg 85-89 | 44137 Dortmund",
+    senderAdressFooter: "\nWestenhellweg 85-89\n44137 Dortmund\n+49 (0) 231 58687380\n",
     recipient: {
       salutation: "geehrter Herr",
-      firstname: "Elon",
-      lastname: "Musk",
-      address: `\n1 Rocket Road\nHawthorne, CA 90250\nUnited States\n`,
+      firstname: "Bill",
+      lastname: "Gates",
+      address: "Suchallee 42\n54321 Suchstadt",
     },
-    date: dayjs("2022-01-02"),
+    date: dayjs(),
+    text: "Testnachricht an Bill",
   });
 
   // Remove unique id inside the pdf

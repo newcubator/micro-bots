@@ -14,9 +14,9 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
   const recipient = await getContactById(event.detail.personId);
   console.log(recipient);
   let recipientCompanyAdress = "";
-  if(recipient.company != null){
-      const recipientCompany = await getCompanyById(recipient.company.id);
-      recipientCompanyAdress = recipientCompany.address;
+  if (recipient.company != null) {
+    const recipientCompany = await getCompanyById(recipient.company.id);
+    recipientCompanyAdress = recipientCompany.address;
   }
   let address = recipientCompanyAdress || recipient.work_address || recipient.home_address;
   console.log(address);

@@ -1,81 +1,76 @@
 import { eventHandler } from "./event-handler";
-import { getProject } from "../moco/projects";
-import { getDealById } from "../moco/deals";
+import { getCompanyById } from "../moco/companies";
 import { getContactById } from "../moco/contacts";
 import { slackClient } from "../clients/slack";
-import { renderCompletionNoticePdf } from "./pdf";
+import { renderShortMailPdf } from "./pdf";
 import dayjs from "dayjs";
 import axios from "axios";
 import MockDate from "mockdate";
 
 MockDate.set("2022-01-02");
 
-jest.mock("../moco/projects");
-jest.mock("../moco/deals");
+jest.mock("../moco/companies");
 jest.mock("../moco/contacts");
 jest.mock("./pdf");
-const getProjectMock = getProject as jest.Mock;
-const getDealByIdMock = getDealById as jest.Mock;
+const getCompanieMock = getCompanyById as jest.Mock;
 const getContactByIdMock = getContactById as jest.Mock;
-const renderCompletionNoticePdfMock = renderCompletionNoticePdf as jest.Mock;
+const renderShortMailPdfMock = renderShortMailPdf as jest.Mock;
 const conversationsJoinMock = slackClient.conversations.join as jest.Mock;
 const fileUploadMock = slackClient.files.upload as jest.Mock;
 const axiosPostMock = axios.post as jest.Mock;
 
-test("handle event", async () => {
-  getProjectMock.mockResolvedValueOnce({
-    id: "project-01",
-    name: "Mars Cultivation Season Manager",
-    billing_address: "\n1 Rocket Road\nHawthorne, CA 90250\nUnited States\n",
-    deal: {
-      id: "deal-01",
-    },
-    custom_properties: {
-      Bestellnummer: "B01",
-    },
-  });
-  getDealByIdMock.mockResolvedValueOnce({
-    person: {
-      id: "person-01",
-    },
-  });
+test("handle event short mail generation", async () => {
   getContactByIdMock.mockResolvedValueOnce({
-    firstname: "Elon",
-    lastname: "Musk",
-    gender: "M",
+    id: 1,
+    gender: "H",
+    firstname: "Bill",
+    lastname: "Gates",
+    work_address: "\nFensterstraße 1\n12345 Fensterhausen ",
+    company: {
+      id: 42,
+      type: "Firma",
+      name: "Fenster",
+    },
   });
-  renderCompletionNoticePdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
+  getCompanieMock.mockResolvedValueOnce({
+    id: 42,
+    name: "Guugel",
+    address: "Suchallee 42\n54321 Suchstadt",
+  });
+
+  renderShortMailPdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
 
   await eventHandler({
     detail: {
       responseUrl: "https://slack.com/response_url",
-      projectId: "project-01",
-      projectName: "Mars Cultivation Season Manager",
+      personId: "1",
+      message: "Testnachricht an Bill",
+      sender: "max.mustermann",
       messageTs: "1633540187.000600",
       channelId: "C02BBA8DWVD",
+      location: "D",
     },
   } as any);
 
-  expect(getProjectMock).toHaveBeenCalledWith("project-01");
-  expect(getDealByIdMock).toHaveBeenCalledWith("deal-01");
-  expect(getContactByIdMock).toHaveBeenCalledWith("person-01");
-  expect(renderCompletionNoticePdfMock).toHaveBeenCalledWith({
-    project: {
-      name: "Mars Cultivation Season Manager",
-      orderNumber: "B01",
-    },
+  expect(getCompanieMock).toHaveBeenCalledWith(42);
+  expect(getContactByIdMock).toHaveBeenCalledWith("1");
+  expect(renderShortMailPdfMock).toHaveBeenCalledWith({
+    sender: "Max Mustermann",
+    senderAdressHeader: "newcubator GmbH | Westenhellweg 85-89 | 44137 Dortmund",
+    senderAdressFooter: "\nWestenhellweg 85-89\n44137 Dortmund\n+49 (0) 231 58687380\n",
     recipient: {
       salutation: "geehrter Herr",
-      firstname: "Elon",
-      lastname: "Musk",
-      address: "\n1 Rocket Road\nHawthorne, CA 90250\nUnited States\n",
+      firstname: "Bill",
+      lastname: "Gates",
+      address: "Suchallee 42\n54321 Suchstadt",
     },
     date: dayjs(),
+    text: "Testnachricht an Bill",
   });
   expect(conversationsJoinMock).toHaveBeenCalledWith({ channel: "C02BBA8DWVD" });
   expect(fileUploadMock).toHaveBeenCalledWith({
     file: expect.anything(),
-    filename: "Fertigstellungsanzeige_B01.pdf",
+    filename: "Kurzbrief Gates.pdf",
     initial_comment: "",
     channels: "C02BBA8DWVD",
     thread_ts: "1633540187.000600",
@@ -83,6 +78,6 @@ test("handle event", async () => {
   });
   expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
     replace_original: "true",
-    text: expect.stringContaining("Mars Cultivation Season Manager"),
+    text: expect.stringContaining("Bill Gates"),
   });
 });

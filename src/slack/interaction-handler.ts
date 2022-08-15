@@ -9,7 +9,6 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
   let actionType = blockAction.actions[0].action_id;
   console.log(`${actionType} requested`);
   console.log(blockAction);
-  console.log(blockAction.state.values);
 
   let requestedEvent = createRequestedEvent();
   console.log(requestedEvent);
