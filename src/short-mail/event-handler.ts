@@ -6,6 +6,7 @@ import { getCompanyById } from "../moco/companies";
 import { getContactById } from "../moco/contacts";
 import { channelLog } from "../slack/channel-log";
 import { ShortMailRequestedEvent } from "../slack/interaction-handler";
+import { getRealSlackName } from '../slack/slack';
 import { renderShortMailPdf } from "./pdf";
 
 export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequestedEvent>) => {
@@ -40,17 +41,13 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
   }
   const text = event.detail.message;
 
-  const formatSender = (s) => {
-    let fullName = s.split(".");
-    let firstName = fullName[0].charAt(0).toUpperCase() + fullName[0].substring(1);
-    let lastName = fullName[1].charAt(0).toUpperCase() + fullName[1].substring(1);
-    return firstName + " " + lastName;
-  };
 
-  const sender: string = formatSender(event.detail.sender);
+
+    const userProfile = await getRealSlackName(event.detail.sender);
+    const userName = userProfile.profile.real_name;
 
   const pdf = renderShortMailPdf({
-    sender: sender,
+    sender: userName,
     senderAdressHeader: senderAdressHeader,
     senderAdressFooter: senderAdressFooter,
     recipient: {

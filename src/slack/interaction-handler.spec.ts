@@ -85,7 +85,7 @@ const samplePayload4 = {
     payload: JSON.stringify({
       type: "block_actions",
       user: {
-        id: "1",
+        id: "maxMustermannId",
         username: "max.mustermann",
         name: "max.mustermann",
       },
@@ -207,7 +207,7 @@ it("handle interaction short mail", async () => {
     personId: "1",
     personName: "Bill Gates",
     message: "Testnachricht an Bill",
-    sender: "max.mustermann",
+    sender: "maxMustermannId",
     location: "D",
     actionId: ActionType.SHORT_MAIL,
   });

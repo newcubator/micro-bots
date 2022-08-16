@@ -1,3 +1,4 @@
+import { getRealSlackName } from '../slack/slack';
 import { eventHandler } from "./event-handler";
 import { getCompanyById } from "../moco/companies";
 import { getContactById } from "../moco/contacts";
@@ -12,7 +13,9 @@ MockDate.set("2022-01-02");
 jest.mock("../moco/companies");
 jest.mock("../moco/contacts");
 jest.mock("./pdf");
+jest.mock("../slack/slack")
 const getCompanieMock = getCompanyById as jest.Mock;
+const getSlackNameMock = getRealSlackName as jest.Mock;
 const getContactByIdMock = getContactById as jest.Mock;
 const renderShortMailPdfMock = renderShortMailPdf as jest.Mock;
 const conversationsJoinMock = slackClient.conversations.join as jest.Mock;
@@ -40,12 +43,21 @@ test("handle event short mail generation", async () => {
 
   renderShortMailPdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
 
+  getSlackNameMock.mockResolvedValueOnce(
+      {
+          ok:true,
+          profile: {
+              real_name: "Max Mustermann"
+          }
+      }
+  )
+
   await eventHandler({
     detail: {
       responseUrl: "https://slack.com/response_url",
       personId: "1",
       message: "Testnachricht an Bill",
-      sender: "max.mustermann",
+      sender: "1337",
       messageTs: "1633540187.000600",
       channelId: "C02BBA8DWVD",
       location: "D",
@@ -53,6 +65,7 @@ test("handle event short mail generation", async () => {
   } as any);
 
   expect(getCompanieMock).toHaveBeenCalledWith(42);
+  expect(getSlackNameMock).toHaveBeenCalledWith("1337");
   expect(getContactByIdMock).toHaveBeenCalledWith("1");
   expect(renderShortMailPdfMock).toHaveBeenCalledWith({
     sender: "Max Mustermann",
