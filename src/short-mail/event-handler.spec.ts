@@ -1,4 +1,4 @@
-import { getRealSlackName } from '../slack/slack';
+import { getRealSlackName } from "../slack/slack";
 import { eventHandler } from "./event-handler";
 import { getCompanyById } from "../moco/companies";
 import { getContactById } from "../moco/contacts";
@@ -13,7 +13,7 @@ MockDate.set("2022-01-02");
 jest.mock("../moco/companies");
 jest.mock("../moco/contacts");
 jest.mock("./pdf");
-jest.mock("../slack/slack")
+jest.mock("../slack/slack");
 const getCompanieMock = getCompanyById as jest.Mock;
 const getSlackNameMock = getRealSlackName as jest.Mock;
 const getContactByIdMock = getContactById as jest.Mock;
@@ -43,14 +43,12 @@ test("handle event short mail generation", async () => {
 
   renderShortMailPdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
 
-  getSlackNameMock.mockResolvedValueOnce(
-      {
-          ok:true,
-          profile: {
-              real_name: "Max Mustermann"
-          }
-      }
-  )
+  getSlackNameMock.mockResolvedValueOnce({
+    ok: true,
+    profile: {
+      real_name: "Max Mustermann",
+    },
+  });
 
   await eventHandler({
     detail: {

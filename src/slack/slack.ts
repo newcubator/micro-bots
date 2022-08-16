@@ -1,12 +1,12 @@
-import { UsersProfileGetResponse, WebClient } from '@slack/web-api';
+import { UsersProfileGetResponse, WebClient } from "@slack/web-api";
 import {
-    SlackChatPostMessageResponse,
-    SlackConversationsCreateResponse,
-    SlackConversationsInviteResponse,
-    SlackConversationsListResponse,
-    SlackConversationsMembersResponse,
-    SlackUsersListResponse,
-} from './types/slack-types';
+  SlackChatPostMessageResponse,
+  SlackConversationsCreateResponse,
+  SlackConversationsInviteResponse,
+  SlackConversationsListResponse,
+  SlackConversationsMembersResponse,
+  SlackUsersListResponse,
+} from "./types/slack-types";
 
 const SLACK_TOKEN = process.env.SLACK_TOKEN;
 
@@ -69,10 +69,10 @@ export const slackChatPostMessage = async (text: string, channelId: string, user
 };
 
 export const getRealSlackName = async (user: string) => {
-    return (await slack.users.profile.get({
-        user: user,
-    })) as UsersProfileGetResponse;
-}
+  return (await slack.users.profile.get({
+    user: user,
+  })) as UsersProfileGetResponse;
+};
 
 export const slackUploadFileToChannel = async (channels, file, filename, initial_comment) => {
   return await slack.files.upload({
