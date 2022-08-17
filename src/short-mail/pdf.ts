@@ -26,10 +26,9 @@ export function renderShortMailPdf(content: PdfContent) {
     .text(date.locale("de").format("D. MMMM YYYY"), 465, 220)
     .setFont("helvetica", "normal")
     .text(`Sehr ${recipient.salutation} ${recipient.lastname},`, 68, 300)
-    .text(`${text}`, 68, 325, {
+    .text(`${text}\n\n\nmit freundlichen Grüßen\n\nnewcubator GmbH\n\n\n${sender}`, 68, 325, {
       maxWidth: 460,
     })
-    .text(`mit freundlichen Grüßen\n\nnewcubator GmbH\n\n\n${sender}`, 68, 400)
     .setFontSize(8)
     .text(`newcubator GmbH${senderAdressFooter}info@newcubator.com\nhttps://newcubator.com`, 68, 745)
     .text("Geschäftsführer: Jörg Herbst\nSitz der Gesellschaft: Hannover\nAmtsgericht Hannover HRB 221930", 525, 745, {
