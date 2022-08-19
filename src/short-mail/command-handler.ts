@@ -65,6 +65,7 @@ export const commandHandler = async (event: APIGatewayEvent) => {
             type: "plain_text_input",
             action_id: ShortMailFields.SHORT_MAIL_TEXT,
             multiline: true,
+            max_length: 2500,
           },
           label: {
             type: "plain_text",

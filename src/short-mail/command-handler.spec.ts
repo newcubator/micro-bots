@@ -4,7 +4,7 @@ import { commandHandler } from "./command-handler";
 jest.mock("../moco/contacts");
 const getContactsMock = getContacts as jest.Mock;
 
-test("command handler short mail", async () => {
+test("command handler for short mail", async () => {
   getContactsMock.mockResolvedValueOnce([
     {
       id: 2,

@@ -14,6 +14,7 @@ jest.mock("../moco/companies");
 jest.mock("../moco/contacts");
 jest.mock("./pdf");
 jest.mock("../slack/slack");
+
 const getCompanieMock = getCompanyById as jest.Mock;
 const getSlackNameMock = getRealSlackName as jest.Mock;
 const getContactByIdMock = getContactById as jest.Mock;
@@ -21,6 +22,7 @@ const renderShortMailPdfMock = renderShortMailPdf as jest.Mock;
 const conversationsJoinMock = slackClient.conversations.join as jest.Mock;
 const fileUploadMock = slackClient.files.upload as jest.Mock;
 const axiosPostMock = axios.post as jest.Mock;
+
 test("handle event short mail generation dortmund to male with company adress", async () => {
   getContactByIdMock.mockResolvedValueOnce({
     id: 1,
