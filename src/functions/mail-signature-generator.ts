@@ -261,8 +261,8 @@ function createMailSignature(user: MocoUserType): string {
     </tr>
     <tr>
       <td>
-        <a href="https://newcubator.com/email-marketing-banner" style="display: inline-block; padding: 0; width: 100%; background-color: rgba(255, 255, 255, 0);">
-          <img src="https://newcubator.com/images/email-marketing-banner/email-footer-image.jpg" alt="newcubator banner" style="display: block; width: 100%;">
+        <a href="https://newcubator.com/email-marketing-banner" style="display: inline-block; padding: 0; width: 593px; background-color: rgba(255, 255, 255, 0);">
+          <img src="https://newcubator.com/images/email-marketing-banner/email-footer-image.jpg" alt="newcubator banner" style="display: block; width: 593px;">
         </a>
       </td>
     </tr>
