@@ -21,7 +21,10 @@ export function renderShortMailPdf(content: PdfContent) {
         .replace(`${recipient.firstname} ${recipient.lastname}`, "")
         .replace("\n", `\n${recipient.firstname} ${recipient.lastname}\n`),
       68,
-      160
+      160,
+      {
+        maxWidth: 200,
+      }
     )
     .text(date.locale("de").format("D. MMMM YYYY"), 465, 220)
     .setFont("helvetica", "normal")
