@@ -30,6 +30,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
     event.detail.location === "D"
       ? "newcubator GmbH | Westenhellweg 85-89 | 44137 Dortmund"
       : "newcubator GmbH | Bödekerstraße 22 | 30161 Hannover";
+
   if (address === "") {
     console.log(
       await axios.post(event.detail.responseUrl, {
@@ -39,6 +40,17 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
     );
     return;
   }
+
+  if (event.detail.message === null) {
+    console.log(
+      await axios.post(event.detail.responseUrl, {
+        replace_original: "true",
+        text: `Ohne Text kann ich leider keinen Brief schreiben!`,
+      })
+    );
+    return;
+  }
+
   const text = event.detail.message;
 
   const userProfile = await getRealSlackName(event.detail.sender);

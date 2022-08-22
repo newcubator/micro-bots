@@ -50,7 +50,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
         return new ShortMailRequestedEvent({
           personId: blockAction.state.values.SHORT_MAIL_RECIPIENT.SHORT_MAIL_RECIPIENT.selected_option.value,
           personName: blockAction.state.values.SHORT_MAIL_RECIPIENT.SHORT_MAIL_RECIPIENT.selected_option.text.text,
-          message: blockAction.state.values.SHORT_MAIL_TEXT.SHORT_MAIL_TEXT.value || "",
+          message: blockAction.state.values.SHORT_MAIL_TEXT.SHORT_MAIL_TEXT.value,
           location: blockAction.state.values.SHORT_MAIL_LOCATION.SHORT_MAIL_LOCATION.selected_option.value,
           responseUrl: blockAction.response_url,
           messageTs: blockAction.container.message_ts,
