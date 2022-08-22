@@ -24,6 +24,7 @@ export function renderShortMailPdf(content: PdfContent) {
       160,
       {
         maxWidth: 200,
+        lineHeightFactor: 1.5,
       }
     )
     .text(date.locale("de").format("D. MMMM YYYY"), 465, 220)
