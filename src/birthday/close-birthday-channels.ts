@@ -14,7 +14,9 @@ export const closeBirthdayChannels = async (birthdays: BirthdayType[]) => {
       `Trying to close channel for ${birthday.firstname} ${birthday.lastname} on ${birthday.birthday.slice(5)}`
     );
     const channel = channels.find(
-      (channel) => channel.name.endsWith(birthday.firstname.toLowerCase()) && !channel.is_archived
+      (channel) =>
+        channel.name.endsWith(`${birthday.firstname.toLowerCase()}-${birthday.lastname.toLowerCase()}`) &&
+        !channel.is_archived
     );
     if (channel) {
       const archiveResponse = await slackConversationsArchive(channel.id);

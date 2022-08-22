@@ -273,7 +273,7 @@ export const EXAMPLE_MEMBER_JANE: Member = {
 
 export const EXAMPLE_CHANNEL_BIRTHDAY_JANE: Channel = {
   id: "C012AB34CD",
-  name: "birthday-jane",
+  name: "birthday-jane-doe",
   is_channel: true,
   is_group: false,
   is_im: false,
@@ -281,7 +281,7 @@ export const EXAMPLE_CHANNEL_BIRTHDAY_JANE: Channel = {
   is_archived: true,
   is_general: false,
   unlinked: 0,
-  name_normalized: "birthday-jane",
+  name_normalized: "birthday-jane-doe",
   is_shared: false,
   parent_conversation: null,
   creator: "U012AB34CD",

@@ -12,7 +12,9 @@ export const sendBirthdayReminder = async (birthdays: BirthdayType[]) => {
     console.log(
       `Trying to send reminder for ${birthday.firstname} ${birthday.lastname} on ${birthday.birthday.slice(5)}`
     );
-    const channel = channels.find((channel) => channel.name.endsWith(birthday.firstname.toLowerCase()));
+    const channel = channels.find((channel) =>
+      channel.name.endsWith(`${birthday.firstname.toLowerCase()}-${birthday.lastname.toLowerCase()}`)
+    );
     if (channel) {
       const messageResponse = await slackChatPostMessage(
         `Hey Leute! ${birthday.firstname} hat heute Geburtstag! Ich hoffe ihr hab bereits das Geschenk bestellt! Denkt daran zu gratulieren!`,
