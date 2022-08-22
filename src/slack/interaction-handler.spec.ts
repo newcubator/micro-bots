@@ -135,6 +135,68 @@ const samplePayload4 = {
   }),
 } as any;
 
+const samplePayload5 = {
+  body: encode({
+    payload: JSON.stringify({
+      type: "block_actions",
+      user: {
+        id: "maxMustermannId2",
+        username: "max.mustermann",
+        name: "max.mustermann",
+      },
+      container: {
+        message_ts: "1633540187.000600",
+        channel_id: "C02BBA8DWVD",
+      },
+      state: {
+        values: {
+          SHORT_MAIL_RECIPIENT: {
+            SHORT_MAIL_RECIPIENT: {
+              type: "static_select",
+              selected_option: {
+                value: "1",
+                text: {
+                  text: "Bill Gates",
+                },
+              },
+            },
+          },
+          SHORT_MAIL_TEXT: { SHORT_MAIL_TEXT: { type: "plain_text_input", value: "Testnachricht an Bill" } },
+          SHORT_MAIL_LOCATION: {
+            SHORT_MAIL_LOCATION: {
+              type: "static_select",
+              selected_option: {
+                value: "D",
+                text: {
+                  text: "Dortmund",
+                },
+              },
+            },
+          },
+        },
+      },
+      response_url: "https://slack.com/response_url",
+      actions: [
+        {
+          action_id: "SHORT_MAIL_DROPDOWN",
+          block_id: "confirmationButton",
+          text: [Object],
+          value: "Confirmation",
+          style: "primary",
+          type: "button",
+        },
+      ],
+    }),
+  }),
+} as any;
+
+it("handle interaction with wrong action type", async () => {
+  eventBridgeSendMock.mockResolvedValueOnce({});
+  const result = await interactionHandler(samplePayload5);
+  expect(eventBridgeSendMock).toHaveBeenCalledTimes(0);
+  expect(result.statusCode).toBe(200);
+});
+
 it("handle interaction", async () => {
   eventBridgeSendMock.mockResolvedValueOnce({});
 

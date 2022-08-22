@@ -10,8 +10,8 @@ export enum ActionType {
 
 export enum ShortMailFields {
   SHORT_MAIL_RECIPIENT = "SHORT_MAIL_RECIPIENT",
-  SHORT_MAIL_TEXT = "SHORT_MAIL_TEXT",
   SHORT_MAIL_LOCATION = "SHORT_MAIL_LOCATION",
+  SHORT_MAIL_TEXT = "SHORT_MAIL_TEXT",
 }
 
 export interface SlackCommandType extends ParsedUrlQuery {
@@ -60,7 +60,7 @@ interface ElementAction {
     text: PlainTextElement;
     value: string;
   };
-  action_id: ActionType;
+  action_id: string;
 }
 
 export interface Channel {
