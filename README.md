@@ -66,6 +66,7 @@ To get a more detailed description of each bot, click on one of them below :arro
 | [Vacation Handover](./docs/vacation-handover.md)         | opens Gitlab issues for oncoming vacations           |
 | [Workload](./docs/workload.md)                           | returns information about the employees workload     |
 | [Lock Project](./docs/lock-project.md)                   | locks a moco project                                 |
+| [Short Mail](./docs/shortmail.md)                        | creates a short mail                                 |
 
 ## Testing
 
