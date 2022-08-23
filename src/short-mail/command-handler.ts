@@ -22,14 +22,14 @@ export const commandHandler = async (event: APIGatewayEvent) => {
       };
     });
 
-  console.log(`Loaded ${options.length} projects to select from`);
+  console.log(`Loaded ${options.length} contacts to select from MOCO`);
 
   if (!options.length) {
     return {
       statusCode: 200,
       body: JSON.stringify({
         response_type: "in_channel",
-        text: "Konnte keine Kontakte finden.",
+        text: "Leider konnte ich keine Empfänger für deinen Brief finden.",
       }),
     };
   }
@@ -52,7 +52,7 @@ export const commandHandler = async (event: APIGatewayEvent) => {
             action_id: ShortMailFields.SHORT_MAIL_RECIPIENT,
             placeholder: {
               type: "plain_text",
-              text: "Kontakt auswählen...",
+              text: "Empfänger auswählen...",
               emoji: true,
             },
             options: options,

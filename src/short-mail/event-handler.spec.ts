@@ -68,8 +68,8 @@ test("handle event short mail generation dortmund to male with company adress", 
   expect(getContactByIdMock).toHaveBeenCalledWith("1");
   expect(renderShortMailPdfMock).toHaveBeenCalledWith({
     sender: "Max Mustermann",
-    senderAdressHeader: "newcubator GmbH | Westenhellweg 85-89 | 44137 Dortmund",
-    senderAdressFooter: "\nWestenhellweg 85-89\n44137 Dortmund\n+49 (0) 231 58687380\n",
+    senderAddressHeader: "newcubator GmbH | Westenhellweg 85-89 | 44137 Dortmund",
+    senderAddressFooter: "\nWestenhellweg 85-89\n44137 Dortmund\n+49 (0) 231 58687380\n",
     recipient: {
       salutation: "geehrter Herr",
       firstname: "Bill",
@@ -131,8 +131,8 @@ test("handle event short mail generation hannover to female without company adre
   expect(getContactByIdMock).toHaveBeenCalledWith("2");
   expect(renderShortMailPdfMock).toHaveBeenCalledWith({
     sender: "Max Mustermann",
-    senderAdressHeader: "newcubator GmbH | Bödekerstraße 22 | 30161 Hannover",
-    senderAdressFooter: "\nBödekerstraße 22\n30161 Hannover\n+49 (0) 511-95731300\n",
+    senderAddressHeader: "newcubator GmbH | Bödekerstraße 22 | 30161 Hannover",
+    senderAddressFooter: "\nBödekerstraße 22\n30161 Hannover\n+49 (0) 511-95731300\n",
     recipient: {
       salutation: "geehrte Frau",
       firstname: "Melinda",

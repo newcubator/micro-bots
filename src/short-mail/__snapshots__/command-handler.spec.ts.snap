@@ -1,5 +1,118 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`command handler for short mail 1`] = `"{\\"response_type\\":\\"in_channel\\",\\"text\\":\\"Kurzbrief angefragt\\",\\"blocks\\":[{\\"type\\":\\"input\\",\\"block_id\\":\\"SHORT_MAIL_RECIPIENT\\",\\"label\\":{\\"type\\":\\"plain_text\\",\\"text\\":\\"Ich erstelle dir gerne einen Kurzbrief. Wähle dazu den Empfänger und deinen Standort aus und gibt deine Nachricht ein.\\"},\\"element\\":{\\"type\\":\\"static_select\\",\\"action_id\\":\\"SHORT_MAIL_RECIPIENT\\",\\"placeholder\\":{\\"type\\":\\"plain_text\\",\\"text\\":\\"Kontakt auswählen...\\",\\"emoji\\":true},\\"options\\":[{\\"value\\":\\"2\\",\\"text\\":{\\"type\\":\\"plain_text\\",\\"text\\":\\"Elon Musk\\",\\"emoji\\":true}},{\\"value\\":\\"2\\",\\"text\\":{\\"type\\":\\"plain_text\\",\\"text\\":\\"Steve Jobs\\",\\"emoji\\":true}}]}},{\\"type\\":\\"input\\",\\"block_id\\":\\"SHORT_MAIL_TEXT\\",\\"element\\":{\\"type\\":\\"plain_text_input\\",\\"action_id\\":\\"SHORT_MAIL_TEXT\\",\\"multiline\\":true,\\"max_length\\":2500},\\"label\\":{\\"type\\":\\"plain_text\\",\\"text\\":\\"Deine Nachricht:\\",\\"emoji\\":true}},{\\"type\\":\\"input\\",\\"block_id\\":\\"SHORT_MAIL_LOCATION\\",\\"label\\":{\\"type\\":\\"plain_text\\",\\"text\\":\\"Wähle deinen Standort aus:\\"},\\"element\\":{\\"type\\":\\"static_select\\",\\"action_id\\":\\"SHORT_MAIL_LOCATION\\",\\"placeholder\\":{\\"type\\":\\"plain_text\\",\\"text\\":\\"Standort auswählen...\\",\\"emoji\\":true},\\"options\\":[{\\"text\\":{\\"type\\":\\"plain_text\\",\\"text\\":\\"Dortmund\\",\\"emoji\\":true},\\"value\\":\\"D\\"},{\\"text\\":{\\"type\\":\\"plain_text\\",\\"text\\":\\"Hannover\\",\\"emoji\\":true},\\"value\\":\\"H\\"}]}},{\\"type\\":\\"actions\\",\\"block_id\\":\\"confirmationButton\\",\\"elements\\":[{\\"type\\":\\"button\\",\\"text\\":{\\"type\\":\\"plain_text\\",\\"text\\":\\"Generieren\\"},\\"value\\":\\"Confirmation\\",\\"style\\":\\"primary\\",\\"action_id\\":\\"SHORT_MAIL\\"}]}]}"`;
+exports[`command handler for short mail 1`] = `
+Object {
+  "blocks": Array [
+    Object {
+      "block_id": "SHORT_MAIL_RECIPIENT",
+      "element": Object {
+        "action_id": "SHORT_MAIL_RECIPIENT",
+        "options": Array [
+          Object {
+            "text": Object {
+              "emoji": true,
+              "text": "Elon Musk",
+              "type": "plain_text",
+            },
+            "value": "2",
+          },
+          Object {
+            "text": Object {
+              "emoji": true,
+              "text": "Steve Jobs",
+              "type": "plain_text",
+            },
+            "value": "2",
+          },
+        ],
+        "placeholder": Object {
+          "emoji": true,
+          "text": "Empfänger auswählen...",
+          "type": "plain_text",
+        },
+        "type": "static_select",
+      },
+      "label": Object {
+        "text": "Ich erstelle dir gerne einen Kurzbrief. Wähle dazu den Empfänger und deinen Standort aus und gibt deine Nachricht ein.",
+        "type": "plain_text",
+      },
+      "type": "input",
+    },
+    Object {
+      "block_id": "SHORT_MAIL_TEXT",
+      "element": Object {
+        "action_id": "SHORT_MAIL_TEXT",
+        "max_length": 2500,
+        "multiline": true,
+        "type": "plain_text_input",
+      },
+      "label": Object {
+        "emoji": true,
+        "text": "Deine Nachricht:",
+        "type": "plain_text",
+      },
+      "type": "input",
+    },
+    Object {
+      "block_id": "SHORT_MAIL_LOCATION",
+      "element": Object {
+        "action_id": "SHORT_MAIL_LOCATION",
+        "options": Array [
+          Object {
+            "text": Object {
+              "emoji": true,
+              "text": "Dortmund",
+              "type": "plain_text",
+            },
+            "value": "D",
+          },
+          Object {
+            "text": Object {
+              "emoji": true,
+              "text": "Hannover",
+              "type": "plain_text",
+            },
+            "value": "H",
+          },
+        ],
+        "placeholder": Object {
+          "emoji": true,
+          "text": "Standort auswählen...",
+          "type": "plain_text",
+        },
+        "type": "static_select",
+      },
+      "label": Object {
+        "text": "Wähle deinen Standort aus:",
+        "type": "plain_text",
+      },
+      "type": "input",
+    },
+    Object {
+      "block_id": "confirmationButton",
+      "elements": Array [
+        Object {
+          "action_id": "SHORT_MAIL",
+          "style": "primary",
+          "text": Object {
+            "text": "Generieren",
+            "type": "plain_text",
+          },
+          "type": "button",
+          "value": "Confirmation",
+        },
+      ],
+      "type": "actions",
+    },
+  ],
+  "response_type": "in_channel",
+  "text": "Kurzbrief angefragt",
+}
+`;
 
-exports[`respond when loads no contacts 1`] = `"{\\"response_type\\":\\"in_channel\\",\\"text\\":\\"Konnte keine Kontakte finden.\\"}"`;
+exports[`respond when loads no contacts 1`] = `
+Object {
+  "response_type": "in_channel",
+  "text": "Leider konnte ich keine Empfänger für deinen Brief finden.",
+}
+`;

@@ -1,5 +1,5 @@
 import "dayjs/locale/de";
-import { base64 } from "./logo";
+import { base64 } from "../media/logo";
 import { Dayjs } from "dayjs";
 import { jsPDF } from "jspdf";
 

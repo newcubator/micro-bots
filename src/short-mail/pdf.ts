@@ -1,10 +1,10 @@
 import "dayjs/locale/de";
-import { base64 } from "./logo";
+import { base64 } from "../media/logo";
 import { Dayjs } from "dayjs";
 import { jsPDF } from "jspdf";
 
 export function renderShortMailPdf(content: PdfContent) {
-  const { sender, senderAdressHeader, senderAdressFooter, recipient, date, text } = content;
+  const { sender, senderAddressHeader, senderAddressFooter, recipient, date, text } = content;
 
   const doc = new jsPDF({
     unit: "pt",
@@ -14,7 +14,7 @@ export function renderShortMailPdf(content: PdfContent) {
     .setCreationDate(new Date("1995-12-17T03:24:00"))
     .addImage(base64, 385, 45, 140, 28)
     .setFontSize(7)
-    .text(`${senderAdressHeader}`, 68, 140)
+    .text(`${senderAddressHeader}`, 68, 140)
     .setFontSize(10)
     .text(
       recipient.address
@@ -34,7 +34,7 @@ export function renderShortMailPdf(content: PdfContent) {
       maxWidth: 460,
     })
     .setFontSize(8)
-    .text(`newcubator GmbH${senderAdressFooter}info@newcubator.com\nhttps://newcubator.com`, 68, 745)
+    .text(`newcubator GmbH${senderAddressFooter}info@newcubator.com\nhttps://newcubator.com`, 68, 745)
     .text("Geschäftsführer: Jörg Herbst\nSitz der Gesellschaft: Hannover\nAmtsgericht Hannover HRB 221930", 525, 745, {
       align: "right",
     });
@@ -44,8 +44,8 @@ export function renderShortMailPdf(content: PdfContent) {
 
 export interface PdfContent {
   sender: string;
-  senderAdressFooter: string;
-  senderAdressHeader: string;
+  senderAddressFooter: string;
+  senderAddressHeader: string;
   recipient: {
     salutation: String;
     firstname: String;

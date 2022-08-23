@@ -7,8 +7,8 @@ expect.extend({ toMatchFile });
 test("render pdf", async () => {
   let pdf = renderShortMailPdf({
     sender: "Max Mustermann",
-    senderAdressHeader: "newcubator GmbH | Westenhellweg 85-89 | 44137 Dortmund",
-    senderAdressFooter: "\nWestenhellweg 85-89\n44137 Dortmund\n+49 (0) 231 58687380\n",
+    senderAddressHeader: "newcubator GmbH | Westenhellweg 85-89 | 44137 Dortmund",
+    senderAddressFooter: "\nWestenhellweg 85-89\n44137 Dortmund\n+49 (0) 231 58687380\n",
     recipient: {
       salutation: "geehrter Herr",
       firstname: "Bill",
