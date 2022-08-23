@@ -1,4 +1,4 @@
-import { channelLog } from "../slack/channel-log";
+import { channelJoin } from "../slack/channel-join";
 import { CompletionNoticeRequestedEvent } from "../slack/interaction-handler";
 import { renderCompletionNoticePdf } from "./pdf";
 import { EventBridgeEvent } from "aws-lambda";
@@ -31,7 +31,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, CompletionNot
   });
 
   // Only user/bots that have joined a channel can post fiels
-  await channelLog(event.detail.channelId);
+  await channelJoin(event.detail.channelId);
 
   let upload = await slackClient.files.upload({
     file: pdf,

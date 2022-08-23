@@ -1,4 +1,4 @@
-import { WebClient } from "@slack/web-api";
+import { UsersProfileGetResponse, WebClient } from "@slack/web-api";
 import {
   SlackChatPostMessageResponse,
   SlackConversationsCreateResponse,
@@ -66,6 +66,12 @@ export const slackChatPostMessage = async (text: string, channelId: string, user
     icon_emoji: icon_emoji,
     link_names: true,
   })) as SlackChatPostMessageResponse;
+};
+
+export const getRealSlackName = async (user: string) => {
+  return (await slack.users.profile.get({
+    user: user,
+  })) as UsersProfileGetResponse;
 };
 
 export const slackUploadFileToChannel = async (channels, file, filename, initial_comment) => {

@@ -5,6 +5,13 @@ export enum ActionType {
   LOCK_PROJECT = "LOCK_PROJECT",
   UNLOCK_PROJECT = "UNLOCK_PROJECT",
   COMPLETION_NOTICE = "COMPLETION_NOTICE",
+  SHORT_MAIL = "SHORT_MAIL",
+}
+
+export enum ShortMailFields {
+  SHORT_MAIL_RECIPIENT = "SHORT_MAIL_RECIPIENT",
+  SHORT_MAIL_LOCATION = "SHORT_MAIL_LOCATION",
+  SHORT_MAIL_TEXT = "SHORT_MAIL_TEXT",
 }
 
 export interface SlackCommandType extends ParsedUrlQuery {
@@ -21,10 +28,23 @@ export interface SlackCommandType extends ParsedUrlQuery {
 }
 
 export interface BlockAction {
+  user: User;
+  state: State;
   type: "block_actions";
   container: Container;
   response_url: string;
   actions: ElementAction[];
+}
+
+interface User {
+  id: string;
+  username: string;
+  name: string;
+  team_id: string;
+}
+
+interface State {
+  values: any;
 }
 
 interface Container {
@@ -35,11 +55,12 @@ interface Container {
 }
 
 interface ElementAction {
+  text: any;
   selected_option: {
     text: PlainTextElement;
     value: string;
   };
-  action_id: ActionType;
+  action_id: string;
 }
 
 export interface Channel {

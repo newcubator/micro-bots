@@ -1,4 +1,4 @@
-import { channelLog } from "../slack/channel-log";
+import { channelJoin } from "../slack/channel-join";
 import { UnLockProjectRequestedEvent } from "../slack/interaction-handler";
 import { EventBridgeEvent } from "aws-lambda";
 import { getProject, putProjectContract } from "../moco/projects";
@@ -19,7 +19,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, UnLockProject
   );
 
   // Only user/bots that have joined a channel can post fiels
-  await channelLog(event.detail.channelId);
+  await channelJoin(event.detail.channelId);
 
   console.log(
     await axios.post(event.detail.responseUrl, {

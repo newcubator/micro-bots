@@ -162,6 +162,24 @@ functions:
     handler: src/functions/twitter-bot.handler
     memorySize: 128
 
+  shortMailCommand:
+    handler: src/short-mail/command-handler.commandHandler
+    timeout: 3
+    events:
+      - http:
+          method: post
+          path: short-mail-command
+  shortMailEvent:
+    handler: src/short-mail/event-handler.eventHandler
+    timeout: 20
+    maximumRetryAttempts: 0
+    events:
+      - eventBridge:
+          eventBus: micro-bots-event
+          pattern:
+            detail-type:
+              - "ShortMailRequestedEvent"
+
   slackInteraction:
     handler: src/slack/interaction-handler.interactionHandler
     timeout: 3

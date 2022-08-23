@@ -207,3 +207,9 @@ export interface MocoContact {
   updated_at: string;
   info: string;
 }
+
+export interface MocoCompany {
+  id: number;
+  name: string;
+  address: string;
+}

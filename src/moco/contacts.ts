@@ -11,3 +11,13 @@ export async function getContactById(id: string) {
     })
     .then((response) => response.data);
 }
+
+export async function getContacts() {
+  return axios
+    .get<MocoContact[]>(`https://newcubator.mocoapp.com/api/v1/contacts/people/`, {
+      headers: {
+        Authorization: "Token token=" + MOCO_TOKEN,
+      },
+    })
+    .then((response) => response.data);
+}

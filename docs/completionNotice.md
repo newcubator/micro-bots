@@ -16,7 +16,7 @@ A Slack Slash Command that makes it easy to generate project completion notices.
 
 Slack only gives 3 seconds for handling interactions, that's why we decoupled the information gathering and generation of the PDF with Amazon EventBridge.
 
-This implementation uses [Slack user interactions](https://api.slack.com/interactivity/handling). For this only one endpoint for all implementations can be configured. We use our Slack-Interaction-Handler for the [Completion Notice](completionNotice.md)-, [lock](lock-project.md)- and [unlock](lock-project.md)-bot.
+This implementation uses [Slack user interactions](https://api.slack.com/interactivity/handling). For this only one endpoint for all implementations can be configured. We use our Slack-Interaction-Handler for the [Short Mail](shortmail.md)-, [Completion Notice](completionNotice.md)-, [lock](lock-project.md)- and [unlock](lock-project.md)-bot.
 
 ## How to Use
 

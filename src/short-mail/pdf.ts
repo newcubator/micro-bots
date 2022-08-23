@@ -1,0 +1,57 @@
+import "dayjs/locale/de";
+import { base64 } from "../media/logo";
+import { Dayjs } from "dayjs";
+import { jsPDF } from "jspdf";
+
+export function renderShortMailPdf(content: PdfContent) {
+  const { sender, senderAddressHeader, senderAddressFooter, recipient, date, text } = content;
+
+  const doc = new jsPDF({
+    unit: "pt",
+  });
+
+  doc
+    .setCreationDate(new Date("1995-12-17T03:24:00"))
+    .addImage(base64, 385, 45, 140, 28)
+    .setFontSize(7)
+    .text(`${senderAddressHeader}`, 68, 140)
+    .setFontSize(10)
+    .text(
+      recipient.address
+        .replace(`${recipient.firstname} ${recipient.lastname}`, "")
+        .replace("\n", `\n${recipient.firstname} ${recipient.lastname}\n`),
+      68,
+      160,
+      {
+        maxWidth: 200,
+        lineHeightFactor: 1.5,
+      }
+    )
+    .text(date.locale("de").format("D. MMMM YYYY"), 465, 220)
+    .setFont("helvetica", "normal")
+    .text(`Sehr ${recipient.salutation} ${recipient.lastname},`, 68, 300)
+    .text(`${text}\n\n\nmit freundlichen Grüßen\n\nnewcubator GmbH\n\n\n${sender}`, 68, 325, {
+      maxWidth: 460,
+    })
+    .setFontSize(8)
+    .text(`newcubator GmbH${senderAddressFooter}info@newcubator.com\nhttps://newcubator.com`, 68, 745)
+    .text("Geschäftsführer: Jörg Herbst\nSitz der Gesellschaft: Hannover\nAmtsgericht Hannover HRB 221930", 525, 745, {
+      align: "right",
+    });
+
+  return Buffer.from(doc.output("arraybuffer"));
+}
+
+export interface PdfContent {
+  sender: string;
+  senderAddressFooter: string;
+  senderAddressHeader: string;
+  recipient: {
+    salutation: String;
+    firstname: String;
+    lastname: String;
+    address: String;
+  };
+  date: Dayjs;
+  text: string;
+}
