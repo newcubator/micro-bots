@@ -16,6 +16,7 @@ const samplePayload1 = {
         message_ts: "1633540187.000600",
         channel_id: "C02BBA8DWVD",
       },
+      channel: { id: "C02BBA8DWVD", name: "testchannel" },
       response_url: "https://slack.com/response_url",
       actions: [
         {
@@ -40,6 +41,7 @@ const samplePayload2 = {
         message_ts: "1633540187.000600",
         channel_id: "C02BBA8DWVD",
       },
+      channel: { id: "C02BBA8DWVD", name: "testchannel" },
       response_url: "https://slack.com/response_url",
       actions: [
         {
@@ -64,6 +66,7 @@ const samplePayload3 = {
         message_ts: "1633540187.000600",
         channel_id: "C02BBA8DWVD",
       },
+      channel: { id: "C02BBA8DWVD", name: "testchannel" },
       response_url: "https://slack.com/response_url",
       actions: [
         {
@@ -120,6 +123,7 @@ const samplePayload4 = {
           },
         },
       },
+      channel: { id: "C02BBA8DWVD", name: "testchannel" },
       response_url: "https://slack.com/response_url",
       actions: [
         {
@@ -175,6 +179,7 @@ const samplePayload5 = {
           },
         },
       },
+      channel: { id: "C02BBA8DWVD", name: "testchannel" },
       response_url: "https://slack.com/response_url",
       actions: [
         {
@@ -190,10 +195,47 @@ const samplePayload5 = {
   }),
 } as any;
 
+const samplePayload6 = {
+  body: encode({
+    payload: JSON.stringify({
+      type: "block_actions",
+      container: {
+        message_ts: "1633540187.000600",
+        channel_id: "C02BBA8DWVD",
+      },
+      channel: { id: "C02BBA8DWVD", name: "privategroup" },
+      response_url: "https://slack.com/response_url",
+      actions: [
+        {
+          selected_option: {
+            value: "project-01",
+            text: {
+              text: "Mars Cultivation Season Manager",
+            },
+          },
+          action_id: ActionType.COMPLETION_NOTICE,
+        },
+      ],
+    }),
+  }),
+} as any;
+
 it("handle interaction with wrong action type", async () => {
   eventBridgeSendMock.mockResolvedValueOnce({});
   const result = await interactionHandler(samplePayload5);
   expect(eventBridgeSendMock).toHaveBeenCalledTimes(0);
+  expect(result.statusCode).toBe(200);
+});
+
+it("handle upload command in private channel", async () => {
+  eventBridgeSendMock.mockResolvedValueOnce({});
+
+  const result = await interactionHandler(samplePayload6);
+  expect(eventBridgeSendMock).toHaveBeenCalledTimes(0);
+  expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
+    replace_original: "true",
+    text: "Vielen Dank für deine Anfrage, ich kann das leider nicht in einem privaten Channel tun, bitte gehe dazu in einen öffentlichen Channel.",
+  });
   expect(result.statusCode).toBe(200);
 });
 
