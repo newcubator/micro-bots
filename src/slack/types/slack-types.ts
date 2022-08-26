@@ -28,6 +28,10 @@ export interface SlackCommandType extends ParsedUrlQuery {
 }
 
 export interface BlockAction {
+  channel: {
+    id: string;
+    name: string;
+  };
   user: User;
   state: State;
   type: "block_actions";

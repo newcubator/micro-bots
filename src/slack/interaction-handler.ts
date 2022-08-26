@@ -63,6 +63,19 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
         statusCode: 200,
       };
   }
+  if (
+    blockAction.channel.name === "privategroup" &&
+    (actionType === ActionType.SHORT_MAIL || actionType === ActionType.COMPLETION_NOTICE)
+  ) {
+    await axios.post(blockAction.response_url, {
+      replace_original: "true",
+      text: "Vielen Dank für deine Anfrage, ich kann das leider nicht in einem privaten Channel tun, bitte gehe dazu in einen öffentlichen Channel.",
+    });
+
+    return {
+      statusCode: 200,
+    };
+  }
 
   await eventBridgeSend(requestedEvent);
 
