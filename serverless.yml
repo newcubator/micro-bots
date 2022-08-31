@@ -1,6 +1,6 @@
 service: micro-bots
 
-frameworkVersion: "2"
+frameworkVersion: "3"
 
 provider:
   name: aws
