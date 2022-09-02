@@ -9,11 +9,6 @@ import { ShortMailRequestedEvent } from "../slack/interaction-handler";
 import { getRealSlackName } from "../slack/slack";
 import { renderShortMailPdf } from "./pdf";
 
-const dortmundAddressHeader = "newcubator GmbH | Westenhellweg 85-89 | 44137 Dortmund";
-const dortmundAddressFooter = "\nWestenhellweg 85-89\n44137 Dortmund\n+49 (0) 231 58687380\n";
-const hannoverAddressHeader = "newcubator GmbH | Bödekerstraße 22 | 30161 Hannover";
-const hannoverAddressFooter = "\nBödekerstraße 22\n30161 Hannover\n+49 (0) 511-95731300\n";
-
 export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequestedEvent>) => {
   console.log(`Handling event ${JSON.stringify(event.detail)}`);
   const recipient = await getContactById(event.detail.personId);
@@ -49,10 +44,10 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
   const userProfile = await getRealSlackName(event.detail.sender);
   const userName = userProfile.profile.real_name;
 
-  const pdf = renderShortMailPdf({
+  const pdf = await renderShortMailPdf({
     sender: userName,
-    senderAddressHeader: event.detail.location === "D" ? dortmundAddressHeader : hannoverAddressHeader,
-    senderAddressFooter: event.detail.location === "D" ? dortmundAddressFooter : hannoverAddressFooter,
+    location: event.detail.location,
+
     recipient: {
       salutation: recipient.gender === "F" ? "geehrte Frau" : "H" ? "geehrter Herr" : "geehrte/r Frau/Herr",
       firstname: recipient.firstname,

@@ -31,3 +31,7 @@ The bot gives you feedback that it is creating the short mail:
 ![shortmail](shortmail2.png)
 
 Then the bot will reply in the thread with the short mail as a PDF to download.
+
+##Configuration
+
+To change the layout in the background of the letter, you must place a PDF file in the shortmail/templates folder. It is important that you convert it to base64 format beforehand.

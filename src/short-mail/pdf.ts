@@ -1,56 +1,71 @@
-import "dayjs/locale/de";
-import { base64 } from "../media/logo";
 import { Dayjs } from "dayjs";
-import { jsPDF } from "jspdf";
+import "dayjs/locale/de";
+import { PDFDocument, StandardFonts } from "pdf-lib";
+import { base64Hannover } from "./templates/hannover";
+import { base64Dortmund } from "./templates/dortmund";
 
-export function renderShortMailPdf(content: PdfContent) {
-  const { sender, senderAddressHeader, senderAddressFooter, recipient, date, text } = content;
+export async function renderShortMailPdf(content: PdfContent) {
+  const { sender, location, recipient, date, text } = content;
 
-  const doc = new jsPDF({
-    unit: "pt",
+  const dortmundAddressHeader = "newcubator GmbH | Westenhellweg 85-89 | 44137 Dortmund";
+
+  const hannoverAddressHeader = "newcubator GmbH | Bödekerstraße 22 | 30161 Hannover";
+  const senderAddressHeader = location === "D" ? dortmundAddressHeader : hannoverAddressHeader;
+  const pdfDoc = await PDFDocument.load(location === "D" ? base64Dortmund : base64Hannover);
+
+  const pages = pdfDoc.getPages();
+  const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
+  const firstPage = pages[0];
+  const { width, height } = firstPage.getSize();
+  pages[0].drawText(`${senderAddressHeader}`, {
+    x: 68,
+    y: height - 140,
+    size: 7,
+  });
+  pages[0].drawText(
+    recipient.address
+      .replace(`${recipient.firstname} ${recipient.lastname}`, "")
+      .replace("\n", `\n${recipient.firstname} ${recipient.lastname}\n`),
+    {
+      x: 68,
+      y: height - 160,
+      size: 10,
+      lineHeight: 15,
+      maxWidth: 200,
+    }
+  );
+  pages[0].drawText(date.locale("de").format("D. MMMM YYYY"), {
+    x: 465,
+    y: height - 220,
+    size: 10,
+  });
+  pages[0].drawText(`Sehr ${recipient.salutation} ${recipient.lastname},`, {
+    x: 68,
+    y: height - 300,
+    size: 10,
+    font: helveticaFont,
+  });
+  pages[0].drawText(`${text}\n \nmit freundlichen Grüßen\nnewcubator GmbH\n \n${sender}`, {
+    x: 68,
+    y: height - 325,
+    size: 10,
+    maxWidth: 460,
+    font: helveticaFont,
   });
 
-  doc
-    .setCreationDate(new Date("1995-12-17T03:24:00"))
-    .addImage(base64, 385, 45, 140, 28)
-    .setFontSize(7)
-    .text(`${senderAddressHeader}`, 68, 140)
-    .setFontSize(10)
-    .text(
-      recipient.address
-        .replace(`${recipient.firstname} ${recipient.lastname}`, "")
-        .replace("\n", `\n${recipient.firstname} ${recipient.lastname}\n`),
-      68,
-      160,
-      {
-        maxWidth: 200,
-        lineHeightFactor: 1.5,
-      }
-    )
-    .text(date.locale("de").format("D. MMMM YYYY"), 465, 220)
-    .setFont("helvetica", "normal")
-    .text(`Sehr ${recipient.salutation} ${recipient.lastname},`, 68, 300)
-    .text(`${text}\n\n\nmit freundlichen Grüßen\n\nnewcubator GmbH\n\n\n${sender}`, 68, 325, {
-      maxWidth: 460,
-    })
-    .setFontSize(8)
-    .text(`newcubator GmbH${senderAddressFooter}info@newcubator.com\nhttps://newcubator.com`, 68, 745)
-    .text("Geschäftsführer: Jörg Herbst\nSitz der Gesellschaft: Hannover\nAmtsgericht Hannover HRB 221930", 525, 745, {
-      align: "right",
-    });
+  const pdfBytes = pdfDoc.save();
 
-  return Buffer.from(doc.output("arraybuffer"));
+  return Buffer.from(await pdfBytes);
 }
 
 export interface PdfContent {
   sender: string;
-  senderAddressFooter: string;
-  senderAddressHeader: string;
+  location: string;
   recipient: {
-    salutation: String;
-    firstname: String;
-    lastname: String;
-    address: String;
+    salutation: string;
+    firstname: string;
+    lastname: string;
+    address: string;
   };
   date: Dayjs;
   text: string;
