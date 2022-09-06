@@ -1,39 +1,7 @@
 import { APIGatewayEvent } from "aws-lambda";
-import { getContacts } from "../moco/contacts";
 import { ActionType, ShortMailFields } from "../slack/types/slack-types";
 
 export const commandHandler = async (event: APIGatewayEvent) => {
-  // no need to parse the command input
-
-  const contacts = await getContacts();
-  console.log(contacts);
-  const options = contacts
-    .sort((a, b) => a.firstname.localeCompare(b.firstname))
-    .filter((contact) => contact.company || contact.work_address || contact.home_address)
-    .slice(0, 100) // slack allows 100 options max
-    .map((contact) => {
-      return {
-        value: contact.id.toString(),
-        text: {
-          type: "plain_text",
-          text: contact.firstname + " " + contact.lastname,
-          emoji: true,
-        },
-      };
-    });
-
-  console.log(`Loaded ${options.length} contacts to select from MOCO`);
-
-  if (!options.length) {
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        response_type: "in_channel",
-        text: "Leider konnte ich keine Empfänger für deinen Brief finden.",
-      }),
-    };
-  }
-
   return {
     statusCode: 200,
     body: JSON.stringify({
@@ -48,14 +16,13 @@ export const commandHandler = async (event: APIGatewayEvent) => {
             text: "Ich erstelle dir gerne einen Kurzbrief. Wähle dazu den Empfänger und deinen Standort aus und gibt deine Nachricht ein.",
           },
           element: {
-            type: "static_select",
+            type: "external_select",
             action_id: ShortMailFields.SHORT_MAIL_RECIPIENT,
             placeholder: {
               type: "plain_text",
               text: "Empfänger auswählen...",
               emoji: true,
             },
-            options: options,
           },
         },
         {

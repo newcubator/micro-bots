@@ -4,6 +4,7 @@ import dayjs from "dayjs";
 import { slackClient } from "../clients/slack";
 import { getCompanyById } from "../moco/companies";
 import { getContactById } from "../moco/contacts";
+import { getUserById } from "../moco/users";
 import { channelJoin } from "../slack/channel-join";
 import { ShortMailRequestedEvent } from "../slack/interaction-handler";
 import { getRealSlackName } from "../slack/slack";
@@ -11,14 +12,22 @@ import { renderShortMailPdf } from "./pdf";
 
 export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequestedEvent>) => {
   console.log(`Handling event ${JSON.stringify(event.detail)}`);
-  const recipient = await getContactById(event.detail.personId);
-  console.log(recipient);
-  let recipientCompanyAdress = "";
-  if (recipient.company != null) {
-    const recipientCompany = await getCompanyById(recipient.company.id);
-    recipientCompanyAdress = recipientCompany.address;
+  let recipient;
+  let address;
+  if (event.detail.personId.length <= 6) {
+    recipient = await getContactById(event.detail.personId);
+    let recipientCompanyAdress = "";
+    if (recipient.company != null) {
+      const recipientCompany = await getCompanyById(recipient.company.id);
+      recipientCompanyAdress = recipientCompany.address;
+    }
+    address = recipientCompanyAdress || recipient.work_address || recipient.home_address;
+  } else {
+    recipient = await getUserById(event.detail.personId);
+    address = recipient.home_address;
   }
-  let address = recipientCompanyAdress || recipient.work_address || recipient.home_address;
+
+  console.log(recipient);
   if (address === "") {
     console.log(
       await axios.post(event.detail.responseUrl, {
