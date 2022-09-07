@@ -12,11 +12,9 @@ export const selectMenuHandler = async (event: APIGatewayEvent) => {
   console.log(blockSuggestion);
 
   const recipients = await loadAllRecipients;
-    console.log(recipients)
   const filteredContacts = recipients.filter((person) =>
     person.text.text.toLowerCase().includes(blockSuggestion.value.toLowerCase())
   );
-  console.log(JSON.stringify(filteredContacts));
 
   return {
     statusCode: 200,
@@ -26,7 +24,7 @@ export const selectMenuHandler = async (event: APIGatewayEvent) => {
   };
 };
 
-async function initAllRecipients() {
+export async function initAllRecipients() {
   const contacts = getAllContacts().then((contacts: MocoContact[]) => {
     return contacts.map((contact) => {
       return {
@@ -40,18 +38,17 @@ async function initAllRecipients() {
     });
   });
 
-  const users = getUsers().then((contacts: MocoUserType[]) =>
-    contacts.map((contact) => ({
+  const users = getUsers().then((contacts: MocoUserType[]) => {
+    return contacts.map((contact) => ({
       value: contact.id.toString(),
       text: {
         type: "plain_text",
         text: contact.firstname + " " + contact.lastname,
         emoji: true,
       },
-    }))
-  );
+    }));
+  });
 
   const all = await Promise.all([contacts, users]);
-
   return all[0].concat(all[1]);
 }
