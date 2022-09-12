@@ -14,7 +14,9 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
   console.log(`Handling event ${JSON.stringify(event.detail)}`);
   let recipient;
   let address;
+
   if (event.detail.personId.length <= 6) {
+    //the ID of contacts in moco has a maximum of 6 digits, while the employee IDs always have more digits
     recipient = await getContactById(event.detail.personId);
     let recipientCompanyAdress = "";
     if (recipient.company != null) {
@@ -27,7 +29,6 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
     address = recipient.home_address;
   }
 
-  console.log(recipient);
   if (address === "") {
     console.log(
       await axios.post(event.detail.responseUrl, {
