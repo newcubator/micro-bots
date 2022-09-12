@@ -17,6 +17,16 @@ export function getUsers(): Promise<Array<MocoUserType>> {
     .then((response: AxiosResponse<Array<MocoUserType>>) => response.data);
 }
 
+export async function getUserById(id: string) {
+  return axios
+    .get<MocoUserType>(`https://newcubator.mocoapp.com/api/v1/users/${id}`, {
+      headers: {
+        Authorization: "Token token=" + MOCO_TOKEN,
+      },
+    })
+    .then((response) => response.data);
+}
+
 export function findUserBySlackCommand(
   command: Pick<SlackCommandType, "user_id" | "user_name">
 ): (users: Array<MocoUserType>) => MocoUserType {

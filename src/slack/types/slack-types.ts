@@ -40,6 +40,14 @@ export interface BlockAction {
   actions: ElementAction[];
 }
 
+export interface BlockSuggestion {
+  user: User;
+  state: State;
+  type: "block_suggestion";
+  container: Container;
+  value: string;
+}
+
 interface User {
   id: string;
   username: string;
