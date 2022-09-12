@@ -219,7 +219,7 @@ function createMailSignature(user: MocoUserType): string {
                         </table>
                       </td>
                       <td style="padding: 0px;">
-                        <a href="//newcubator.com" color="#50505e" style="text-decoration: none; color: rgb(80, 80, 94); font-size: 12px;">
+                        <a href="https://newcubator.com" color="#50505e" style="text-decoration: none; color: rgb(80, 80, 94); font-size: 12px;">
                           <span>newcubator.com</span>
                         </a>
                       </td>
