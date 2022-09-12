@@ -141,13 +141,24 @@ functions:
           path: mailSignatureGenerator
     handler: src/functions/mail-signature-generator.handler
     memorySize: 128
-  privateChannel:
+
+  privateChannelCommand:
+    handler: src/private-channel/command-handler.commandHandler
+    timeout: 3
     events:
       - http:
           method: post
-          path: privateChannel
-    handler: src/functions/private-channel.handler
-    memorySize: 128
+          path: private-channel-command
+  privateChannelEvent:
+    handler: src/private-channel/event-handler.eventHandler
+    timeout: 20
+    maximumRetryAttempts: 0
+    events:
+      - eventBridge:
+          eventBus: micro-bots-event
+          pattern:
+            detail-type:
+              - "PrivateChannelRequestedEvent"
   twitterBot:
     environment:
       TWITTER_ACCESS_SECRET: ${env:TWITTER_ACCESS_SECRET}

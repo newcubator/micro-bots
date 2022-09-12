@@ -10,6 +10,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
   let actionType: string = blockAction.actions[0].action_id;
   console.log(`${actionType} requested`);
   console.log(blockAction);
+    console.log(blockAction.state.values.PRIVATE_CHANNEL_USERS);
 
   let requestedEvent;
 
@@ -57,6 +58,16 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
         actionType,
       });
       break;
+      case ActionType.PRIVATE_CHANNEL:
+          requestedEvent = new PrivateChannelRequestedEvent({
+              personId: blockAction.state.values.PRIVATE_CHANNEL_USERS.PRIVATE_CHANNEL_USERS.selected_users,
+              channelName: blockAction.state.values.PRIVATE_CHANNEL_NAME.PRIVATE_CHANNEL_NAME.value,
+              responseUrl: blockAction.response_url,
+              messageTs: blockAction.container.message_ts,
+              channelId: blockAction.container.channel_id,
+              actionType,
+          });
+          break;
     default:
       console.log("No handle registered for this type of action.");
       return {
@@ -165,4 +176,22 @@ export class ShortMailRequestedEvent {
     this.sender = sender;
     this.actionId = actionType;
   }
+}
+
+export class PrivateChannelRequestedEvent {
+    personId: string[];
+    channelName: string;
+    responseUrl: string;
+    messageTs: string;
+    channelId: string;
+    actionId: ActionType;
+
+    constructor({ personId, channelName, responseUrl, messageTs, channelId, actionType }) {
+        this.personId = personId;
+        this.channelName= channelName;
+        this.responseUrl = responseUrl;
+        this.messageTs = messageTs;
+        this.channelId = channelId;
+        this.actionId = actionType;
+    }
 }
