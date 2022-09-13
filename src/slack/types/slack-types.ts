@@ -6,7 +6,7 @@ export enum ActionType {
   UNLOCK_PROJECT = "UNLOCK_PROJECT",
   COMPLETION_NOTICE = "COMPLETION_NOTICE",
   SHORT_MAIL = "SHORT_MAIL",
-    PRIVATE_CHANNEL = "PRIVATE_CHANNEL"
+  PRIVATE_CHANNEL = "PRIVATE_CHANNEL",
 }
 
 export enum ShortMailFields {
@@ -15,9 +15,9 @@ export enum ShortMailFields {
   SHORT_MAIL_TEXT = "SHORT_MAIL_TEXT",
 }
 
-export enum PrivateChannelFields{
-    PRIVATE_CHANNEL_USERS = "PRIVATE_CHANNEL_USERS",
-    PRIVATE_CHANNEL_NAME = "PRIVATE_CHANNEL_NAME",
+export enum PrivateChannelFields {
+  PRIVATE_CHANNEL_USERS = "PRIVATE_CHANNEL_USERS",
+  PRIVATE_CHANNEL_NAME = "PRIVATE_CHANNEL_NAME",
 }
 
 export interface SlackCommandType extends ParsedUrlQuery {
