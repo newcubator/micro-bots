@@ -1,0 +1,57 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`command handler for short mail 1`] = `
+{
+  "blocks": [
+    {
+      "accessory": {
+        "action_id": "PRIVATE_CHANNEL_USERS",
+        "placeholder": {
+          "text": "Nutzer auswählen...",
+          "type": "plain_text",
+        },
+        "type": "multi_users_select",
+      },
+      "block_id": "PRIVATE_CHANNEL_USERS",
+      "text": {
+        "text": "Ich erstelle dir gerne einen privaten Channel. Gib hierfür nur an, wen du nicht in dem Channel haben möchtest:",
+        "type": "mrkdwn",
+      },
+      "type": "section",
+    },
+    {
+      "block_id": "PRIVATE_CHANNEL_NAME",
+      "element": {
+        "action_id": "PRIVATE_CHANNEL_NAME",
+        "max_length": 200,
+        "multiline": false,
+        "type": "plain_text_input",
+      },
+      "label": {
+        "emoji": true,
+        "text": "Channel Name:",
+        "type": "plain_text",
+      },
+      "type": "input",
+    },
+    {
+      "block_id": "confirmationButton",
+      "elements": [
+        {
+          "action_id": "PRIVATE_CHANNEL",
+          "style": "primary",
+          "text": {
+            "text": "Erstellen",
+            "type": "plain_text",
+          },
+          "type": "button",
+          "value": "Confirmation",
+        },
+      ],
+      "type": "actions",
+    },
+  ],
+  "response_type": "in_channel",
+  "text": "Private channel angefragt",
+}
+`;

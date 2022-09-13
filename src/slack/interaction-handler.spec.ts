@@ -220,6 +220,40 @@ const samplePayload6 = {
   }),
 } as any;
 
+const samplePayload7 = {
+  body: encode({
+    payload: JSON.stringify({
+      type: "block_actions",
+      container: {
+        message_ts: "1633540187.000600",
+        channel_id: "C02BBA8DWVD",
+      },
+      channel: { id: "C02BBA8DWVD", name: "privategroup" },
+      response_url: "https://slack.com/response_url",
+      state: {
+        values: {
+          PRIVATE_CHANNEL_USERS: {
+            PRIVATE_CHANNEL_USERS: {
+              selected_users: ["1", "2"],
+            },
+          },
+          PRIVATE_CHANNEL_NAME: { PRIVATE_CHANNEL_NAME: { value: "Testchannel" } },
+        },
+      },
+      actions: [
+        {
+          action_id: "PRIVATE_CHANNEL",
+          block_id: "confirmationButton",
+          text: [Object],
+          value: "Confirmation",
+          style: "primary",
+          type: "button",
+        },
+      ],
+    }),
+  }),
+} as any;
+
 it("handle interaction with wrong action type", async () => {
   eventBridgeSendMock.mockResolvedValueOnce({});
   const result = await interactionHandler(samplePayload5);
@@ -314,6 +348,26 @@ it("handle interaction short mail with text", async () => {
     sender: "maxMustermannId",
     location: "D",
     actionId: ActionType.SHORT_MAIL,
+  });
+  expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
+    replace_original: "true",
+    text: "Vielen Dank für deine Anfrage, ich werde mich sofort darum kümmern. ⏳",
+  });
+  expect(result.statusCode).toBe(200);
+});
+
+it("handle interaction private channel", async () => {
+  eventBridgeSendMock.mockResolvedValueOnce({});
+
+  const result = await interactionHandler(samplePayload7);
+
+  expect(eventBridgeSendMock).toHaveBeenCalledWith({
+    channelId: "C02BBA8DWVD",
+    messageTs: "1633540187.000600",
+    responseUrl: "https://slack.com/response_url",
+    personId: ["1", "2"],
+    channelName: "Testchannel",
+    actionId: ActionType.PRIVATE_CHANNEL,
   });
   expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
     replace_original: "true",
