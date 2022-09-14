@@ -30,7 +30,6 @@ export const commandHandler = async () => {
   return {
     statusCode: 200,
     body: JSON.stringify({
-      response_type: "in_channel",
       text: "Unlock project angefragt",
       blocks: [
         {

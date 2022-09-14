@@ -51,7 +51,6 @@ exports[`command handler for short mail 1`] = `
       "type": "actions",
     },
   ],
-  "response_type": "in_channel",
   "text": "Private channel angefragt",
 }
 `;

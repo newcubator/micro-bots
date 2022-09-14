@@ -87,7 +87,6 @@ exports[`command handler for short mail 1`] = `
       "type": "actions",
     },
   ],
-  "response_type": "in_channel",
   "text": "Kurzbrief angefragt",
 }
 `;
@@ -179,7 +178,6 @@ exports[`respond when loads no contacts 1`] = `
       "type": "actions",
     },
   ],
-  "response_type": "in_channel",
   "text": "Kurzbrief angefragt",
 }
 `;

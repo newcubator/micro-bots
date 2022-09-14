@@ -5,7 +5,6 @@ export const commandHandler = async (event: APIGatewayEvent) => {
   return {
     statusCode: 200,
     body: JSON.stringify({
-      response_type: "in_channel",
       text: "Kurzbrief angefragt",
       blocks: [
         {
