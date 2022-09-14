@@ -23,134 +23,139 @@ const conversationsJoinMock = slackClient.conversations.join as jest.Mock;
 const fileUploadMock = slackClient.files.upload as jest.Mock;
 const axiosPostMock = axios.post as jest.Mock;
 
-test("handle event short mail generation dortmund to male with company adress", async () => {
-  getContactByIdMock.mockResolvedValueOnce({
-    id: 1,
-    gender: "H",
-    firstname: "Bill",
-    lastname: "Gates",
-    work_address: "\nFensterstraße 1\n12345 Fensterhausen ",
-    company: {
-      id: 42,
-      type: "Firma",
-      name: "Fenster",
-    },
-  });
-  getCompanieMock.mockResolvedValueOnce({
-    id: 42,
-    name: "Guugel",
-    address: "Suchallee 42\n54321 Suchstadt",
+describe("ShortmailEventHandler", () => {
+  beforeEach(() => {
+    jest.clearAllMocks();
   });
 
-  renderShortMailPdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
-
-  getSlackNameMock.mockResolvedValueOnce({
-    ok: true,
-    profile: {
-      real_name: "Max Mustermann",
-    },
-  });
-
-  await eventHandler({
-    detail: {
-      responseUrl: "https://slack.com/response_url",
-      personId: "1",
-      message: "Testnachricht an Bill",
-      sender: "1337",
-      messageTs: "1633540187.000600",
-      channelId: "C02BBA8DWVD",
-      location: "D",
-    },
-  } as any);
-
-  expect(getCompanieMock).toHaveBeenCalledWith(42);
-  expect(getSlackNameMock).toHaveBeenCalledWith("1337");
-  expect(getContactByIdMock).toHaveBeenCalledWith("1");
-  expect(renderShortMailPdfMock).toHaveBeenCalledWith({
-    sender: "Max Mustermann",
-    location: "D",
-    recipient: {
-      salutation: "geehrter Herr",
-      firstname: "Bill",
-      lastname: "Gates",
-      address: "Suchallee 42\n54321 Suchstadt",
-    },
-    date: dayjs(),
-    text: "Testnachricht an Bill",
-  });
-  expect(conversationsJoinMock).toHaveBeenCalledWith({ channel: "C02BBA8DWVD" });
-  expect(fileUploadMock).toHaveBeenCalledWith({
-    file: expect.anything(),
-    filename: "Kurzbrief Gates.pdf",
-    initial_comment: "",
-    channels: "C02BBA8DWVD",
-    thread_ts: "1633540187.000600",
-    broadcast: "true",
-  });
-  expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
-    replace_original: "true",
-    text: expect.stringContaining("Bill Gates"),
-  });
-});
-
-test("handle event short mail generation hannover to female without company adress", async () => {
-  getContactByIdMock.mockResolvedValueOnce({
-    id: 2,
-    gender: "F",
-    firstname: "Melinda",
-    lastname: "Gates",
-    work_address: "\nFensterstraße 1\n12345 Fensterhausen ",
-    company: null,
-  });
-  getCompanieMock.mockResolvedValueOnce({});
-
-  renderShortMailPdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
-
-  getSlackNameMock.mockResolvedValueOnce({
-    ok: true,
-    profile: {
-      real_name: "Max Mustermann",
-    },
-  });
-
-  await eventHandler({
-    detail: {
-      responseUrl: "https://slack.com/response_url",
-      personId: "2",
-      message: "Testnachricht an Melinda",
-      sender: "1337",
-      messageTs: "1633540187.000600",
-      channelId: "C02BBA8DWVD",
-      location: "H",
-    },
-  } as any);
-
-  expect(getCompanieMock).toBeCalledTimes(1);
-  expect(getSlackNameMock).toHaveBeenCalledWith("1337");
-  expect(getContactByIdMock).toHaveBeenCalledWith("2");
-  expect(renderShortMailPdfMock).toHaveBeenCalledWith({
-    sender: "Max Mustermann",
-    location: "H",
-    recipient: {
-      salutation: "geehrte Frau",
+  it("should handle event short mail generation hannover to female without company adress", async () => {
+    getContactByIdMock.mockResolvedValueOnce({
+      id: 2,
+      gender: "F",
       firstname: "Melinda",
       lastname: "Gates",
-      address: "\nFensterstraße 1\n12345 Fensterhausen ",
-    },
-    date: dayjs(),
-    text: "Testnachricht an Melinda",
+      work_address: "\nFensterstraße 1\n12345 Fensterhausen ",
+      company: null,
+    });
+
+    renderShortMailPdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
+
+    getSlackNameMock.mockResolvedValueOnce({
+      ok: true,
+      profile: {
+        real_name: "Max Mustermann",
+      },
+    });
+
+    await eventHandler({
+      detail: {
+        responseUrl: "https://slack.com/response_url",
+        personId: "2",
+        message: "Testnachricht an Melinda",
+        sender: "1337",
+        messageTs: "1633540187.000600",
+        channelId: "C02BBA8DWVD",
+        location: "H",
+      },
+    } as any);
+
+    expect(getCompanieMock).toBeCalledTimes(0);
+    expect(getSlackNameMock).toHaveBeenCalledWith("1337");
+    expect(getContactByIdMock).toHaveBeenCalledWith("2");
+    expect(renderShortMailPdfMock).toHaveBeenCalledWith({
+      sender: "Max Mustermann",
+      location: "H",
+      recipient: {
+        salutation: "Sehr geehrte Frau Gates",
+        firstname: "Melinda",
+        lastname: "Gates",
+        address: "\nFensterstraße 1\n12345 Fensterhausen ",
+      },
+      date: dayjs(),
+      text: "Testnachricht an Melinda",
+    });
+    expect(conversationsJoinMock).toHaveBeenCalledWith({ channel: "C02BBA8DWVD" });
+    expect(fileUploadMock).toHaveBeenCalledWith({
+      file: expect.anything(),
+      filename: "Kurzbrief Gates.pdf",
+      initial_comment: "",
+      channels: "C02BBA8DWVD",
+      thread_ts: "1633540187.000600",
+      broadcast: "true",
+    });
+    expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
+      replace_original: "true",
+      text: expect.stringContaining("Melinda Gates"),
+    });
   });
-  expect(conversationsJoinMock).toHaveBeenCalledWith({ channel: "C02BBA8DWVD" });
-  expect(fileUploadMock).toHaveBeenCalledWith({
-    file: expect.anything(),
-    filename: "Kurzbrief Gates.pdf",
-    initial_comment: "",
-    channels: "C02BBA8DWVD",
-    thread_ts: "1633540187.000600",
-    broadcast: "true",
-  });
-  expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
-    replace_original: "true",
-    text: expect.stringContaining("Melinda Gates"),
+
+  it("should handle event short mail generation dortmund to male with company address", async () => {
+    getContactByIdMock.mockResolvedValueOnce({
+      id: 1,
+      gender: "H",
+      firstname: "Bill",
+      lastname: "Gates",
+      work_address: "\nFensterstraße 1\n12345 Fensterhausen ",
+      company: {
+        id: 42,
+        type: "Firma",
+        name: "Guugel",
+      },
+    });
+    getCompanieMock.mockResolvedValueOnce({
+      id: 42,
+      name: "Guugel",
+      address: "Suchallee 42\n54321 Suchstadt",
+    });
+
+    renderShortMailPdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
+
+    getSlackNameMock.mockResolvedValueOnce({
+      ok: true,
+      profile: {
+        real_name: "Max Mustermann",
+      },
+    });
+
+    await eventHandler({
+      detail: {
+        responseUrl: "https://slack.com/response_url",
+        personId: "1",
+        message: "Testnachricht an Bill",
+        sender: "1337",
+        messageTs: "1633540187.000600",
+        channelId: "C02BBA8DWVD",
+        location: "D",
+      },
+    } as any);
+
+    expect(getCompanieMock).toHaveBeenCalledWith(42);
+    expect(getSlackNameMock).toHaveBeenCalledWith("1337");
+    expect(getContactByIdMock).toHaveBeenCalledWith("1");
+    expect(renderShortMailPdfMock).toHaveBeenCalledWith({
+      sender: "Max Mustermann",
+      location: "D",
+      recipient: {
+        salutation: "Sehr geehrter Herr Gates",
+        firstname: "Bill",
+        lastname: "Gates",
+        address: "Suchallee 42\n54321 Suchstadt",
+      },
+      date: dayjs(),
+      text: "Testnachricht an Bill",
+    });
+    expect(conversationsJoinMock).toHaveBeenCalledWith({ channel: "C02BBA8DWVD" });
+    expect(fileUploadMock).toHaveBeenCalledWith({
+      file: expect.anything(),
+      filename: "Kurzbrief Gates.pdf",
+      initial_comment: "",
+      channels: "C02BBA8DWVD",
+      thread_ts: "1633540187.000600",
+      broadcast: "true",
+    });
+    expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
+      replace_original: "true",
+      text: expect.stringContaining("Bill Gates"),
+    });
   });
 });

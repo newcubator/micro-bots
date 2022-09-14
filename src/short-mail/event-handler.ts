@@ -14,22 +14,30 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
   console.log(`Handling event ${JSON.stringify(event.detail)}`);
   let recipient;
   let address;
+  let salutation;
 
   if (event.detail.personId.length <= 6) {
     //the ID of contacts in moco has a maximum of 6 digits, while the employee IDs always have more digits
     recipient = await getContactById(event.detail.personId);
-    let recipientCompanyAdress = "";
+    let recipientCompanyAddress = "";
     if (recipient.company != null) {
       const recipientCompany = await getCompanyById(recipient.company.id);
-      recipientCompanyAdress = recipientCompany.address;
+      recipientCompanyAddress = recipientCompany.address;
     }
-    address = recipientCompanyAdress || recipient.work_address || recipient.home_address;
+    salutation =
+      recipient.gender === "F"
+        ? `Sehr geehrte Frau ${recipient.lastname}`
+        : recipient.gender === "H"
+        ? `Sehr geehrter Herr ${recipient.lastname}`
+        : `Sehr geehrte/r Frau/Herr ${recipient.lastname}`;
+    address = recipientCompanyAddress || recipient.work_address || recipient.home_address;
   } else {
     recipient = await getUserById(event.detail.personId);
     address = recipient.home_address;
+    salutation = `Hallo ${recipient.firstname}`;
   }
 
-  if (address === "") {
+  if (!address) {
     console.log(
       await axios.post(event.detail.responseUrl, {
         replace_original: "true",
@@ -39,7 +47,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
     return;
   }
 
-  if (event.detail.message === null) {
+  if (!event.detail.message) {
     console.log(
       await axios.post(event.detail.responseUrl, {
         replace_original: "true",
@@ -59,16 +67,16 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
     location: event.detail.location,
 
     recipient: {
-      salutation: recipient.gender === "F" ? "geehrte Frau" : "H" ? "geehrter Herr" : "geehrte/r Frau/Herr",
+      salutation,
       firstname: recipient.firstname,
       lastname: recipient.lastname,
-      address: address,
+      address,
     },
     date: dayjs(),
-    text: text,
+    text,
   });
 
-  // Only user/bots that have joined a channel can post fiels
+  // Only user/bots that have joined a channel can post files
   await channelJoin(event.detail.channelId);
 
   try {
@@ -90,7 +98,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
       );
     }
   } catch (error) {
-    console.log(error);
+    console.error(error);
     throw new Error(error);
   }
 };

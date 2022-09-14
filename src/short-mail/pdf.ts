@@ -39,7 +39,7 @@ export async function renderShortMailPdf(content: PdfContent) {
     y: height - 220,
     size: 10,
   });
-  pages[0].drawText(`Sehr ${recipient.salutation} ${recipient.lastname},`, {
+  pages[0].drawText(`${recipient.salutation},`, {
     x: 68,
     y: height - 300,
     size: 10,
