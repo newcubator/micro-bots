@@ -120,6 +120,15 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
                 style: "primary",
                 action_id: ActionType.UPLOAD_LETTERXPRESS,
               },
+              {
+                type: "button",
+                text: {
+                  type: "plain_text",
+                  text: "Abbrechen",
+                },
+                style: "danger",
+                action_id: ActionType.CANCEL,
+              },
             ],
           },
         ]

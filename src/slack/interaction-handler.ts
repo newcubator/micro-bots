@@ -74,6 +74,15 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
         sender: blockAction.user.id,
       });
       break;
+    case ActionType.CANCEL:
+      await axios.post(blockAction.response_url, {
+        replace_original: "true",
+        text: "Der Brief wird nicht verschickt.",
+      });
+
+      return {
+        statusCode: 200,
+      };
     default:
       console.log("No handle registered for this type of action.");
       return {
