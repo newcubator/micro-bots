@@ -166,6 +166,8 @@ functions:
       TWITTER_APP_KEY: ${env:TWITTER_APP_KEY}
       TWITTER_APP_SECRET: ${env:TWITTER_APP_SECRET}
       TWITTER_BOT_SPREADSHEET_ID: ${env:TWITTER_BOT_SPREADSHEET_ID}
+    timeout: 10
+    maximumRetryAttempts: 0
     events:
       - schedule:
           enabled: true
