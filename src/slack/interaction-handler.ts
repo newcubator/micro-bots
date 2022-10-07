@@ -9,6 +9,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
 
   let actionType: string = blockAction.actions[0].action_id;
   console.log(`${actionType} requested`);
+  console.log(blockAction);
   let requestedEvent;
 
   switch (actionType) {
@@ -65,6 +66,23 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
         actionType,
       });
       break;
+    case ActionType.UPLOAD_LETTERXPRESS:
+      requestedEvent = new UploadLetterXpressEvent({
+        file: blockAction.actions[0].value,
+        responseUrl: blockAction.response_url,
+        channelId: blockAction.container.channel_id,
+        sender: blockAction.user.id,
+      });
+      break;
+    case ActionType.CANCEL:
+      await axios.post(blockAction.response_url, {
+        replace_original: "true",
+        text: "Der Brief wird nicht verschickt.",
+      });
+
+      return {
+        statusCode: 200,
+      };
     default:
       console.log("No handle registered for this type of action.");
       return {
@@ -190,5 +208,19 @@ export class PrivateChannelRequestedEvent {
     this.messageTs = messageTs;
     this.channelId = channelId;
     this.actionId = actionType;
+  }
+}
+
+export class UploadLetterXpressEvent {
+  file: string;
+  responseUrl: string;
+  channelId: string;
+  sender: string;
+
+  constructor({ file, responseUrl, channelId, sender }) {
+    this.file = file;
+    this.responseUrl = responseUrl;
+    this.channelId = channelId;
+    this.sender = sender;
   }
 }

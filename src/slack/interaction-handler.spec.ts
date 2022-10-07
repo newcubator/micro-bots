@@ -254,6 +254,39 @@ const samplePayload7 = {
   }),
 } as any;
 
+const samplePayload8 = {
+  body: encode({
+    payload: JSON.stringify({
+      type: "block_actions",
+      container: {
+        message_ts: "1633540187.000600",
+        channel_id: "C02BBA8DWVD",
+      },
+      channel: { id: "C02BBA8DWVD", name: "privategroup" },
+      response_url: "https://slack.com/response_url",
+      state: {
+        values: {
+          PRIVATE_CHANNEL_USERS: {
+            PRIVATE_CHANNEL_USERS: {
+              selected_users: ["1", "2"],
+            },
+          },
+          PRIVATE_CHANNEL_NAME: { PRIVATE_CHANNEL_NAME: { value: "Testchannel" } },
+        },
+      },
+      actions: [
+        {
+          action_id: "CANCEL",
+          block_id: "uploadButton",
+          text: [Object],
+          style: "danger",
+          type: "button",
+        },
+      ],
+    }),
+  }),
+} as any;
+
 it("handle interaction with wrong action type", async () => {
   eventBridgeSendMock.mockResolvedValueOnce({});
   const result = await interactionHandler(samplePayload5);
@@ -352,6 +385,16 @@ it("handle interaction short mail with text", async () => {
   expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
     replace_original: "true",
     text: "Vielen Dank für deine Anfrage, ich werde mich sofort darum kümmern. ⏳",
+  });
+  expect(result.statusCode).toBe(200);
+});
+
+it("should cancel interaction", async () => {
+  const result = await interactionHandler(samplePayload8);
+
+  expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
+    replace_original: "true",
+    text: "Der Brief wird nicht verschickt.",
   });
   expect(result.statusCode).toBe(200);
 });
