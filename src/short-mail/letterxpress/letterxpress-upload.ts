@@ -11,8 +11,8 @@ export const uploadHandler = async (event: EventBridgeEvent<string, UploadLetter
     headers: { "Content-Type": "application/pdf", Authorization: `Bearer ${process.env.SLACK_TOKEN}` },
   });
 
-  let pdfBase64 = await convertPdfToBase64(pdf);
-  let checkSum = await getMd5Hash(pdfBase64);
+  const pdfBase64 = await convertPdfToBase64(pdf);
+  const checkSum = await getMd5Hash(pdfBase64);
 
   const content = {
     auth: {
@@ -30,13 +30,9 @@ export const uploadHandler = async (event: EventBridgeEvent<string, UploadLetter
       },
     },
   };
-  try {
-    let upload = await axios.post("https://api.letterxpress.de/v1/setJob", content);
-    if (upload.data.message === "OK") {
-      await slackChatPostEphemeral(event.detail.channelId, "Der Brief ist jetzt unterwegs!", event.detail.sender);
-    }
-  } catch (error) {
-    console.error(error);
-    throw new Error(error);
+
+  let upload = await axios.post("https://api.letterxpress.de/v1/setJob", content);
+  if (upload.data.message === "OK") {
+    await slackChatPostEphemeral(event.detail.channelId, "Der Brief ist jetzt unterwegs!", event.detail.sender);
   }
 };
