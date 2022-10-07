@@ -7,7 +7,8 @@ import { getContactById } from "../moco/contacts";
 import { getUserById } from "../moco/users";
 import { channelJoin } from "../slack/channel-join";
 import { ShortMailRequestedEvent } from "../slack/interaction-handler";
-import { getRealSlackName } from "../slack/slack";
+import { getRealSlackName, slackChatPostEphemeral } from "../slack/slack";
+import { ActionType } from "../slack/types/slack-types";
 import { renderShortMailPdf } from "./pdf";
 
 export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequestedEvent>) => {
@@ -88,13 +89,40 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
       thread_ts: event.detail.messageTs,
       broadcast: "true",
     });
-    console.log(upload);
     if (upload.ok) {
-      console.log(
-        await axios.post(event.detail.responseUrl, {
-          replace_original: "true",
-          text: `Der Kurzbrief für '${recipient.firstname} ${recipient.lastname}' ist fertig! 🙌`,
-        })
+      await axios.post(event.detail.responseUrl, {
+        replace_original: "true",
+        text: `Der Kurzbrief für '${recipient.firstname} ${recipient.lastname}' ist fertig! 🙌`,
+      });
+      await slackChatPostEphemeral(
+        event.detail.channelId,
+        "Möchtest du den Brief direkt verschicken?",
+        event.detail.sender,
+        [
+          {
+            text: {
+              type: "mrkdwn",
+              text: `Möchtest du den Brief direkt per LetterXpress verschicken?`,
+            },
+            type: "section",
+          },
+          {
+            type: "actions",
+            block_id: "uploadButton",
+            elements: [
+              {
+                type: "button",
+                text: {
+                  type: "plain_text",
+                  text: "Verschicken",
+                },
+                value: upload.file?.url_private,
+                style: "primary",
+                action_id: ActionType.UPLOAD_LETTERXPRESS,
+              },
+            ],
+          },
+        ]
       );
     }
   } catch (error) {

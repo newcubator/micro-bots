@@ -1,5 +1,7 @@
 import { UsersProfileGetResponse, WebClient } from "@slack/web-api";
+import { slackClient } from "../clients/slack";
 import {
+  SlackChatPostEphemeralResponse,
   SlackChatPostMessageResponse,
   SlackConversationsCreateResponse,
   SlackConversationsInviteResponse,
@@ -66,6 +68,14 @@ export const slackChatPostMessage = async (text: string, channelId: string, user
     icon_emoji: icon_emoji,
     link_names: true,
   })) as SlackChatPostMessageResponse;
+};
+export const slackChatPostEphemeral = async (channelId: string, text: string, user: string, blocks?: any[]) => {
+  return (await slackClient.chat.postEphemeral({
+    channel: channelId,
+    text: text,
+    user: user,
+    blocks: blocks,
+  })) as SlackChatPostEphemeralResponse;
 };
 
 export const getRealSlackName = async (user: string) => {

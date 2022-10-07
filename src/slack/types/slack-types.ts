@@ -7,6 +7,7 @@ export enum ActionType {
   COMPLETION_NOTICE = "COMPLETION_NOTICE",
   SHORT_MAIL = "SHORT_MAIL",
   PRIVATE_CHANNEL = "PRIVATE_CHANNEL",
+  UPLOAD_LETTERXPRESS = "UPLOAD_LETTERXPRESS",
 }
 
 export enum ShortMailFields {
@@ -73,6 +74,7 @@ interface Container {
 }
 
 interface ElementAction {
+  value: any;
   text: any;
   selected_option: {
     text: PlainTextElement;
@@ -206,6 +208,10 @@ export interface SlackUsersListResponse extends WebAPICallResult {
 }
 
 export interface SlackChatPostMessageResponse extends WebAPICallResult {
+  channel: string;
+  message: Message;
+}
+export interface SlackChatPostEphemeralResponse extends WebAPICallResult {
   channel: string;
   message: Message;
 }

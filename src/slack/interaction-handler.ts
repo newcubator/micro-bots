@@ -9,6 +9,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
 
   let actionType: string = blockAction.actions[0].action_id;
   console.log(`${actionType} requested`);
+  console.log(blockAction);
   let requestedEvent;
 
   switch (actionType) {
@@ -63,6 +64,14 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
         messageTs: blockAction.container.message_ts,
         channelId: blockAction.container.channel_id,
         actionType,
+      });
+      break;
+    case ActionType.UPLOAD_LETTERXPRESS:
+      requestedEvent = new UploadLetterXpressEvent({
+        file: blockAction.actions[0].value,
+        responseUrl: blockAction.response_url,
+        channelId: blockAction.container.channel_id,
+        sender: blockAction.user.id,
       });
       break;
     default:
@@ -190,5 +199,19 @@ export class PrivateChannelRequestedEvent {
     this.messageTs = messageTs;
     this.channelId = channelId;
     this.actionId = actionType;
+  }
+}
+
+export class UploadLetterXpressEvent {
+  file: string;
+  responseUrl: string;
+  channelId: string;
+  sender: string;
+
+  constructor({ file, responseUrl, channelId, sender }) {
+    this.file = file;
+    this.responseUrl = responseUrl;
+    this.channelId = channelId;
+    this.sender = sender;
   }
 }

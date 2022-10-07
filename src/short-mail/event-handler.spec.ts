@@ -1,4 +1,4 @@
-import { getRealSlackName } from "../slack/slack";
+import { getRealSlackName, slackChatPostEphemeral } from "../slack/slack";
 import { eventHandler } from "./event-handler";
 import { getCompanyById } from "../moco/companies";
 import { getContactById } from "../moco/contacts";
@@ -21,6 +21,7 @@ const getContactByIdMock = getContactById as jest.Mock;
 const renderShortMailPdfMock = renderShortMailPdf as jest.Mock;
 const conversationsJoinMock = slackClient.conversations.join as jest.Mock;
 const fileUploadMock = slackClient.files.upload as jest.Mock;
+const postEphemeralMock = slackChatPostEphemeral as jest.Mock;
 const axiosPostMock = axios.post as jest.Mock;
 
 describe("ShortmailEventHandler", () => {
@@ -87,6 +88,7 @@ describe("ShortmailEventHandler", () => {
       replace_original: "true",
       text: expect.stringContaining("Melinda Gates"),
     });
+    expect(postEphemeralMock).toHaveBeenCalled();
   });
 
   it("should handle event short mail generation dortmund to male with company address", async () => {
