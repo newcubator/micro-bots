@@ -15,6 +15,9 @@ const slackPostEphemeralMock = slackChatPostEphemeral as jest.Mock;
 const sampleBase64 = "sampleBase64String";
 const correctMD5Hash = "b3eb6b11374e509bb6e8dc233480a82a";
 
+process.env.LETTERXPRESS_USER = "testuser";
+process.env.LETTERXPRESS_KEY = "testkey";
+
 test("upload pdf to letterxpress", async () => {
   axiosGetMock.mockResolvedValueOnce({});
   axiosPostMock.mockResolvedValueOnce({ data: { message: "OK" } });
@@ -31,8 +34,8 @@ test("upload pdf to letterxpress", async () => {
   expect(getMD5HashMock).toHaveBeenCalledWith(sampleBase64);
   expect(axiosPostMock).toHaveBeenCalledWith("https://api.letterxpress.de/v1/setJob", {
     auth: {
-      username: undefined,
-      apikey: undefined,
+      username: "testuser",
+      apikey: "testkey",
     },
     letter: {
       base64_file: sampleBase64,
