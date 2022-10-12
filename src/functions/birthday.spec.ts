@@ -33,7 +33,7 @@ describe("birthday", () => {
   const mockedSlackConversationsInvite = jest
     .spyOn(slack, "slackConversationsInvite")
     .mockResolvedValue(EXAMPLE_SLACK_CONVERSATIONS_INVITE_RESPONSE);
-  const mockedSlackUsersList = jest.spyOn(slack, "slackUsersList").mockResolvedValue(EXAMPLE_SLACK_USERS_LIST_RESPONSE);
+  const mockedSlackUsersList = jest.spyOn(slack, "getSlackUsers").mockResolvedValue(EXAMPLE_SLACK_USERS_LIST_RESPONSE);
   const mockedSlackChatPostMessage = jest
     .spyOn(slack, "slackChatPostMessage")
     .mockResolvedValue(EXAMPLE_SLACK_CHAT_POST_MESSAGE_RESPONSE);

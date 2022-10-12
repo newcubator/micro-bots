@@ -7,7 +7,7 @@ import { getContactById } from "../moco/contacts";
 import { getUserById } from "../moco/users";
 import { channelJoin } from "../slack/channel-join";
 import { ShortMailRequestedEvent } from "../slack/interaction-handler";
-import { getRealSlackName, slackChatPostEphemeral } from "../slack/slack";
+import { getSlackUserProfile, slackChatPostEphemeral } from "../slack/slack";
 import { ActionType } from "../slack/types/slack-types";
 import { renderShortMailPdf } from "./pdf";
 
@@ -60,7 +60,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
 
   const text = event.detail.message;
 
-  const userProfile = await getRealSlackName(event.detail.sender);
+  const userProfile = await getSlackUserProfile(event.detail.sender);
   const userName = userProfile.profile.real_name;
 
   const pdf = await renderShortMailPdf({

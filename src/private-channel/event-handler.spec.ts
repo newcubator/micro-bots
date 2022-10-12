@@ -1,20 +1,20 @@
 import axios from "axios";
 import {
-  getRealSlackName,
+  getSlackUserProfile,
   slackConversationsCreate,
   slackConversationsInvite,
   slackConversationsList,
-  slackUsersList,
+  getSlackUsers,
 } from "../slack/slack";
 import { eventHandler } from "./event-handler";
 
 jest.mock("../slack/slack");
 
-const getSlackNameMock = getRealSlackName as jest.Mock;
+const getSlackNameMock = getSlackUserProfile as jest.Mock;
 const slackConversationsCreateMock = slackConversationsCreate as jest.Mock;
 const slackConversationsListMock = slackConversationsList as jest.Mock;
 const slackConversationsInviteMock = slackConversationsInvite as jest.Mock;
-const slackUsersListMock = slackUsersList as jest.Mock;
+const slackUsersListMock = getSlackUsers as jest.Mock;
 const axiosPostMock = axios.post as jest.Mock;
 
 describe("Private Channel Bot", () => {

@@ -56,7 +56,7 @@ export const slackConversationsInvite = async (channelId: string, users: string)
   })) as SlackConversationsInviteResponse;
 };
 
-export const slackUsersList = async () => {
+export const getSlackUsers = async () => {
   return (await slack.users.list()) as SlackUsersListResponse;
 };
 
@@ -78,7 +78,7 @@ export const slackChatPostEphemeral = async (channelId: string, text: string, us
   })) as SlackChatPostEphemeralResponse;
 };
 
-export const getRealSlackName = async (user: string) => {
+export const getSlackUserProfile = async (user: string) => {
   return (await slack.users.profile.get({
     user: user,
   })) as UsersProfileGetResponse;

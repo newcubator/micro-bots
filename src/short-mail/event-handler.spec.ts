@@ -1,4 +1,4 @@
-import { getRealSlackName, slackChatPostEphemeral } from "../slack/slack";
+import { getSlackUserProfile, slackChatPostEphemeral } from "../slack/slack";
 import { eventHandler } from "./event-handler";
 import { getCompanyById } from "../moco/companies";
 import { getContactById } from "../moco/contacts";
@@ -16,7 +16,7 @@ jest.mock("./pdf");
 jest.mock("../slack/slack");
 
 const getCompanieMock = getCompanyById as jest.Mock;
-const getSlackNameMock = getRealSlackName as jest.Mock;
+const getSlackNameMock = getSlackUserProfile as jest.Mock;
 const getContactByIdMock = getContactById as jest.Mock;
 const renderShortMailPdfMock = renderShortMailPdf as jest.Mock;
 const conversationsJoinMock = slackClient.conversations.join as jest.Mock;

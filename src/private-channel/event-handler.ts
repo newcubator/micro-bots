@@ -2,11 +2,11 @@ import { PrivateChannelRequestedEvent } from "../slack/interaction-handler";
 import { EventBridgeEvent } from "aws-lambda";
 import axios from "axios";
 import {
-  getRealSlackName,
+  getSlackUserProfile,
   slackConversationsCreate,
   slackConversationsInvite,
   slackConversationsList,
-  slackUsersList,
+  getSlackUsers,
 } from "../slack/slack";
 
 export const eventHandler = async (event: EventBridgeEvent<string, PrivateChannelRequestedEvent>) => {
@@ -23,7 +23,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, PrivateChanne
 
   const excludedUsers = event.detail.personId;
   const excludedUsersNames = await Promise.all(
-    excludedUsers.map((id) => getRealSlackName(id).then((user) => user.profile.real_name))
+    excludedUsers.map((id) => getSlackUserProfile(id).then((user) => user.profile.real_name))
   );
 
   const channelName = event.detail.channelName;
@@ -48,7 +48,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, PrivateChanne
     return;
   }
 
-  const users = await slackUsersList();
+  const users = await getSlackUsers();
 
   if (excludedUsers.some((user) => !users.members.map((m) => m.id).includes(user))) {
     console.error("aborting because a specified user was not found");
