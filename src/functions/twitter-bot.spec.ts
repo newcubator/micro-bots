@@ -2,7 +2,23 @@ import Parser from "rss-parser";
 import { AwsSecretsManager } from "../clients/aws-secrets-manager";
 import { GoogleSheetsAccessor } from "../clients/google-sheets-accessor";
 import { twitterClient } from "../clients/twitter";
-import { composeTweetFromPost, creatorTemplate } from "../twitter-bot/composeTweetFromPost";
+jest.mock("openai", () => {
+  return {
+    Configuration: jest.fn().mockImplementation(),
+    OpenAIApi: jest.fn().mockImplementation(() => ({
+      createCompletion: jest.fn().mockResolvedValue({
+        data: {
+          choices: [
+            {
+              text: "Ich bin ein tweet",
+            },
+          ],
+        },
+      }),
+    })),
+  };
+});
+import { composeTweetWithOpenAI } from "../twitter-bot/composeTweetWithOpenAI";
 import * as fetchRssFeed from "../twitter-bot/get-dev-squad-posts";
 import * as fetchTweetsFromSpreadsheet from "../twitter-bot/get-already-tweeted-dev-squad-posts";
 import { filterUntweetedDevSquadPosts } from "../twitter-bot/filter-untweeted-dev-squad-posts";
@@ -140,36 +156,23 @@ describe("TwitterBot", () => {
     jest.clearAllMocks();
   });
 
-  it("should shorten tweets longer than 280 chars", () => {
-    const result = composeTweetFromPost(fakeRssFeedItemLong);
-    expect(result.message).toHaveLength(280);
+  it("should shorten tweets longer than 280 chars", async () => {
+    const result = await composeTweetWithOpenAI(fakeRssFeedItemLong);
+    expect(result.message).toHaveLength(26);
   });
 
-  it("should not shorten tweets shorter than 280 chars", () => {
-    const result = composeTweetFromPost(fakeRssFeedItemShort);
-    expect(result.message.length).toBeLessThanOrEqual(280);
+  it("should not shorten tweets shorter than 280 chars", async () => {
+    const result = await composeTweetWithOpenAI(fakeRssFeedItemShort);
+    expect(result.message.length).toBeLessThanOrEqual(26);
   });
 
-  it("should always start with 'Neues aus dem Entwicklerteam:'and end with #devsquad when no twitter username is given", () => {
-    const result1 = composeTweetFromPost(fakeRssFeedItemLong);
-    const result2 = composeTweetFromPost(fakeRssFeedItemShort);
-    expect(result1.message).toContain("Neues aus dem Entwicklerteam:" && "#devsquad");
-    expect(result2.message).toContain("Neues aus dem Entwicklerteam:" && "#devsquad");
+  it("should always start with 'Neues aus dem Entwicklerteam:'and end with #devsquad when no twitter username is given", async () => {
+    const result1 = await composeTweetWithOpenAI(fakeRssFeedItemLong);
+    const result2 = await composeTweetWithOpenAI(fakeRssFeedItemShort);
+    expect(result1.message).toContain("Ich bin ein tweet");
+    expect(result2.message).toContain("Ich bin ein tweet");
   });
 
-  it("should always start with 'Neues von @max_mustermann:'and end with #devsquad", () => {
-    const result = composeTweetFromPost(fakeRssFeedItemTwitter);
-    expect(result.message.startsWith("Neues von @max_mustermann:")).toBeTruthy();
-    expect(result.message.endsWith("#devsquad")).toBeTruthy();
-  });
-  it("should return 'creator_name' ", () => {
-    const result = creatorTemplate("https://twitter.com/creator_name");
-    expect(result).toEqual("creator_name");
-  });
-  it("should return 'newcubator' if there is no creator ", () => {
-    const result = creatorTemplate(undefined);
-    expect(result).toEqual("newcubator");
-  });
   it("should call Newcubator Website", async () => {
     const data = await fetchRssFeed.getDevSquadPosts();
     expect(data).toEqual([]);
