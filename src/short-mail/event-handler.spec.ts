@@ -1,28 +1,28 @@
-import { getSlackUserProfile, slackChatPostEphemeral } from "../slack/slack";
+import axios from "axios";
+import dayjs from "dayjs";
+import MockDate from "mockdate";
 import { eventHandler } from "./event-handler";
 import { getCompanyById } from "../moco/companies";
 import { getContactById } from "../moco/contacts";
-import { slackClient } from "../clients/slack";
+import { getSlackUserProfile, slackChatPostEphemeral } from "../slack/slack";
 import { renderShortMailPdf } from "./pdf";
-import dayjs from "dayjs";
-import axios from "axios";
-import MockDate from "mockdate";
+import { slackClient } from "../clients/slack";
 
 MockDate.set("2022-01-02");
 
 jest.mock("../moco/companies");
 jest.mock("../moco/contacts");
-jest.mock("./pdf");
 jest.mock("../slack/slack");
+jest.mock("./pdf");
 
-const getCompanieMock = getCompanyById as jest.Mock;
-const getSlackNameMock = getSlackUserProfile as jest.Mock;
-const getContactByIdMock = getContactById as jest.Mock;
-const renderShortMailPdfMock = renderShortMailPdf as jest.Mock;
-const conversationsJoinMock = slackClient.conversations.join as jest.Mock;
-const fileUploadMock = slackClient.files.upload as jest.Mock;
-const postEphemeralMock = slackChatPostEphemeral as jest.Mock;
 const axiosPostMock = axios.post as jest.Mock;
+const mocoCompanieMock = getCompanyById as jest.Mock;
+const mocoContactMock = getContactById as jest.Mock;
+const shortMailRenderPdfMock = renderShortMailPdf as jest.Mock;
+const slackConversationsJoinMock = slackClient.conversations.join as jest.Mock;
+const slackFileUploadMock = slackClient.files.upload as jest.Mock;
+const slackPostEphemeralMock = slackChatPostEphemeral as jest.Mock;
+const slackUserProfileMock = getSlackUserProfile as jest.Mock;
 
 describe("ShortmailEventHandler", () => {
   beforeEach(() => {
@@ -30,7 +30,7 @@ describe("ShortmailEventHandler", () => {
   });
 
   it("should handle event short mail generation hannover to female without company adress", async () => {
-    getContactByIdMock.mockResolvedValueOnce({
+    mocoContactMock.mockResolvedValueOnce({
       id: 2,
       gender: "F",
       firstname: "Melinda",
@@ -39,9 +39,9 @@ describe("ShortmailEventHandler", () => {
       company: null,
     });
 
-    renderShortMailPdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
+    shortMailRenderPdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
 
-    getSlackNameMock.mockResolvedValueOnce({
+    slackUserProfileMock.mockResolvedValueOnce({
       ok: true,
       profile: {
         real_name: "Max Mustermann",
@@ -60,10 +60,10 @@ describe("ShortmailEventHandler", () => {
       },
     } as any);
 
-    expect(getCompanieMock).toBeCalledTimes(0);
-    expect(getSlackNameMock).toHaveBeenCalledWith("1337");
-    expect(getContactByIdMock).toHaveBeenCalledWith("2");
-    expect(renderShortMailPdfMock).toHaveBeenCalledWith({
+    expect(mocoCompanieMock).toBeCalledTimes(0);
+    expect(slackUserProfileMock).toHaveBeenCalledWith("1337");
+    expect(mocoContactMock).toHaveBeenCalledWith("2");
+    expect(shortMailRenderPdfMock).toHaveBeenCalledWith({
       sender: "Max Mustermann",
       location: "H",
       recipient: {
@@ -75,8 +75,8 @@ describe("ShortmailEventHandler", () => {
       date: dayjs(),
       text: "Testnachricht an Melinda",
     });
-    expect(conversationsJoinMock).toHaveBeenCalledWith({ channel: "C02BBA8DWVD" });
-    expect(fileUploadMock).toHaveBeenCalledWith({
+    expect(slackConversationsJoinMock).toHaveBeenCalledWith({ channel: "C02BBA8DWVD" });
+    expect(slackFileUploadMock).toHaveBeenCalledWith({
       file: expect.anything(),
       filename: "Kurzbrief Gates.pdf",
       initial_comment: "",
@@ -88,11 +88,11 @@ describe("ShortmailEventHandler", () => {
       replace_original: "true",
       text: expect.stringContaining("Melinda Gates"),
     });
-    expect(postEphemeralMock).toHaveBeenCalled();
+    expect(slackPostEphemeralMock).toHaveBeenCalled();
   });
 
   it("should handle event short mail generation dortmund to male with company address", async () => {
-    getContactByIdMock.mockResolvedValueOnce({
+    mocoContactMock.mockResolvedValueOnce({
       id: 1,
       gender: "H",
       firstname: "Bill",
@@ -104,15 +104,15 @@ describe("ShortmailEventHandler", () => {
         name: "Guugel",
       },
     });
-    getCompanieMock.mockResolvedValueOnce({
+    mocoCompanieMock.mockResolvedValueOnce({
       id: 42,
       name: "Guugel",
       address: "Suchallee 42\n54321 Suchstadt",
     });
 
-    renderShortMailPdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
+    shortMailRenderPdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
 
-    getSlackNameMock.mockResolvedValueOnce({
+    slackUserProfileMock.mockResolvedValueOnce({
       ok: true,
       profile: {
         real_name: "Max Mustermann",
@@ -131,10 +131,10 @@ describe("ShortmailEventHandler", () => {
       },
     } as any);
 
-    expect(getCompanieMock).toHaveBeenCalledWith(42);
-    expect(getSlackNameMock).toHaveBeenCalledWith("1337");
-    expect(getContactByIdMock).toHaveBeenCalledWith("1");
-    expect(renderShortMailPdfMock).toHaveBeenCalledWith({
+    expect(mocoCompanieMock).toHaveBeenCalledWith(42);
+    expect(slackUserProfileMock).toHaveBeenCalledWith("1337");
+    expect(mocoContactMock).toHaveBeenCalledWith("1");
+    expect(shortMailRenderPdfMock).toHaveBeenCalledWith({
       sender: "Max Mustermann",
       location: "D",
       recipient: {
@@ -146,8 +146,8 @@ describe("ShortmailEventHandler", () => {
       date: dayjs(),
       text: "Testnachricht an Bill",
     });
-    expect(conversationsJoinMock).toHaveBeenCalledWith({ channel: "C02BBA8DWVD" });
-    expect(fileUploadMock).toHaveBeenCalledWith({
+    expect(slackConversationsJoinMock).toHaveBeenCalledWith({ channel: "C02BBA8DWVD" });
+    expect(slackFileUploadMock).toHaveBeenCalledWith({
       file: expect.anything(),
       filename: "Kurzbrief Gates.pdf",
       initial_comment: "",
