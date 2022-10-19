@@ -5,7 +5,7 @@ import {
   slackConversationsInvite,
   slackConversationsMembers,
   slackConversationsUnarchive,
-  slackUsersList,
+  getSlackUsers,
 } from "../slack/slack";
 import { Channel } from "../slack/types/slack-types";
 import { createChannelName } from "./create-channel-name";
@@ -46,7 +46,7 @@ export const createBirthdayChannels = async (birthdays: BirthdayType[]) => {
       console.log(`Created channel ${JSON.stringify(channelResponse)}`);
     }
 
-    const userResponse = await slackUsersList();
+    const userResponse = await getSlackUsers();
     let invites = userResponse.members
       .filter((member) => member.id !== "USLACKBOT")
       .filter((member) => !member.deleted)
