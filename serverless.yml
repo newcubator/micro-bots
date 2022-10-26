@@ -257,6 +257,11 @@ functions:
     handler: src/functions/vacation-handover.handler
     memorySize: 128
 
+  mailSignatureChanger:
+    handler: src/functions/mail-signature-changer.handler
+    timeout: 3
+    environment:
+      MAIL_SIGNATUR_CHANGE_SLACK_CHANNEL: ${env:MAIL_SIGNATUR_CHANGE_SLACK_CHANNEL}
   recruitmentIncomingMail:
     handler: src/recruitment/incoming-mail.handler
     memorySize: 256
