@@ -25,7 +25,6 @@ provider:
     # https://www.serverless.com/framework/docs/deprecations/#AWS_EVENT_BRIDGE_CUSTOM_RESOURCE
     useCloudFormation: true
   environment:
-    NODE_OPTIONS: --enable-source-maps
     AWS_ACCESS_KEY_ID_GOOGLE: ${env:AWS_ACCESS_KEY_ID_GOOGLE}
     AWS_SECRET_ACCESS_KEY_GOOGLE: ${env:AWS_SECRET_ACCESS_KEY_GOOGLE}
     AWS_SECRET_NAME: ${env:AWS_SECRET_NAME}
@@ -262,6 +261,10 @@ functions:
     timeout: 3
     environment:
       MAIL_SIGNATUR_CHANGE_SLACK_CHANNEL: ${env:MAIL_SIGNATUR_CHANGE_SLACK_CHANNEL}
+      MICROSOFT_TOKEN: ${env:MICROSOFT_TOKEN}
+      MICROSOFT_CLIENT_ID: ${env:MICROSOFT_CLIENT_ID}
+      MICROSOFT_CLIENT_SECRET: ${env:MICROSOFT_CLIENT_SECRET}
+
   recruitmentIncomingMail:
     handler: src/recruitment/incoming-mail.handler
     memorySize: 256
