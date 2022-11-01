@@ -44,8 +44,7 @@ describe("gitlab-issue-reminder", () => {
 
     expect(slackPostMessageMock).toHaveBeenCalledWith({
       channel: "1",
-      text: "⚠️ Das Ticket [Im due today](https://gitlab.test/issue/1) ist heute fällig!",
-      mrkdwn: true,
+      text: "⚠️ Das Ticket <https://gitlab.test/issue/1|Im due today> ist heute fällig!",
     });
   });
 
