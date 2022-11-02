@@ -288,15 +288,12 @@ const samplePayload8 = {
 } as any;
 
 it("handle interaction with wrong action type", async () => {
-  eventBridgeSendMock.mockResolvedValueOnce({});
   const result = await interactionHandler(samplePayload5);
   expect(eventBridgeSendMock).toHaveBeenCalledTimes(0);
   expect(result.statusCode).toBe(200);
 });
 
 it("handle upload command in private channel", async () => {
-  eventBridgeSendMock.mockResolvedValueOnce({});
-
   const result = await interactionHandler(samplePayload6);
   expect(eventBridgeSendMock).toHaveBeenCalledTimes(0);
   expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
