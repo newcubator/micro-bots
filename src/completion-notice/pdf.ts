@@ -23,7 +23,7 @@ export function renderCompletionNoticePdf(content: PdfContent) {
     .setFont("helvetica", "normal")
     .text(`Sehr ${recipient.salutation} ${recipient.lastname},`, 68, 300)
     .text(
-      `hiermit zeigen wir Ihnen an, dass wir alle von uns zu erbringenden Leistungen im Projekt ${project.name} mit der Auftragsnummer ${project.orderNumber} zu erbringenden Leistungen erbracht haben.`,
+      `hiermit zeigen wir Ihnen an, dass wir alle von uns zu erbringenden Leistungen im Projekt ${project.name} mit der Auftragsnummer ${project.orderNumber} erbracht haben.`,
       68,
       325,
       {
