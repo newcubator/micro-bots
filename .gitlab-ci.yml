@@ -1,5 +1,5 @@
 default:
-  image: node:fermium-alpine
+  image: node:lts-gallium
   cache:
     key:
       files:
