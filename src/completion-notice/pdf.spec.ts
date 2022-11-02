@@ -1,6 +1,7 @@
 import { renderCompletionNoticePdf } from "./pdf";
 import { toMatchFile } from "jest-file-snapshot";
 import dayjs from "dayjs";
+import { join } from "path";
 
 expect.extend({ toMatchFile });
 
@@ -24,5 +25,5 @@ test("render pdf", async () => {
   content = content.replace(/^\s*\/ID\s.*/m, "");
   pdf = Buffer.from(content, "binary");
 
-  expect(pdf).toMatchFile();
+  expect(pdf).toMatchFile(join(__dirname, "/__file_snapshots__", "render-pdf.pdf"));
 });
