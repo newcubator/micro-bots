@@ -32,7 +32,26 @@ export const handler = async () => {
 
     console.log("Azure Access Token: ", azureAccessToken);
 
-    const userId = "c6b13425-2242-442b-8b50-c62af830ca68";
+    const users = await axios
+        .get(`https://graph.microsoft.com/v1.0/users/`, {
+          headers: { Authorization: `Bearer ${azureAccessToken.access_token}` },
+        })
+        .then((response) => {
+          return response.data;
+        })
+        .catch((error) => {
+          console.log(error);
+        });
+
+    console.log("Users: ", users.value);
+
+    const user = users.value.find((obj) => {
+      return obj.displayName === 'Patrick Schaper';
+    });
+
+    console.log("User: ", user);
+
+    const userId = user.id;
 
     const mailData = {
       "@odata.context": `https://graph.microsoft.com/v1.0/$metadata#users('${userId}')/mailboxSettings`,
@@ -68,10 +87,10 @@ export const handler = async () => {
     console.log("Mail Signature Response: ", mailSignatureResponse);
 
     const messageResponse = await slackChatPostMessage(
-      `SlackMassage works`,
+      `SlackMassage works!`,
       MAIL_SIGNATUR_CHANGE_SLACK_CHANNEL,
-      "Twitter Bot",
-      ":bird:"
+      "Mail Bot",
+      ":e-mail:"
     );
     console.log(`Wrote message ${JSON.stringify(messageResponse)}`);
   } catch (err) {
