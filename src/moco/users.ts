@@ -13,6 +13,9 @@ export function getUsers(): Promise<Array<MocoUserType>> {
       headers: {
         Authorization: "Token token=" + MOCO_TOKEN,
       },
+      params: {
+        include_archived: true,
+      },
     })
     .then((response: AxiosResponse<Array<MocoUserType>>) => response.data);
 }
