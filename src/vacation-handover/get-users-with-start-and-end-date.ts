@@ -10,12 +10,17 @@ interface UserWithDates {
   vacationDates: string[];
   employment: MocoEmployment;
 }
+export interface UsersWithVacations {
+  user: MocoUserType;
+  dates: string[];
+  employment: MocoEmployment;
+}
 
 export const getUsersWithStartAndEndDate = (
   users: UserWithDates[],
   date: dayjs.Dayjs,
   MIN_VACATION_DURATION: number
-) => {
+): UsersWithVacations[] => {
   return users
     .map((value) => {
       setUpBusinessTimes(value.employment);

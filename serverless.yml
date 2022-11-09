@@ -256,9 +256,13 @@ functions:
     handler: src/functions/vacation-handover.handler
     memorySize: 128
 
-  mailSignatureChanger:
-    handler: src/functions/mail-signature-changer.handler
+  holidaySetAutomaticMailReplies:
+    handler: src/functions/holiday-set-automatic-mail-replies.handler
     timeout: 3
+    events:
+      - schedule:
+          enabled: true
+          rate: cron(5 4 * * ? *) # at 4:05 AM (UTC) every day
     environment:
       MAIL_SIGNATUR_CHANGE_SLACK_CHANNEL: ${env:MAIL_SIGNATUR_CHANGE_SLACK_CHANNEL}
       MICROSOFT_TOKEN: ${env:MICROSOFT_TOKEN}
