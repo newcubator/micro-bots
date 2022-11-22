@@ -1,4 +1,3 @@
-import { MocoUserType } from "../moco/types/moco-types";
 import { findUserBySlackCommand, getUsers } from "../moco/users";
 import { handler } from "./mail-signature-generator";
 jest.mock("../moco/users");
