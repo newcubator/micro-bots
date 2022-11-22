@@ -323,7 +323,7 @@ it("handle interaction", async () => {
   expect(result.statusCode).toBe(200);
 });
 
-it("handle interaction", async () => {
+it("handle interaction for locking a project", async () => {
   eventBridgeSendMock.mockResolvedValueOnce({});
 
   const result = await interactionHandler(samplePayload2);
@@ -343,7 +343,7 @@ it("handle interaction", async () => {
   expect(result.statusCode).toBe(200);
 });
 
-it("handle interaction", async () => {
+it("handle interaction for unlocking a project", async () => {
   eventBridgeSendMock.mockResolvedValueOnce({});
 
   const result = await interactionHandler(samplePayload3);
