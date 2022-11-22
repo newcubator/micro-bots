@@ -33,7 +33,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, CompletionNot
   // Only user/bots that have joined a channel can post fiels
   await channelJoin(event.detail.channelId);
 
-  let upload = await slackClient.files.upload({
+  const upload = await slackClient.files.upload({
     file: pdf,
     filename: `Fertigstellungsanzeige_${project.custom_properties.Bestellnummer}.pdf`,
     initial_comment: ``,

@@ -81,7 +81,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
   await channelJoin(event.detail.channelId);
 
   try {
-    let upload = await slackClient.files.upload({
+    const upload = await slackClient.files.upload({
       file: pdf,
       filename: `Kurzbrief ${recipient.lastname}.pdf`,
       initial_comment: ``,

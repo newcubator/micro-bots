@@ -6,7 +6,7 @@ import { MocoContact, MocoUserType } from "../moco/types/moco-types";
 import { getUsers } from "../moco/users";
 import { BlockSuggestion } from "./types/slack-types";
 
-let loadAllRecipients: Promise<PlainTextOption[]> = initAllRecipients(); //cache the contacts so that a new search is faster
+const loadAllRecipients: Promise<PlainTextOption[]> = initAllRecipients(); //cache the contacts so that a new search is faster
 
 export const selectMenuHandler = async (event: APIGatewayEvent) => {
   const blockSuggestion: BlockSuggestion = JSON.parse(decode(event.body).payload as string) as BlockSuggestion;

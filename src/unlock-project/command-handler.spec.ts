@@ -38,7 +38,7 @@ test("command handler", async () => {
     },
   ]);
 
-  let result = await commandHandler();
+  const result = await commandHandler();
 
   // don't load completed projects
   expect(getProjectsMock).toHaveBeenCalledWith({ include_archived: false });
@@ -50,7 +50,7 @@ test("command handler", async () => {
 test("respond when loads no projects", async () => {
   getProjectsMock.mockResolvedValueOnce([]);
 
-  let result = await commandHandler();
+  const result = await commandHandler();
 
   expect(result.statusCode).toBe(200);
   expect(result.body).toMatchSnapshot();

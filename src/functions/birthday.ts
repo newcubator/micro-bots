@@ -25,7 +25,7 @@ export const handler = async () => {
   console.log(
     `Searching for birthdays from ${today.format("MM-DD")} to ${birthdayDate.format("MM-DD")} to open channel`
   );
-  let dateArray: Dayjs[] = [];
+  const dateArray: Dayjs[] = [];
   let currentDate = today;
   while (currentDate <= birthdayDate) {
     dateArray.push(currentDate);

@@ -2,7 +2,7 @@ import { shortenFeedTitle } from "./shorten-feed-title";
 import { RssFeedItem, Tweet } from "./twitter-bot";
 
 export function composeTweetFromPost(feedItem: RssFeedItem): Tweet {
-  let creator = creatorTemplate(feedItem.creator);
+  const creator = creatorTemplate(feedItem.creator);
   let tweetText = tweetTemplate(feedItem.title, feedItem.link, creator);
   if (tweetText.length > 280) {
     tweetText = tweetTemplate(shortenFeedTitle(feedItem.title, tweetText.length), feedItem.link, creator);
@@ -18,7 +18,7 @@ export function tweetTemplate(title: string, link: string, creator: string) {
   }
 }
 
-export function creatorTemplate(creator: String) {
+export function creatorTemplate(creator: string) {
   if (creator == undefined) {
     return "newcubator";
   } else {

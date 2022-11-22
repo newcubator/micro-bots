@@ -19,9 +19,11 @@ export const getUsersWithStartAndEndDate = (
   return users
     .map((value) => {
       setUpBusinessTimes(value.employment);
-      let arr: string[][] = [],
-        startDate: string = value.vacationDates[0],
-        endDate: string;
+
+      const arr: string[][] = [];
+      let startDate: string = value.vacationDates[0];
+      let endDate: string;
+
       for (let i = 0; i < value.vacationDates.length; i++) {
         if (value.vacationDates[i + 1] !== undefined) {
           if (!value.vacationDates.includes(dayjs(value.vacationDates[i]).nextBusinessDay().format("YYYY-MM-DD"))) {
