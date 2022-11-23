@@ -29,7 +29,7 @@ export const createVacationHandoverIssues = async (vacationIssues: GitlabIssue[]
 
   const vacationHandoverDescription = (
     await getIssueTemplateByName(process.env.GITLAB_BOOK_PROJECT_ID, "Urlaubsübergabe")
-  ).data.content;
+  ).content;
 
   // open new issues if no closed issues were found with the expected title
   await Promise.all(createIssuesForUsers(usersWithStartAndEndDates, vacationHandoverDescription, vacationIssues));

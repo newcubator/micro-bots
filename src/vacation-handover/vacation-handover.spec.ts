@@ -6,10 +6,15 @@ import { MocoEmployment, MocoUserType } from "../moco/types/moco-types";
 import { calculateDueDate } from "./calculate-due-date";
 import { createVacationHandoverIssues } from "./create-vacation-handover-issues";
 import { getUsersWithStartAndEndDate } from "./get-users-with-start-and-end-date";
+import { getIssueTemplateByName } from "../gitlab/templates";
+
+jest.mock("../gitlab/templates");
 
 MockDate.set("2021-08-24");
 
 global.console = { log: jest.fn() } as unknown as Console;
+
+const getIssueTemplateByNameMock = getIssueTemplateByName as jest.Mock;
 
 const exampleSchedulesResponse = {
   data: [
@@ -108,10 +113,8 @@ const exampleUserEmploymentResponse = {
 };
 
 const exampleTemplateResponse = {
-  data: {
-    name: "Urlaubsuebergabe",
-    content: "This is some cool template",
-  },
+  name: "Urlaubsuebergabe",
+  content: "This is some cool template",
 };
 
 (axios.post as jest.Mock).mockImplementation(
@@ -132,8 +135,8 @@ describe("vacation-handover", () => {
     (axios.get as jest.Mock)
       .mockReturnValueOnce(exampleSchedulesResponse)
       .mockReturnValueOnce(exampleUserSchedulesResponse)
-      .mockReturnValueOnce(exampleUserEmploymentResponse)
-      .mockReturnValueOnce(exampleTemplateResponse);
+      .mockReturnValueOnce(exampleUserEmploymentResponse);
+    getIssueTemplateByNameMock.mockResolvedValueOnce(exampleTemplateResponse);
 
     await createVacationHandoverIssues([]);
 
@@ -149,7 +152,7 @@ describe("vacation-handover", () => {
       headers: { Authorization: "Token token=not a real moco token" },
       params: { from: "2021-08-03", to: "2021-09-28", user_id: 444555666 },
     });
-    expect(axios.get).toHaveBeenCalledTimes(4);
+    expect(axios.get).toHaveBeenCalledTimes(3);
 
     expect(axios.post).toHaveBeenCalledWith(
       "https://gitlab.com/api/v4/projects/11111111/issues",
@@ -188,12 +191,12 @@ describe("vacation-handover", () => {
           },
         ],
       })
-      .mockReturnValueOnce(exampleUserEmploymentResponse)
-      .mockReturnValueOnce(exampleTemplateResponse);
+      .mockReturnValueOnce(exampleUserEmploymentResponse);
+    getIssueTemplateByNameMock.mockResolvedValueOnce(exampleTemplateResponse);
 
     await createVacationHandoverIssues([]);
 
-    expect(axios.get).toHaveBeenCalledTimes(4);
+    expect(axios.get).toHaveBeenCalledTimes(3);
     expect(axios.post).toHaveBeenCalledTimes(0);
   });
 
@@ -201,12 +204,12 @@ describe("vacation-handover", () => {
     (axios.get as jest.Mock)
       .mockReturnValueOnce(exampleSchedulesResponse)
       .mockReturnValueOnce(exampleUserSchedulesResponse)
-      .mockReturnValueOnce(exampleUserEmploymentResponse)
-      .mockReturnValueOnce(exampleTemplateResponse);
+      .mockReturnValueOnce(exampleUserEmploymentResponse);
+    getIssueTemplateByNameMock.mockResolvedValueOnce(exampleTemplateResponse);
 
     await createVacationHandoverIssues([{ title: "Urlaubsübergabe Peter (19.08.2021 - 01.09.2021)" } as GitlabIssue]);
 
-    expect(axios.get).toHaveBeenCalledTimes(4);
+    expect(axios.get).toHaveBeenCalledTimes(3);
     expect(axios.post).toHaveBeenCalledTimes(0);
     expect(console.log as jest.Mock).toHaveBeenCalledWith(
       "Issue for detected vacation of Peter for vacation from 2021-08-19 to 2021-09-01 already exists with due date 2021-08-18"
@@ -217,14 +220,14 @@ describe("vacation-handover", () => {
     (axios.get as jest.Mock)
       .mockReturnValueOnce(exampleSchedulesResponse)
       .mockReturnValueOnce(exampleUserSchedulesResponse)
-      .mockReturnValueOnce(exampleUserEmploymentResponse)
-      .mockReturnValueOnce(exampleTemplateResponse);
+      .mockReturnValueOnce(exampleUserEmploymentResponse);
+    getIssueTemplateByNameMock.mockResolvedValueOnce(exampleTemplateResponse);
 
     await createVacationHandoverIssues([
       { title: "Urlaubsübergabe Peter (19.08.2021 - 01.09.2021)", state: "opened" } as GitlabIssue,
     ]);
 
-    expect(axios.get).toHaveBeenCalledTimes(2);
+    expect(axios.get).toHaveBeenCalledTimes(1);
     expect(axios.post).toHaveBeenCalledTimes(0);
   });
 
