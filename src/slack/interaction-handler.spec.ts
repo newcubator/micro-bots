@@ -419,12 +419,12 @@ it("handle interaction private channel", async () => {
 it("throw error when unable to send event", async () => {
   eventBridgeSendMock.mockRejectedValueOnce(new Error("some error"));
 
-  expect(interactionHandler(samplePayload1)).rejects.toThrow("some error");
+  await expect(interactionHandler(samplePayload1)).rejects.toThrow("some error");
 });
 
 it("throw error when unable to respond in slack", async () => {
   eventBridgeSendMock.mockResolvedValueOnce({});
   axiosPostMock.mockRejectedValueOnce(new Error("some error"));
 
-  expect(interactionHandler(samplePayload1)).rejects.toThrow("some error");
+  await expect(interactionHandler(samplePayload1)).rejects.toThrow("some error");
 });
