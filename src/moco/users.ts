@@ -19,7 +19,6 @@ export function getUsers(): Promise<Array<MocoUserType>> {
     })
     .then((response: AxiosResponse<Array<MocoUserType>>) => {
       console.info(`Loaded ${response.data.length} users`);
-      console.debug(JSON.stringify(response.data));
       return response.data;
     })
     .catch((error) => {
