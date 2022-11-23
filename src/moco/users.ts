@@ -8,7 +8,6 @@ import { MocoUserType } from "./types/moco-types";
  */
 
 export function getUsers(): Promise<Array<MocoUserType>> {
-  console.log(MOCO_TOKEN);
   return axios
     .get("https://newcubator.mocoapp.com/api/v1/users", {
       headers: {
@@ -20,6 +19,7 @@ export function getUsers(): Promise<Array<MocoUserType>> {
     })
     .then((response: AxiosResponse<Array<MocoUserType>>) => {
       console.info(`Loaded ${response.data.length} users`);
+      console.debug(JSON.stringify(response.data));
       return response.data;
     })
     .catch((error) => {
