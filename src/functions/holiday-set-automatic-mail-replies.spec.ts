@@ -1,19 +1,23 @@
 import dayjs from "dayjs";
-import { changeMailRespondForUser } from "../microsoft/mail";
-import { getUsers as microsoftGetUsers } from "../microsoft/users";
+import utc from "dayjs/plugin/utc";
+import { changeMailRespondForUser, getMailSettingsForUser } from "../_shared/microsoft/mail";
+import { getUsers as microsoftGetUsers } from "../_shared/microsoft/users";
 import { getUsersWithVacation } from "../moco/vacation";
-import { handler } from "./holiday-set-automatic-mail-replies";
 import { slackChatPostMessage } from "../slack/slack";
+import { handler } from "./holiday-set-automatic-mail-replies";
 
 jest.mock("../moco/vacation");
-jest.mock("../microsoft/users");
-jest.mock("../microsoft/mail");
+jest.mock("../_shared/microsoft/users");
+jest.mock("../_shared/microsoft/mail");
 jest.mock("../slack/slack");
 
 const mockGetUsersWithVacation = getUsersWithVacation as unknown as jest.Mock;
 const mockMicrosoftGetUsers = microsoftGetUsers as unknown as jest.Mock;
+const mockMicrosoftGetMailSettingsForUser = getMailSettingsForUser as unknown as jest.Mock;
 const mockMicrosoftChangeMailRespondForUser = changeMailRespondForUser as unknown as jest.Mock;
 const mockSlackChatPostMessage = slackChatPostMessage as unknown as jest.Mock;
+
+dayjs.extend(utc);
 
 describe("HolidaySetAutomaticMailReplies", () => {
   it("should set a mail reply for user", async () => {
@@ -43,6 +47,14 @@ describe("HolidaySetAutomaticMailReplies", () => {
           displayName: "Max Mustermann",
         },
       ],
+    });
+
+    mockMicrosoftGetMailSettingsForUser.mockResolvedValueOnce({
+      automaticRepliesSetting: {
+        scheduledStartDateTime: {
+          dateTime: dayjs(oldHoliday).utc().format(),
+        },
+      },
     });
 
     mockMicrosoftChangeMailRespondForUser.mockResolvedValueOnce({});

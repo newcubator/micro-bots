@@ -15,7 +15,9 @@ export interface UsersWithVacations {
   dates: string[];
   employment: MocoEmployment;
 }
-
+/*
+ * This function looks if a user has vacation on the day which is passed to the function. Then all days in the past are checked until the first vacation day is found. The same happens with the future days until the end date of the vacation is found. At the end it is checked if this period is equal to or greater than the minimum days.
+ * */
 export const getUsersWithStartAndEndDate = (
   users: UserWithDates[],
   date: dayjs.Dayjs,
