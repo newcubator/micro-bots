@@ -55,7 +55,7 @@ describe("gitlab-issue-reminder", () => {
 
     await handler();
 
-    expect(slackPostMessageMock).toBeCalledTimes(0);
+    expect(slackPostMessageMock).toHaveBeenCalledTimes(0);
   });
 
   it("handle error on posting messages", async () => {
@@ -78,6 +78,6 @@ describe("gitlab-issue-reminder", () => {
 
     await handler();
 
-    expect(slackPostMessageMock).toBeCalledTimes(2);
+    expect(slackPostMessageMock).toHaveBeenCalledTimes(2);
   });
 });

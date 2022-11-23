@@ -137,15 +137,15 @@ describe("vacation-handover", () => {
 
     await createVacationHandoverIssues([]);
 
-    expect(axios.get).nthCalledWith(1, "https://newcubator.mocoapp.com/api/v1/schedules", {
+    expect(axios.get).toHaveBeenNthCalledWith(1, "https://newcubator.mocoapp.com/api/v1/schedules", {
       headers: { Authorization: "Token token=not a real moco token" },
       params: { from: "2021-08-31", page: 1, to: "2021-08-31" },
     });
-    expect(axios.get).nthCalledWith(2, "https://newcubator.mocoapp.com/api/v1/schedules", {
+    expect(axios.get).toHaveBeenNthCalledWith(2, "https://newcubator.mocoapp.com/api/v1/schedules", {
       headers: { Authorization: "Token token=not a real moco token" },
       params: { from: "2021-08-03", to: "2021-09-28", user_id: 444555666 },
     });
-    expect(axios.get).nthCalledWith(3, "https://newcubator.mocoapp.com/api/v1/users/employments", {
+    expect(axios.get).toHaveBeenNthCalledWith(3, "https://newcubator.mocoapp.com/api/v1/users/employments", {
       headers: { Authorization: "Token token=not a real moco token" },
       params: { from: "2021-08-03", to: "2021-09-28", user_id: 444555666 },
     });
