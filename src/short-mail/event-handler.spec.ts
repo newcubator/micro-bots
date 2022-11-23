@@ -60,7 +60,7 @@ describe("ShortmailEventHandler", () => {
       },
     } as any);
 
-    expect(mocoCompanieMock).toBeCalledTimes(0);
+    expect(mocoCompanieMock).toHaveBeenCalledTimes(0);
     expect(slackUserProfileMock).toHaveBeenCalledWith("1337");
     expect(mocoContactMock).toHaveBeenCalledWith("2");
     expect(shortMailRenderPdfMock).toHaveBeenCalledWith({

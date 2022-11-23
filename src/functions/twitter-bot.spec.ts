@@ -176,7 +176,7 @@ describe("TwitterBot", () => {
   it("should call Newcubator Website", async () => {
     const data = await fetchRssFeed.getDevSquadPosts();
     expect(data).toEqual([]);
-    expect(ParserMock.prototype.parseURL).toBeCalledWith("https://newcubator.com/devsquad/rss.xml");
+    expect(ParserMock.prototype.parseURL).toHaveBeenCalledWith("https://newcubator.com/devsquad/rss.xml");
   });
 
   it("should not filter similar Feed Item", () => {
