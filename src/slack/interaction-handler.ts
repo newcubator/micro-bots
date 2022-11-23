@@ -7,7 +7,7 @@ import { ActionType, BlockAction } from "./types/slack-types";
 export const interactionHandler = async (event: APIGatewayEvent) => {
   const blockAction: BlockAction = JSON.parse(decode(event.body).payload as string) as BlockAction;
 
-  let actionType: string = blockAction.actions[0].action_id;
+  const actionType: string = blockAction.actions[0].action_id;
   console.log(`${actionType} requested`);
   console.log(blockAction);
   let requestedEvent;

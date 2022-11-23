@@ -1,6 +1,6 @@
 import { APIGatewayEvent, APIGatewayProxyEventHeaders } from "aws-lambda";
 
-let sendEmail = jest.fn();
+const sendEmail = jest.fn();
 jest.mock("@aws-sdk/client-ses", () => ({
   SES: jest.fn().mockImplementation(() => ({
     sendEmail,

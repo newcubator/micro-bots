@@ -59,7 +59,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, PrivateChanne
     return;
   }
 
-  let invites = users.members
+  const invites = users.members
     .filter((member) => member.id !== "USLACKBOT")
     .filter((member) => !member.deleted)
     .filter((member) => !member.is_bot)

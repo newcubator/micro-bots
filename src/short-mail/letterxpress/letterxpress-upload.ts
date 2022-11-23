@@ -31,7 +31,7 @@ export const uploadHandler = async (event: EventBridgeEvent<string, UploadLetter
     },
   };
 
-  let upload = await axios.post("https://api.letterxpress.de/v1/setJob", content);
+  const upload = await axios.post("https://api.letterxpress.de/v1/setJob", content);
   if (upload.data.message === "OK") {
     await slackChatPostEphemeral(event.detail.channelId, "Der Brief ist jetzt unterwegs!", event.detail.sender);
   }

@@ -47,14 +47,14 @@ export function renderCompletionNoticePdf(content: PdfContent) {
 
 export interface PdfContent {
   project: {
-    name: String;
-    orderNumber: String;
+    name: string;
+    orderNumber: string;
   };
   recipient: {
-    salutation: String;
-    firstname: String;
-    lastname: String;
-    address: String;
+    salutation: string;
+    firstname: string;
+    lastname: string;
+    address: string;
   };
   date: Dayjs;
 }
