@@ -34,8 +34,8 @@ export async function getMessageAttachments(
       },
     })
     .then((response) => {
-      console.debug(response.data);
-      return response.data;
+      console.debug(response.data.value);
+      return response.data.value;
     })
     .catch((error) => {
       console.error("Error while calling microsoft graph api to get message attachments!");

@@ -42,7 +42,9 @@ describe("getMessage", () => {
 describe("getMessageAttachments", () => {
   it("should get message attachments", async () => {
     axiosGetMock.mockResolvedValueOnce({
-      data: SAMPLE_ATTACHMENTS,
+      data: {
+        value: SAMPLE_ATTACHMENTS,
+      },
     });
 
     await expect(getMessageAttachments("test@jestjs.io", "abc123")).resolves.toMatchObject(SAMPLE_ATTACHMENTS);
