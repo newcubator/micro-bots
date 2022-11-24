@@ -10,6 +10,7 @@ export async function getIssueTemplateByName(projectId: string, name: string): P
       },
     })
     .then((response) => {
+      console.info(response.data);
       return response.data;
     })
     .catch((error) => {
