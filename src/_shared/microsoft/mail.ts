@@ -13,7 +13,7 @@ export async function getMessage(userPrincipalName: string, messageId: string): 
     })
     .then((response) => {
       console.debug(response.data);
-      return response.data.value;
+      return response.data;
     })
     .catch((error) => {
       console.error("Error while calling microsoft graph api to get message!");
@@ -35,7 +35,7 @@ export async function getMessageAttachments(
     })
     .then((response) => {
       console.debug(response.data);
-      return response.data.value;
+      return response.data;
     })
     .catch((error) => {
       console.error("Error while calling microsoft graph api to get message attachments!");

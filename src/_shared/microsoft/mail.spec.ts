@@ -19,9 +19,7 @@ afterEach(() => {
 describe("getMessage", () => {
   it("should get message", async () => {
     axiosGetMock.mockResolvedValueOnce({
-      data: {
-        value: SAMPLE_MESSAGE,
-      },
+      data: SAMPLE_MESSAGE,
     });
 
     await expect(getMessage("test@jestjs.io", "abc123")).resolves.toMatchObject(SAMPLE_MESSAGE);
@@ -44,9 +42,7 @@ describe("getMessage", () => {
 describe("getMessageAttachments", () => {
   it("should get message attachments", async () => {
     axiosGetMock.mockResolvedValueOnce({
-      data: {
-        value: SAMPLE_ATTACHMENTS,
-      },
+      data: SAMPLE_ATTACHMENTS,
     });
 
     await expect(getMessageAttachments("test@jestjs.io", "abc123")).resolves.toMatchObject(SAMPLE_ATTACHMENTS);
