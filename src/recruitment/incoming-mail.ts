@@ -59,8 +59,7 @@ export const handler = async (event: APIGatewayRequestAuthorizerEventV2) => {
 
   await Promise.all([
     updateIssueWithMailLink(issue, message.from.emailAddress.address),
-    markMessageAsRead(MAIL_USER_PRINCIPAL_NAME, messageId),
-    moveMessage(MAIL_USER_PRINCIPAL_NAME, messageId, MAIL_ARCHIVE_FOLDER_ID),
+    markAsReadAndMoveMessage(messageId),
   ]);
 
   return {
@@ -76,4 +75,9 @@ async function updateIssueWithMailLink(issue: GitlabIssue, recipient: string) {
   link = link.replace("[ID]", issue.id.toString());
   link = link.replace("[RECIPIENT]", recipient);
   return updateIssueDescription(GITLAB_PROJECT_ID, issue.iid, link + issue.description);
+}
+
+async function markAsReadAndMoveMessage(messageId: string): Promise<void> {
+  await markMessageAsRead(MAIL_USER_PRINCIPAL_NAME, messageId);
+  await moveMessage(MAIL_USER_PRINCIPAL_NAME, messageId, MAIL_ARCHIVE_FOLDER_ID);
 }
