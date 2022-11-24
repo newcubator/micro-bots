@@ -25,6 +25,7 @@ provider:
     # https://www.serverless.com/framework/docs/deprecations/#AWS_EVENT_BRIDGE_CUSTOM_RESOURCE
     useCloudFormation: true
   environment:
+    NODE_OPTIONS: --enable-source-maps
     AWS_ACCESS_KEY_ID_GOOGLE: ${env:AWS_ACCESS_KEY_ID_GOOGLE}
     AWS_SECRET_ACCESS_KEY_GOOGLE: ${env:AWS_SECRET_ACCESS_KEY_GOOGLE}
     AWS_SECRET_NAME: ${env:AWS_SECRET_NAME}
