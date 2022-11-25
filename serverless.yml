@@ -261,6 +261,7 @@ functions:
     handler: src/recruitment/incoming-mail.handler
     memorySize: 256
     url: true
+    tracing: Active
     environment:
       GITLAB_TOKEN: ${env:GITLAB_TOKEN_RECRUITMENT}
       MICROSOFT_TOKEN: ${env:MICROSOFT_TOKEN}
