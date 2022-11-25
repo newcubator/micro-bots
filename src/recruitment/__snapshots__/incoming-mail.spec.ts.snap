@@ -2,7 +2,7 @@
 
 exports[`Recruitment Incoming Job Application Mail should create gitlab issue from mail job application 1`] = `
 [
-  "38166633",
+  "35095396",
   "Job Application",
   "Template Content
 Job Applicant
@@ -15,7 +15,7 @@ https://outlook.office.com/mail/abc123
 
 exports[`Recruitment Incoming Job Application Mail should create gitlab issue from mail job application 2`] = `
 [
-  "38166633",
+  "35095396",
   6,
   "
 <b><a href="mailto:applicant@jestjs.io?bcc=incoming+newcubator-people-recruiting-38166633-dxmv8fhkpi28plc4lptak2z5l-issue-13@incoming.gitlab.com"> >> Mail senden und als Kommentar anhängen</a></b>
