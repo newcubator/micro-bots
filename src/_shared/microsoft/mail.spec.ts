@@ -27,7 +27,7 @@ describe("getMessage", () => {
     expect(axiosGetMock).toHaveBeenCalledWith("https://graph.microsoft.com/v1.0/users/test@jestjs.io/messages/abc123", {
       headers: {
         Authorization: "Bearer mocked-access-token",
-        Prefer: 'outlook.body-content-type="text"',
+        Prefer: 'IdType="ImmutableId",outlook.body-content-type="text"',
       },
     });
   });

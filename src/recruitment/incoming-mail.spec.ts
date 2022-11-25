@@ -58,7 +58,7 @@ describe("Recruitment Incoming Job Application Mail", () => {
 
     // Moving a message changes the message id.
     // So we have to mark the message as read before moving it.
-    expect(markMessageAsReadMock.mock.invocationCallOrder[0]).toBeLessThan(moveMessageMock.mock.invocationCallOrder[0])
+    expect(markMessageAsReadMock.mock.invocationCallOrder[0]).toBeLessThan(moveMessageMock.mock.invocationCallOrder[0]);
   });
 
   it("should return error when mail messageId is missing", async () => {
@@ -74,27 +74,6 @@ describe("Recruitment Incoming Job Application Mail", () => {
     });
 
     expect(getMessageMock).toBeCalledTimes(0);
-  });
-
-  it("should not load attachments if message does not have any", async () => {
-    getMessageMock.mockResolvedValueOnce({
-      ...SAMPLE_MESSAGE,
-      hasAttachments: false,
-    });
-    getIssueTemplateMock.mockResolvedValueOnce(SAMPLE_TEMPLATE);
-    createIssueMock.mockResolvedValueOnce({
-      id: 13,
-      iid: 6,
-    });
-    markMessageAsReadMock.mockResolvedValueOnce({});
-
-    await expect(handler(SAMPLE_EVENT)).resolves.toMatchObject({
-      statusCode: 200,
-      body: '{"result":"Done"}',
-    });
-
-    expect(getAttachmentsMock).toBeCalledTimes(0);
-    expect(uploadFileMock).toBeCalledTimes(0);
   });
 });
 

@@ -8,7 +8,7 @@ export async function getMessage(userPrincipalName: string, messageId: string): 
     .get(`https://graph.microsoft.com/v1.0/users/${userPrincipalName}/messages/${messageId}`, {
       headers: {
         Authorization: `Bearer ${accessToken}`,
-        Prefer: 'outlook.body-content-type="text"',
+        Prefer: 'IdType="ImmutableId",outlook.body-content-type="text"',
       },
     })
     .then((response) => {
