@@ -41,14 +41,21 @@ export const handler = async (event: APIGatewayRequestAuthorizerEventV2) => {
   description = description.replace("[BODY]", message.body.content);
   description = description.replace("[WEBLINK]", message.webLink);
 
-  await Promise.all(attachments.map(async (attachment) => {
-    const upload = await uploadFile(GITLAB_PROJECT_ID, attachment.contentBytes, attachment.contentType, attachment.name);
-    if (attachment.isInline) {
-      description = description.replace(`[cid:${attachment.contentId}]`, upload.markdown);
-    } else {
-      description += `\r\n${upload.markdown}`;
-    }
-  }));
+  await Promise.all(
+    attachments.map(async (attachment) => {
+      const upload = await uploadFile(
+        GITLAB_PROJECT_ID,
+        attachment.contentBytes,
+        attachment.contentType,
+        attachment.name
+      );
+      if (attachment.isInline) {
+        description = description.replace(`[cid:${attachment.contentId}]`, upload.markdown);
+      } else {
+        description += `\r\n${upload.markdown}`;
+      }
+    })
+  );
 
   const issue = await createIssue(GITLAB_PROJECT_ID, message.subject, description);
 
