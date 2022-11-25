@@ -55,10 +55,6 @@ describe("Recruitment Incoming Job Application Mail", () => {
       "AQMkADQ3YTAyOWE2LTdjNjAtNDhjMy1iNWY4LTY0Y2RjODI0MmE0MABGAAAVc",
       "AAMkAGJmODcwNWExLWM3ZmItNGNlZS04N2Q2LTc4YTJkMTZkOGJmOQAuAAAAAACsW_joJTKFSIXU5SXQHv11AQA4LQp9ObtJT7LiE4tqoOmkAAOkGk5ZAAA="
     );
-
-    // Moving a message changes the message id.
-    // So we have to mark the message as read before moving it.
-    expect(markMessageAsReadMock.mock.invocationCallOrder[0]).toBeLessThan(moveMessageMock.mock.invocationCallOrder[0]);
   });
 
   it("should return error when mail messageId is missing", async () => {

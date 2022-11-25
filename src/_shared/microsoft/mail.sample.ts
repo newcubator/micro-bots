@@ -1,7 +1,7 @@
 import { MicrosoftAttachment, MicrosoftMessage } from "./mail";
 
 export const SAMPLE_MESSAGE: MicrosoftMessage = {
-  id: "acb123",
+  id: "AQMkADQ3YTAyOWE2LTdjNjAtNDhjMy1iNWY4LTY0Y2RjODI0MmE0MABGAAAVc",
   from: {
     emailAddress: {
       address: "applicant@jestjs.io",
