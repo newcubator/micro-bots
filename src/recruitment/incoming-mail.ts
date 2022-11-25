@@ -4,7 +4,7 @@ import { GitlabIssue } from "../gitlab/gitlab";
 import { getIssueTemplateByName } from "../gitlab/templates";
 import { createIssue, updateIssueDescription, uploadFile } from "../gitlab/issues";
 
-const GITLAB_PROJECT_ID = "38166633";
+const GITLAB_PROJECT_ID = "35095396";
 const TEMPLATE_NAME = "Bewerbung";
 const MAIL_USER_PRINCIPAL_NAME = "info@newcubator.com";
 const MAIL_ARCHIVE_FOLDER_ID =
