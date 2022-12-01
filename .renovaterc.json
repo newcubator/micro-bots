@@ -1,4 +1,10 @@
 {
   "rangeStrategy": "pin",
-  "labels": ["Renovate"]
+  "labels": ["Renovate"],
+  "packageRules": [
+    {
+      "groupName": "@aws-sdk",
+      "matchPackagePatterns": ["^@aws-sdk/"]
+    }
+  ]
 }
