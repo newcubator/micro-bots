@@ -10,8 +10,7 @@ const MAIL_USER_PRINCIPAL_NAME = "info@newcubator.com";
 const MAIL_ARCHIVE_FOLDER_ID =
   "AAMkAGJmODcwNWExLWM3ZmItNGNlZS04N2Q2LTc4YTJkMTZkOGJmOQAuAAAAAACsW_joJTKFSIXU5SXQHv11AQA4LQp9ObtJT7LiE4tqoOmkAAOkGk5ZAAA=";
 const MAIL_LINK_TEMPLATE = `
-<b><a href="mailto:[RECIPIENT]?bcc=incoming+newcubator-people-recruiting-38166633-dxmv8fhkpi28plc4lptak2z5l-issue-[ID]@incoming.gitlab.com"> >> Mail senden und als Kommentar anhängen</a></b>
-
+<b><a href="mailto:[RECIPIENT]?bcc=incoming+newcubator-people-employees-35095396-dxmv8fhkpi28plc4lptak2z5l-issue-[ID]@incoming.gitlab.com"> >> Mail senden und als Kommentar anhängen</a></b>
 `;
 
 export const handler = async (event: APIGatewayRequestAuthorizerEventV2) => {
