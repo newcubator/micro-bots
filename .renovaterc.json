@@ -1,8 +1,12 @@
 {
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "rangeStrategy": "pin",
+  "prHourlyLimit": 2,
+  "prConcurrentLimit": 10,
   "labels": ["Renovate"],
   "packageRules": [
     {
+      "description": "Group aws-sdk updates in one MR",
       "groupName": "@aws-sdk",
       "matchPackagePatterns": ["^@aws-sdk/"]
     }
