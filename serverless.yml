@@ -257,6 +257,19 @@ functions:
     handler: src/functions/vacation-handover.handler
     memorySize: 128
 
+  holidaySetAutomaticMailReplies:
+    handler: src/functions/holiday-set-automatic-mail-replies.handler
+    timeout: 3
+    events:
+      - schedule:
+          enabled: true
+          rate: cron(5 4 * * ? *) # at 4:05 AM (UTC) every day
+    environment:
+      HOLIDAY_MAIL_REPLIES_CHANGE_SLACK_CHANNEL: ${env:HOLIDAY_MAIL_REPLIES_CHANGE_SLACK_CHANNEL}
+      MICROSOFT_TOKEN: ${env:MICROSOFT_TOKEN}
+      MICROSOFT_CLIENT_ID: ${env:MICROSOFT_CLIENT_ID}
+      MICROSOFT_CLIENT_SECRET: ${env:MICROSOFT_CLIENT_SECRET}
+
   recruitmentIncomingMail:
     handler: src/recruitment/incoming-mail.handler
     memorySize: 256
