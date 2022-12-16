@@ -9,6 +9,13 @@
       "description": "Group aws-sdk updates in one MR",
       "groupName": "@aws-sdk",
       "matchPackagePatterns": ["^@aws-sdk/"]
+    },
+    {
+      "description": "Automatically merge minor and patch-level updates",
+      "matchUpdateTypes": ["minor", "patch"],
+      "matchCurrentVersion": "!/^0/",
+      "automerge": true,
+      "platformAutomerge": true
     }
   ]
 }

@@ -26,6 +26,9 @@ deploy:
   stage: deploy
   script:
     - npm run deploy:prod
+  environment:
+    name: production
+    deployment_tier: production
   resource_group: production
   only:
     - main
