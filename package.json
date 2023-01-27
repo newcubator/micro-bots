@@ -44,7 +44,7 @@
     "jest-file-snapshot": "0.5.0",
     "mockdate": "3.0.5",
     "prettier": "2.8.3",
-    "serverless": "3.26.0",
+    "serverless": "3.27.0",
     "serverless-esbuild": "1.37.3",
     "serverless-sentry": "2.5.3",
     "ts-jest": "29.0.5",
