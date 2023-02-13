@@ -7,6 +7,11 @@ provider:
   runtime: nodejs16.x
   region: eu-central-1
   stage: production
+  stackTags:
+    Project: micro-bots
+    GitlabProjectId: "20934853"
+    GitlabProjectUrl: https://gitlab.com/newcubator/newcubator/micro-bots
+    Environment: ${opt:stage, 'dev'}
   iam:
     role:
       statements:
