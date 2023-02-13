@@ -1,5 +1,5 @@
 default:
-  image: node:lts-gallium
+  image: registry.gitlab.com/newcubator/newcubator/micro-bots/buildutil-node:18.14.0-alpine
   cache:
     key:
       files:
@@ -24,11 +24,21 @@ test:
 
 deploy:
   stage: deploy
-  script:
-    - npm run deploy:prod
   environment:
     name: production
     deployment_tier: production
   resource_group: production
+  script:
+    - >
+      export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s"
+      $(aws sts assume-role-with-web-identity
+      --role-arn ${ROLE_ARN}
+      --role-session-name "GitLabRunner-${CI_PROJECT_ID}-${CI_PIPELINE_ID}"
+      --web-identity-token $CI_JOB_JWT_V2
+      --duration-seconds 3600
+      --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]'
+      --output text))
+    - aws sts get-caller-identity
+    - npm run deploy:prod
   only:
     - main
