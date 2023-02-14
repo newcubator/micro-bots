@@ -10,6 +10,9 @@ default:
   before_script:
     - npm ci
 
+variables:
+  ROLE_ARN: "arn:aws:iam::931595285256:role/gitlab-micro-bots-deploymentrole"
+
 test:
   stage: test
   script:
