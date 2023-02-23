@@ -11,7 +11,7 @@ default:
     - npm ci
 
 variables:
-  ROLE_ARN: "arn:aws:iam::931595285256:role/gitlab-micro-bots-deploymentrole"
+  ROLE_ARN: "arn:aws:iam::931595285256:role/GitlabMicroBotsDeploymentRole"
 
 test:
   stage: test
