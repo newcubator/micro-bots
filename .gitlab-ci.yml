@@ -1,5 +1,5 @@
 default:
-  image: registry.gitlab.com/newcubator/newcubator/micro-bots/buildutil-node:18.14.0-alpine
+  image: registry.gitlab.com/newcubator/newcubator/micro-bots/buildutil-node:18.14.2-alpine
   cache:
     key:
       files:
