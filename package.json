@@ -34,7 +34,7 @@
   "devDependencies": {
     "@types/aws-lambda": "8.10.111",
     "@types/jest": "29.4.0",
-    "@types/node": "18.14.1",
+    "@types/node": "18.14.2",
     "@typescript-eslint/eslint-plugin": "5.53.0",
     "dotenv": "16.0.3",
     "esbuild": "0.17.9",
