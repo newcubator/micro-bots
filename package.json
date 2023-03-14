@@ -32,7 +32,7 @@
     "twitter-api-v2": "1.14.2"
   },
   "devDependencies": {
-    "@types/aws-lambda": "8.10.111",
+    "@types/aws-lambda": "8.10.112",
     "@types/jest": "29.4.1",
     "@types/node": "18.15.3",
     "@typescript-eslint/eslint-plugin": "5.54.1",
