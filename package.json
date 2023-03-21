@@ -35,7 +35,7 @@
     "@types/aws-lambda": "8.10.114",
     "@types/jest": "29.5.0",
     "@types/node": "18.15.5",
-    "@typescript-eslint/eslint-plugin": "5.55.0",
+    "@typescript-eslint/eslint-plugin": "5.56.0",
     "dotenv": "16.0.3",
     "esbuild": "0.17.12",
     "eslint": "8.36.0",
