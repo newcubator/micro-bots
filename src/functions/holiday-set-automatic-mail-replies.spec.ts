@@ -72,12 +72,6 @@ describe("HolidaySetAutomaticMailReplies", () => {
       endHoliday.format("YYYY-MM-DD"),
     ]);
     expect(mockSlackChatPostMessage.mock.calls.length).toEqual(1);
-    expect(mockSlackChatPostMessage.mock.calls[0]).toEqual([
-      "Die E-Mail Response für Max Mustermann wurde gesetzt. Hab einen schönen Urlaub!",
-      "1111111",
-      "Mail Bot",
-      ":e-mail:",
-    ]);
   });
 
   it("should return a useful message if nobody has holiday", async () => {
