@@ -40,8 +40,6 @@ export function getAzureAccessToken(): Promise<string> {
       }
     )
     .then((response) => {
-      console.debug(response.data);
-
       // update cache
       cachedAccessToken = response.data.access_token;
       cachedAccessTokenExpiration = Date.now() + toMilliSeconds(response.data.expires_in - 20);
