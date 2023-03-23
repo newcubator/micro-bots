@@ -43,7 +43,9 @@ export const handler = async () => {
         await changeMailRespondForUser(mUserId, message, startDate, endDate);
 
         await slackChatPostMessage(
-          `Die E-Mail Response für ${mUserDisplayName} wurde gesetzt. Hab einen schönen Urlaub!`,
+          `Die E-Mail Response für ${mUserDisplayName} wurde ab dem ${mUserMailScheduledStart.format(
+            "DD.MM.YYYY"
+          )} gesetzt. Hab einen schönen Urlaub!`,
           HOLIDAY_MAIL_REPLIES_CHANGE_SLACK_CHANNEL,
           "Mail Bot",
           ":e-mail:"
