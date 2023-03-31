@@ -48,6 +48,6 @@
     "serverless-esbuild": "1.43.0",
     "serverless-sentry": "2.5.3",
     "ts-jest": "29.0.5",
-    "typescript": "5.0.2"
+    "typescript": "5.0.3"
   }
 }
