@@ -167,21 +167,19 @@ functions:
               - "PrivateChannelRequestedEvent"
   twitterBot:
     environment:
-      TWITTER_ACCESS_SECRET: ${env:TWITTER_ACCESS_SECRET}
-      TWITTER_ACCESS_TOKEN: ${env:TWITTER_ACCESS_TOKEN}
-      TWITTER_APP_KEY: ${env:TWITTER_APP_KEY}
-      TWITTER_APP_SECRET: ${env:TWITTER_APP_SECRET}
       TWITTER_BOT_SPREADSHEET_ID: ${env:TWITTER_BOT_SPREADSHEET_ID}
       TWITTER_POST_SLACK_CHANNEL: ${env:TWITTER_POST_SLACK_CHANNEL}
       OPENAI_TOKEN: ${env:OPENAI_TOKEN}
-    timeout: 10
+      GOOGLE_CLIENT_EMAIL: ${env:GOOGLE_CLIENT_EMAIL}
+      GOOGLE_PRIVATE_KEY: ${env:GOOGLE_PRIVATE_KEY}
+    timeout: 20
     maximumRetryAttempts: 0
     events:
       - schedule:
           enabled: true
-          rate: cron(0 16 * * ? *)
+          rate: cron(*/5 * * * ? *)
     handler: src/functions/twitter-bot.handler
-    memorySize: 128
+    memorySize: 512
 
   selectMenuHandler:
     handler: src/slack/select-menu-handler.selectMenuHandler

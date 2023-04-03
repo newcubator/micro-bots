@@ -1,6 +1,7 @@
 import { RssFeedItem, Tweet } from "./twitter-bot";
 
 const { Configuration, OpenAIApi } = require("openai");
+const { convert } = require("html-to-text");
 
 const OPENAI_TOKEN = process.env.OPENAI_TOKEN;
 
@@ -10,12 +11,13 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 export async function composeTweetWithOpenAI(feedItem: RssFeedItem): Promise<Tweet> {
+  const text = convert(feedItem["content:encoded"]);
   const openAIResponse = await openai.createCompletion({
     model: "text-davinci-002",
     prompt: `Write a tweet about the following content including three hashtags and not more then 250 characters: 
 ---
 ${feedItem.title}
-${feedItem.content}
+${text}
 ---
 Tweet:
 `,
