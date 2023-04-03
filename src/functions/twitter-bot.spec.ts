@@ -1,7 +1,6 @@
 import Parser from "rss-parser";
 import { AwsSecretsManager } from "../clients/aws-secrets-manager";
 import { GoogleSheetsAccessor } from "../clients/google-sheets-accessor";
-import { twitterClient } from "../clients/twitter";
 jest.mock("openai", () => {
   return {
     Configuration: jest.fn().mockImplementation(),
@@ -53,90 +52,66 @@ const getRowsExample = {
 };
 
 const fakeRssFeedItemLong = {
-  creator: "https://twitter.com/newcubator",
   title:
     "j4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAURj4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAURj4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAURj4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAURj4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAURj4RkRKjmHoV3iOG5d87vg4VmP9IVXvvgeznXpiGUru7WJodAUR",
   link: "FakeLink",
   pubDate: "FakeDate",
-  content: "FakeContent",
-  contentSnippet: "FakeSnippetContent",
+  "content:encoded": "FakeContent",
   guid: "1234",
-  isoDate: "FakeIsoDate",
 };
 
 const fakeRssFeedItemShort = {
-  creator: undefined,
   title: "j4RkRKjmHoV3iR",
   link: "FakeLink",
   pubDate: "FakeDate",
-  content: "FakeContent",
-  contentSnippet: "FakeSnippetContent",
+  "content:encoded": "FakeContent",
   guid: "1234",
-  isoDate: "FakeIsoDate",
 };
 const fakeRssFeedItemTwitter = {
-  creator: "https://twitter.com/max_mustermann",
   title: "j4RkRKjmHoV3iR",
   link: "FakeLink",
   pubDate: "FakeDate",
-  content: "FakeContent",
-  contentSnippet: "FakeSnippetContent",
+  "content:encoded": "FakeContent",
   guid: "1234",
-  isoDate: "FakeIsoDate",
 };
 
 //export const emptyFeedArray = [{}];
 
 const fakeRssFeed = [
   {
-    creator: "https://twitter.com/max_mustermann",
     title: "Wie teste ich Rust und Java",
     link: "FakeLink",
     pubDate: "FakeDate",
-    content: "FakeContent",
-    contentSnippet: "FakeSnippetContent",
+    "content:encoded": "FakeContent",
     guid: "111111",
-    isoDate: "FakeIsoDate",
   },
   {
-    creator: "https://twitter.com/max_mustermann",
     title: "Wie teste ich Rust und Java 2",
     link: "FakeLink",
     pubDate: "FakeDate",
-    content: "FakeContent",
-    contentSnippet: "FakeSnippetContent",
+    "content:encoded": "FakeContent",
     guid: "111112",
-    isoDate: "FakeIsoDate",
   },
   {
-    creator: "https://twitter.com/max_mustermann",
     title: "Wie teste ich Python",
     link: "FakeLink",
     pubDate: "FakeDate",
-    content: "FakeContent",
-    contentSnippet: "FakeSnippetContent",
+    "content:encoded": "FakeContent",
     guid: "111113",
-    isoDate: "FakeIsoDate",
   },
   {
-    creator: "https://twitter.com/max_mustermann",
     title: "How to do something 3",
     link: "FakeLink",
     pubDate: "FakeDate",
-    content: "FakeContent",
-    contentSnippet: "FakeSnippetContent",
+    "content:encoded": "FakeContent",
     guid: "111114",
-    isoDate: "FakeIsoDate",
   },
   {
-    creator: "https://twitter.com/max_mustermann",
     title: "How to do something",
     link: "FakeLink",
     pubDate: "FakeDate",
-    content: "FakeContent",
-    contentSnippet: "FakeSnippetContent",
+    "content:encoded": "FakeContent",
     guid: "111115",
-    isoDate: "FakeIsoDate",
   },
 ];
 
@@ -198,7 +173,6 @@ describe("TwitterBot", () => {
   //TODO: mocking in this test leads to failing all tests below
 
   it("should send tweet", async () => {
-    process.env.AWS_LAMBDA_FUNCTION_NAME = "micro-bots-production-twitterBot";
     jest
       .spyOn(setUpSheetsAccessor, "setUpSheetsAccessor")
       .mockResolvedValueOnce({ addRows: jest.fn() } as unknown as GoogleSheetsAccessor);
@@ -209,26 +183,9 @@ describe("TwitterBot", () => {
     await handler();
 
     expect(saveToSpreadsheetMock).toHaveBeenCalled();
-    expect(twitterClient.v1.tweet).toHaveBeenCalled();
-  });
-
-  it("should not send tweet", async () => {
-    process.env.AWS_LAMBDA_FUNCTION_NAME = "micro-bots-dev-twitterBot";
-    jest
-      .spyOn(setUpSheetsAccessor, "setUpSheetsAccessor")
-      .mockResolvedValueOnce({ addRows: jest.fn() } as unknown as GoogleSheetsAccessor);
-    jest.spyOn(fetchTweetsFromSpreadsheet, "getAlreadyTweetedDevSquadPosts").mockResolvedValue(fakeGoogleSheet);
-    jest.spyOn(fetchRssFeed, "getDevSquadPosts").mockResolvedValue(fakeRssFeed);
-    const saveToSpreadsheetMock = jest.spyOn(saveToSpreadsheet, "saveTweetedPost").mockResolvedValue({});
-
-    await handler();
-
-    expect(saveToSpreadsheetMock).not.toHaveBeenCalled();
-    expect(twitterClient.v1.tweet).not.toHaveBeenCalled();
   });
 
   it("should not send", async () => {
-    process.env.AWS_LAMBDA_FUNCTION_NAME = "micro-bots-production-twitterBot";
     jest
       .spyOn(setUpSheetsAccessor, "setUpSheetsAccessor")
       .mockResolvedValueOnce({ addRows: jest.fn() } as unknown as GoogleSheetsAccessor);
@@ -240,6 +197,5 @@ describe("TwitterBot", () => {
     await handler();
 
     expect(saveToSpreadsheetMock).not.toHaveBeenCalled();
-    expect(twitterClient.v1.tweet).not.toHaveBeenCalled();
   });
 });

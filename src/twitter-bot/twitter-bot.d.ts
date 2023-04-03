@@ -5,12 +5,9 @@ export interface Tweet {
 }
 
 export interface RssFeedItem {
-  creator: string;
   title: string;
   link: string;
   pubDate: string;
-  content: string;
-  contentSnippet: string;
+  "content:encoded": string;
   guid: string;
-  isoDate: string;
 }

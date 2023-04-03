@@ -7,14 +7,11 @@ import Sheets = sheets_v4.Sheets;
 export class GoogleSheetsAccessor {
   private googleAuth: GoogleAuth;
 
-  private GOOGLE_CREDENTIALS;
-
   private client: any;
 
   private googleSheets: Sheets;
 
-  public setupGoogle(credentials: any): Promise<boolean> {
-    this.GOOGLE_CREDENTIALS = credentials;
+  public setupGoogle(): Promise<boolean> {
     return new Promise<boolean>((resolve) => {
       this.setGoogleAuth()
         .then(() => this.authGoogle())
@@ -53,8 +50,8 @@ export class GoogleSheetsAccessor {
     return new Promise<boolean>((resolve) => {
       this.googleAuth = new google.auth.GoogleAuth({
         credentials: {
-          client_email: this.GOOGLE_CREDENTIALS.client_email,
-          private_key: this.GOOGLE_CREDENTIALS.private_key,
+          client_email: process.env.GOOGLE_CLIENT_EMAIL,
+          private_key: process.env.GOOGLE_PRIVATE_KEY.replace(/\\n/g, "\n"),
         },
         scopes: ["https://www.googleapis.com/auth/spreadsheets"],
       });
