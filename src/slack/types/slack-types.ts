@@ -9,6 +9,7 @@ export enum ActionType {
   PRIVATE_CHANNEL = "PRIVATE_CHANNEL",
   UPLOAD_LETTERXPRESS = "UPLOAD_LETTERXPRESS",
   CANCEL = "CANCEL",
+  BOOK_SUPPORT = "BOOK_SUPPORT",
 }
 
 export enum ShortMailFields {

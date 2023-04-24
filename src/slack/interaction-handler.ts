@@ -13,6 +13,14 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
   let requestedEvent;
 
   switch (actionType) {
+    case ActionType.BOOK_SUPPORT:
+      requestedEvent = new BookSupportRequestedEvent({
+        text: blockAction.actions[0].value,
+        responseUrl: blockAction.response_url,
+        channelId: blockAction.container.channel_id,
+        actionType: blockAction.actions[0].action_id,
+      });
+      break;
     case ActionType.LOCK_PROJECT:
       requestedEvent = new LockProjectRequestedEvent({
         projectId: blockAction.actions[0].selected_option.value,
@@ -130,6 +138,21 @@ export class LockProjectRequestedEvent {
     this.messageTs = messageTs;
     this.channelId = channelId;
     this.actionId = actionType;
+  }
+}
+
+export class BookSupportRequestedEvent {
+  text: string;
+  channelId: string;
+  actionId: ActionType;
+  responseUrl: string;
+
+
+  constructor({ text, channelId, actionType, responseUrl }) {
+    this.text = text;
+    this.channelId = channelId;
+    this.actionId = actionType;
+    this.responseUrl = responseUrl;
   }
 }
 

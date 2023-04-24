@@ -74,6 +74,30 @@ functions:
     memorySize: 128
     timeout: 20
 
+  bookSupportCommand:
+    handler: src/book-support/book-support-command.commandHandler
+    timeout: 3
+    events:
+      - http:
+          method: post
+          path: book-support-command
+
+  bookSupportEvent:
+    environment:
+      BOOK_SUPPORT_SPREADSHEET_ID: ${env:BOOK_SUPPORT_SPREADSHEET_ID}
+      OPENAI_TOKEN: ${env:OPENAI_TOKEN}
+      GOOGLE_CLIENT_EMAIL: ${env:GOOGLE_CLIENT_EMAIL}
+      GOOGLE_PRIVATE_KEY: ${env:GOOGLE_PRIVATE_KEY}
+    events:
+      - eventBridge:
+          eventBus: micro-bots-event
+          pattern:
+            detail-type:
+              - "BookSupportRequestedEvent"
+    handler: src/book-support/book-support-event.handler
+    timeout: 20
+    memorySize: 512
+
   ##
   ## Completion Notice
   ##
