@@ -9,7 +9,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
 
   const actionType: string = blockAction.actions[0].action_id;
   console.log(`${actionType} requested`);
-  console.log(blockAction);
+
   let requestedEvent;
 
   switch (actionType) {
@@ -19,6 +19,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
         responseUrl: blockAction.response_url,
         channelId: blockAction.container.channel_id,
         actionType: blockAction.actions[0].action_id,
+        createIndex: blockAction.actions[0].value.startsWith("CREATE"),
       });
       break;
     case ActionType.LOCK_PROJECT:
@@ -144,15 +145,16 @@ export class LockProjectRequestedEvent {
 export class BookSupportRequestedEvent {
   text: string;
   channelId: string;
-  actionId: ActionType;
+  actionType: ActionType;
   responseUrl: string;
+  createIndex: boolean;
 
-
-  constructor({ text, channelId, actionType, responseUrl }) {
+  constructor({ text, channelId, actionType, responseUrl, createIndex }) {
     this.text = text;
     this.channelId = channelId;
-    this.actionId = actionType;
+    this.actionType = actionType;
     this.responseUrl = responseUrl;
+    this.createIndex = createIndex;
   }
 }
 
