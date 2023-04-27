@@ -16,16 +16,16 @@ export const handler = async (event: EventBridgeEvent<string, BookSupportRequest
 
   //Initial Index zu den eigenen Daten generieren
   if (event.detail.createIndex) {
-    await createIndex();
+    await createIndex(openai);
   }
 
-  const context = await getBookQuestionContext(question);
+  const context = await getBookQuestionContext(question, openai);
   const openAIResponse = await openai.createCompletion({
     model: "text-davinci-002",
     prompt: `Gegeben ist folgender Kontext:
          """ ${context} """ .
         Beantworte im Bezug auf den Kontext folgende Frage möglichst ausführlich: """ ${question} """`,
-    temperature: 0.4,
+    temperature: 0.2,
     max_tokens: 256,
     top_p: 1,
     frequency_penalty: 0,

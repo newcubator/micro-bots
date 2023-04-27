@@ -8,8 +8,8 @@ export async function getRowsFromGoogleSheet(googleSheetsAccessor: GoogleSheetsA
   return parseBookEntries(sheetData);
 }
 
-export async function saveBookEntryVector(entry: BookEntry, googleSheetsAccessor: GoogleSheetsAccessor): Promise<any> {
-  return googleSheetsAccessor.addRows(process.env.BOOK_SUPPORT_SPREADSHEET_ID, `Sheet1!B${entry.index}`, [
+export async function saveBookEntryVector(entry: BookEntry, googleSheetsAccessor: GoogleSheetsAccessor): Promise<void> {
+  await googleSheetsAccessor.addRows(process.env.BOOK_SUPPORT_SPREADSHEET_ID, `Sheet1!B${entry.index}`, [
     [entry.vector],
   ]);
 }

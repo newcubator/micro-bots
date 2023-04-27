@@ -96,6 +96,7 @@ functions:
               - "BookSupportRequestedEvent"
     handler: src/book-support/book-support-event.handler
     timeout: 20
+    maximumRetryAttempts: 0
     memorySize: 512
 
   ##

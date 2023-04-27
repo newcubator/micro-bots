@@ -2,13 +2,7 @@ import { Configuration, OpenAIApi } from "openai";
 import { setUpSheetsAccessor } from "../twitter-bot/set-up-sheets-accessor";
 import { parseBookEntries } from "./types/bookEntry";
 
-const OPENAI_TOKEN = process.env.OPENAI_TOKEN;
-const configuration = new Configuration({
-  apiKey: OPENAI_TOKEN,
-});
-const openai = new OpenAIApi(configuration);
-
-export async function getBookQuestionContext(question: string) {
+export async function getBookQuestionContext(question: string, openai: OpenAIApi) {
   console.info("Trying to get embedding for question string");
   const questionEmbedding = await openai.createEmbedding({
     model: "text-embedding-ada-002",
@@ -36,15 +30,13 @@ export const compareEmbeddingVectors = async (questionVector: number[]) => {
 };
 
 function cosineSimilarity(vectorA: number[], vectorB: number[]): number {
-  // Überprüfen, ob die Vektoren die gleiche Länge haben
   if (vectorA.length !== vectorB.length) {
     throw new Error("Vectors do not have the same length");
   }
 
-  // Berechnung des Skalarprodukts
-  let dotProduct = 0;
+  let scalarProduct = 0;
   for (let i = 0; i < vectorA.length; i++) {
-    dotProduct += vectorA[i] * vectorB[i];
+    scalarProduct += vectorA[i] * vectorB[i];
   }
 
   // Berechnung der Normen
@@ -58,5 +50,5 @@ function cosineSimilarity(vectorA: number[], vectorB: number[]): number {
   normB = Math.sqrt(normB);
 
   // Berechnung der Kosinus-Ähnlichkeit
-  return dotProduct / (normA * normB);
+  return scalarProduct / (normA * normB);
 }
