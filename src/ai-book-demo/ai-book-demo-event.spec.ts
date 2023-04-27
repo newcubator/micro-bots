@@ -1,4 +1,4 @@
-import { handler } from "./book-support-event";
+import { handler } from "./ai-book-demo-event";
 import axios from "axios";
 import { ActionType } from "../slack/types/slack-types";
 import { getBookQuestionContext } from "./get-book-question-context";

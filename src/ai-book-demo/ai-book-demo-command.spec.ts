@@ -1,4 +1,4 @@
-import { commandHandler } from "./book-support-command";
+import { commandHandler } from "./ai-book-demo-command";
 
 test("command handler", async () => {
   const result = await commandHandler({} as any);

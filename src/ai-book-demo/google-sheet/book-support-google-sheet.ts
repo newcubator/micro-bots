@@ -1,5 +1,4 @@
 import { GoogleSheetsAccessor } from "../../clients/google-sheets-accessor";
-import { BookEntry, parseBookEntries } from "../types/bookEntry";
 
 export async function getRowsFromGoogleSheet(googleSheetsAccessor: GoogleSheetsAccessor): Promise<BookEntry[]> {
   console.info("Loading text data from google sheet");
@@ -12,4 +11,19 @@ export async function saveBookEntryVector(entry: BookEntry, googleSheetsAccessor
   await googleSheetsAccessor.addRows(process.env.BOOK_SUPPORT_SPREADSHEET_ID, `Sheet1!B${entry.index}`, [
     [entry.vector],
   ]);
+}
+
+export type BookEntry = {
+  text: string;
+  vector: string;
+  index: number;
+};
+
+export function parseBookEntries(sheetData: string[][]): BookEntry[] {
+  sheetData.shift();
+  return sheetData.map((entry, index) => ({
+    text: entry[0],
+    vector: entry[1],
+    index: index + 2,
+  }));
 }

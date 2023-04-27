@@ -74,15 +74,12 @@ functions:
     memorySize: 128
     timeout: 20
 
-  bookSupportCommand:
-    handler: src/book-support/book-support-command.commandHandler
+  aiBookDemoCommand:
+    handler: src/ai-book-demo/ai-book-demo-command.commandHandler
     timeout: 3
-    events:
-      - http:
-          method: post
-          path: book-support-command
+    url: true
 
-  bookSupportEvent:
+  aiBookDemoEvent:
     environment:
       BOOK_SUPPORT_SPREADSHEET_ID: ${env:BOOK_SUPPORT_SPREADSHEET_ID}
       OPENAI_TOKEN: ${env:OPENAI_TOKEN}
@@ -93,8 +90,8 @@ functions:
           eventBus: micro-bots-event
           pattern:
             detail-type:
-              - "BookSupportRequestedEvent"
-    handler: src/book-support/book-support-event.handler
+              - "AiBookDemoRequestedEvent"
+    handler: src/ai-book-demo/ai-book-demo-event.handler
     timeout: 20
     maximumRetryAttempts: 0
     memorySize: 512

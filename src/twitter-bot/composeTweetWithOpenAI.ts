@@ -11,7 +11,6 @@ const configuration = new Configuration({
 const openai = new OpenAIApi(configuration);
 
 export async function composeTweetWithOpenAI(feedItem: RssFeedItem): Promise<Tweet> {
-  console.log(openai);
   const text = convert(feedItem["content:encoded"]);
   const openAIResponse = await openai.createCompletion({
     model: "text-davinci-002",

@@ -14,7 +14,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
 
   switch (actionType) {
     case ActionType.BOOK_SUPPORT:
-      requestedEvent = new BookSupportRequestedEvent({
+      requestedEvent = new AiBookDemoRequestedEvent({
         text: blockAction.actions[0].value,
         responseUrl: blockAction.response_url,
         channelId: blockAction.container.channel_id,
@@ -142,7 +142,7 @@ export class LockProjectRequestedEvent {
   }
 }
 
-export class BookSupportRequestedEvent {
+export class AiBookDemoRequestedEvent {
   text: string;
   channelId: string;
   actionType: ActionType;

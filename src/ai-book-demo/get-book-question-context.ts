@@ -1,9 +1,9 @@
-import { Configuration, OpenAIApi } from "openai";
+import { OpenAIApi } from "openai";
 import { setUpSheetsAccessor } from "../twitter-bot/set-up-sheets-accessor";
-import { parseBookEntries } from "./types/bookEntry";
+import { parseBookEntries } from "./google-sheet/book-support-google-sheet";
 
 export async function getBookQuestionContext(question: string, openai: OpenAIApi) {
-  console.info("Trying to get embedding for question string");
+  console.info("Get embedding for question string");
   const questionEmbedding = await openai.createEmbedding({
     model: "text-embedding-ada-002",
     input: question,
@@ -11,7 +11,7 @@ export async function getBookQuestionContext(question: string, openai: OpenAIApi
   return compareEmbeddingVectors(questionEmbedding.data.data[0].embedding);
 }
 
-export const compareEmbeddingVectors = async (questionVector: number[]) => {
+async function compareEmbeddingVectors(questionVector: number[]) {
   const googleSheetsAccessor = await setUpSheetsAccessor();
   console.info("Loading embedding data from google sheet");
   const sheetData = (await googleSheetsAccessor.getRows(process.env.BOOK_SUPPORT_SPREADSHEET_ID, "Sheet1!A:B")).data
@@ -27,7 +27,7 @@ export const compareEmbeddingVectors = async (questionVector: number[]) => {
     }
   });
   return highestSimilarityEmbedding.embedding.text;
-};
+}
 
 function cosineSimilarity(vectorA: number[], vectorB: number[]): number {
   if (vectorA.length !== vectorB.length) {
@@ -39,7 +39,7 @@ function cosineSimilarity(vectorA: number[], vectorB: number[]): number {
     scalarProduct += vectorA[i] * vectorB[i];
   }
 
-  // Berechnung der Normen
+  // Calculation of the standards
   let normA = 0;
   let normB = 0;
   for (let i = 0; i < vectorA.length; i++) {
@@ -49,6 +49,6 @@ function cosineSimilarity(vectorA: number[], vectorB: number[]): number {
   normA = Math.sqrt(normA);
   normB = Math.sqrt(normB);
 
-  // Berechnung der Kosinus-Ähnlichkeit
+  // Calculation of the cosine similarity
   return scalarProduct / (normA * normB);
 }

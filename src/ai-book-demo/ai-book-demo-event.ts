@@ -2,11 +2,11 @@ import { EventBridgeEvent } from "aws-lambda";
 import { getBookQuestionContext } from "./get-book-question-context";
 import { createIndex } from "./create-index";
 import axios from "axios";
-import { BookSupportRequestedEvent } from "../slack/interaction-handler";
+import { AiBookDemoRequestedEvent } from "../slack/interaction-handler";
 
 const { Configuration, OpenAIApi } = require("openai");
 
-export const handler = async (event: EventBridgeEvent<string, BookSupportRequestedEvent>) => {
+export const handler = async (event: EventBridgeEvent<string, AiBookDemoRequestedEvent>) => {
   const OPENAI_TOKEN = process.env.OPENAI_TOKEN;
   const configuration = new Configuration({
     apiKey: OPENAI_TOKEN,
@@ -14,7 +14,7 @@ export const handler = async (event: EventBridgeEvent<string, BookSupportRequest
   const openai = new OpenAIApi(configuration);
   const question = event.detail.text;
 
-  //Initial Index zu den eigenen Daten generieren
+  //Generate initial index to own data
   if (event.detail.createIndex) {
     await createIndex(openai);
   }
