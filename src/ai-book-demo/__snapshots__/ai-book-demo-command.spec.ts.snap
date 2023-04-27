@@ -1,0 +1,3 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`command handler 1`] = `"{"blocks":[{"dispatch_action":true,"type":"input","block_id":"BOOK_SUPPORT_TEXT","element":{"type":"plain_text_input","action_id":"BOOK_SUPPORT"},"label":{"type":"plain_text","text":"Ich beantworte dir gerne Fragen zum Book! Was möchtest du wissen?","emoji":true}}]}"`;
