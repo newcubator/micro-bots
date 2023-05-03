@@ -10,7 +10,7 @@ const MAIL_USER_PRINCIPAL_NAME = "info@newcubator.com";
 const MAIL_ARCHIVE_FOLDER_ID =
   "AAMkAGJmODcwNWExLWM3ZmItNGNlZS04N2Q2LTc4YTJkMTZkOGJmOQAuAAAAAACsW_joJTKFSIXU5SXQHv11AQA4LQp9ObtJT7LiE4tqoOmkAAOkGk5ZAAA=";
 const MAIL_LINK_TEMPLATE = `
-<b><a href="mailto:[RECIPIENT]?bcc=incoming+newcubator-people-employees-35095396-dxmv8fhkpi28plc4lptak2z5l-issue-[ID]@incoming.gitlab.com"> >> Mail senden und als Kommentar anhängen</a></b>
+<b><a href="mailto:[RECIPIENT]?bcc=incoming+newcubator-people-employees-35095396-dxmv8fhkpi28plc4lptak2z5l-issue-[IID]@incoming.gitlab.com"> >> Mail senden und als Kommentar anhängen</a></b>
 `;
 
 export const handler = async (event: APIGatewayRequestAuthorizerEventV2) => {
@@ -74,7 +74,7 @@ export const handler = async (event: APIGatewayRequestAuthorizerEventV2) => {
 
 async function updateIssueWithMailLink(issue: GitlabIssue, recipient: string) {
   let link = MAIL_LINK_TEMPLATE;
-  link = link.replace("[ID]", issue.id.toString());
+  link = link.replace("[IID]", issue.iid.toString());
   link = link.replace("[RECIPIENT]", recipient);
   return updateIssueDescription(GITLAB_PROJECT_ID, issue.iid, link + issue.description);
 }
