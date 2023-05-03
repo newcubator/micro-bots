@@ -18,7 +18,7 @@ exports[`Recruitment Incoming Job Application Mail should create gitlab issue fr
   "35095396",
   6,
   "
-<b><a href="mailto:applicant@jestjs.io?bcc=incoming+newcubator-people-employees-35095396-dxmv8fhkpi28plc4lptak2z5l-issue-13@incoming.gitlab.com"> >> Mail senden und als Kommentar anhängen</a></b>
+<b><a href="mailto:applicant@jestjs.io?bcc=incoming+newcubator-people-employees-35095396-dxmv8fhkpi28plc4lptak2z5l-issue-6@incoming.gitlab.com"> >> Mail senden und als Kommentar anhängen</a></b>
 undefined",
 ]
 `;
