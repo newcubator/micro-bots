@@ -22,17 +22,23 @@ export const handler = async (event: EventBridgeEvent<string, AiBookDemoRequeste
   const context = await getBookQuestionContext(question, openai);
   const openAIResponse = await openai.createCompletion({
     model: "text-davinci-002",
-    prompt: `Gegeben ist folgender Kontext:
-         """ ${context} """ .
-        Beantworte im Bezug auf den Kontext folgende Frage möglichst ausführlich: """ ${question} """`,
+    prompt: `Wenn du die Frage mit den gegebenen Informationen nicht sinnvoll beantworten kannst, antworte mit "Das weiß ich nicht". Gegeben ist folgender Kontext: """${context} """.
+        Beantworte im Bezug auf den Kontext folgende Frage möglichst ausführlich und auf deutsch: " ${question}". Antwort:`,
     temperature: 0.2,
-    max_tokens: 256,
+    max_tokens: 1024,
     top_p: 1,
     frequency_penalty: 0,
     presence_penalty: 0,
   });
   const responseText = openAIResponse.data.choices[0].text;
-  console.info("Tokens used: " + openAIResponse.data.usage);
+  console.info(
+    "Prompt tokens used: " +
+      openAIResponse.data.usage?.prompt_tokens +
+      ". Completion tokens used: " +
+      openAIResponse.data.usage?.completion_tokens +
+      ". Total tokens used: " +
+      openAIResponse.data.usage?.total_tokens
+  );
 
   await axios.post(event.detail.responseUrl, {
     replace_original: "true",
