@@ -198,7 +198,7 @@ functions:
     maximumRetryAttempts: 0
     events:
       - schedule:
-          enabled: true
+          enabled: false
           rate: cron(*/5 * * * ? *)
     handler: src/functions/twitter-bot.handler
     memorySize: 512
