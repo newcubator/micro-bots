@@ -14,7 +14,6 @@ import { channelJoin } from "../slack/channel-join";
 import { getProject } from "../moco/projects";
 import { MocoProject } from "../moco/types/moco-types";
 import dayjs from "dayjs";
-import fuzz from "fuzzball";
 
 export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExportRequestedEvent>) => {
   const project: MocoProject = await getProject(event.detail.projectId);
@@ -123,9 +122,12 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
         return; // skip the header row
       }
 
+      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      const fuzz = require("fuzzball");
+
       if (typeof cell.value === "string" && cell.value) {
         const bana = fuzz.ratio("Gewährleistung".toLowerCase(), cell.value.toLowerCase());
-        const fuzziness = fuzz.ratio(project.name.toLowerCase(), cell.value.toLowerCase());
+        const fuzziness = fuzz.ratio(projectName.toLowerCase(), cell.value.toLowerCase());
         if (fuzziness < 80 && bana < 80) {
           // adjust this ratio based on your requirement
           cell.fill = {
