@@ -42,11 +42,12 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
   // Only user/bots that have joined a channel can post files
   await channelJoin(event.detail.channelId);
 
+  const filename = `${project.name}_report_${dayjs().format("YYYY-MM-DD")}.xlsx`;
   const upload = await slackClient.files.upload({
     channels: event.detail.channelId,
     file: buffer,
-    title: "projectReport.xlsx",
-    filename: "projectReport.xlsx",
+    title: filename,
+    filename: filename,
   });
 
   console.log(

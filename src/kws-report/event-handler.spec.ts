@@ -6,6 +6,9 @@ import { channelJoin } from "../slack/channel-join";
 import { slackClient } from "../clients/slack";
 import axios from "axios";
 import { getIssue } from "../kws-jira/issues";
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
+// @ts-ignore
+import dayjs from "dayjs";
 
 jest.mock("../moco/projects");
 jest.mock("../moco/activities");
@@ -93,8 +96,8 @@ describe("eventHandler", () => {
     expect(slackClient.files.upload).toHaveBeenCalledWith({
       channels: channelId,
       file: expect.any(Buffer),
-      title: "projectReport.xlsx",
-      filename: "projectReport.xlsx",
+      title: `MikesProject_report_${dayjs().format("YYYY-MM-DD")}.xlsx`,
+      filename: `MikesProject_report_${dayjs().format("YYYY-MM-DD")}.xlsx`,
     });
     expect(axios.post).toHaveBeenCalledWith("https://example.com/response", {
       replace_original: "false",
