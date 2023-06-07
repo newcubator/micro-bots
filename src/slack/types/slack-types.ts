@@ -10,6 +10,7 @@ export enum ActionType {
   UPLOAD_LETTERXPRESS = "UPLOAD_LETTERXPRESS",
   CANCEL = "CANCEL",
   BOOK_SUPPORT = "BOOK_SUPPORT",
+  KWS_EXCEL_EXPORT = "KWS_EXCEL_EXPORT",
 }
 
 export enum ShortMailFields {
