@@ -138,7 +138,7 @@ functions:
 
   kwsReport:
     handler: src/kws-report/command-handler.commandHandler
-    timeout: 3
+    timeout: 25
     events:
       - http:
           method: post
@@ -146,6 +146,7 @@ functions:
 
   kwsReportEvent:
     handler: src/kws-report/event-handler.eventHandler
+    timeout: 25
     events:
       - eventBridge:
           eventBus: micro-bots-event
