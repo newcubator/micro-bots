@@ -5,7 +5,7 @@ import { getActivities } from "../moco/activities";
 import { channelJoin } from "../slack/channel-join";
 import { slackClient } from "../clients/slack";
 import axios from "axios";
-import { getIssue } from "../kws-jira/issues";
+import { getIssues } from "../kws-jira/issues";
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 import dayjs from "dayjs";
@@ -71,17 +71,20 @@ describe("eventHandler", () => {
         },
       ],
     ]);
-    (getIssue as jest.Mock).mockResolvedValue({
-      id: "issue1",
-      key: "key1",
-      fields: {
-        issuetype: {
-          name: "issueType1",
+    (getIssues as jest.Mock).mockResolvedValue([
+      // updated mock
+      {
+        id: "issue1",
+        key: "key1",
+        fields: {
+          issuetype: {
+            name: "issueType1",
+          },
+          customfield_10089: "orderReference1",
+          customfield_10027: 1,
         },
-        customfield_10089: "orderReference1",
-        customfield_10027: 1,
       },
-    });
+    ]);
     (channelJoin as jest.Mock).mockResolvedValue(undefined);
     slackClient.files.upload = jest.fn().mockResolvedValue({ file: { url_private: "https://example.com/file" } });
     (axios.post as jest.Mock).mockResolvedValue({ status: 200, data: {} });

@@ -16,3 +16,33 @@ export async function getIssue(key: string): Promise<Issue | null> {
 
   return sprint.issues && sprint.issues.length > 0 ? sprint.issues[0] : null;
 }
+
+export async function getIssues(keys: string[], maxResults = 100): Promise<Issue[]> {
+  const jql = `key in (${keys.join(",")})`;
+  let startAt = 0;
+  let allIssues: Issue[] = [];
+  let issues: Issue[] = [];
+
+  do {
+    const url = new URL("https://kwssaat.atlassian.net/rest/api/2/search");
+    url.searchParams.append("jql", jql);
+    url.searchParams.append("startAt", String(startAt));
+    url.searchParams.append("maxResults", String(maxResults));
+
+    const response = await axios.get<SprintIssues>(url.toString(), {
+      auth: {
+        username: JIRA_USER_KWS,
+        password: JIRA_PASSWORD_KWS,
+      },
+    });
+
+    const sprint = response.data;
+    issues = sprint.issues || [];
+
+    allIssues = [...allIssues, ...issues];
+
+    startAt += maxResults;
+  } while (issues.length === maxResults);
+
+  return allIssues;
+}
