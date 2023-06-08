@@ -4,7 +4,7 @@ import { EventBridgeEvent } from "aws-lambda";
 import { getActivities } from "../moco/activities";
 import { groupBy } from "../util/groupBy";
 import { KwsReport, ExcelReportRow } from "./kws-report.model";
-import { getIssue } from "../kws-jira/issues";
+import { getIssues } from "../kws-jira/issues";
 import axios from "axios";
 import { slackClient } from "../clients/slack";
 import { tmpName } from "tmp-promise";
@@ -183,12 +183,22 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
     const groupedReports = groupBy(reports, (report) => report[groupingKey]);
     const reportRows: ExcelReportRow[] = [];
 
-    for (const key in groupedReports) {
-      if (useIssueData && !key) {
-        continue;
+    if (useIssueData) {
+      const keys = Object.keys(groupedReports).filter((key) => key);
+      const issuesData = await getIssues(keys);
+      const issuesDataMap = new Map(issuesData.map((issue) => [issue.key, issue]));
+
+      for (const key in groupedReports) {
+        if (!key) {
+          continue;
+        }
+        const issueData = issuesDataMap.get(key);
+        reportRows.push(generateExcelReportRow(groupedReports[key], issueData));
       }
-      const issueData = useIssueData ? await getIssue(key) : undefined;
-      reportRows.push(generateExcelReportRow(groupedReports[key], issueData));
+    } else {
+      for (const key in groupedReports) {
+        reportRows.push(generateExcelReportRow(groupedReports[key], undefined));
+      }
     }
 
     return reportRows;
