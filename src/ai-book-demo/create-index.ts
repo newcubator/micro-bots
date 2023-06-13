@@ -1,5 +1,5 @@
 import { OpenAIApi } from "openai";
-import { setUpSheetsAccessor } from "../twitter-bot/set-up-sheets-accessor";
+import { setUpSheetsAccessor } from "./set-up-sheets-accessor";
 import { getRowsFromGoogleSheet, saveBookEntryVector } from "./google-sheet/book-support-google-sheet";
 
 export async function createIndex(openai: OpenAIApi): Promise<void> {

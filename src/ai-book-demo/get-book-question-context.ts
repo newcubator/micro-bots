@@ -1,5 +1,5 @@
 import { OpenAIApi } from "openai";
-import { setUpSheetsAccessor } from "../twitter-bot/set-up-sheets-accessor";
+import { setUpSheetsAccessor } from "./set-up-sheets-accessor";
 import { parseBookEntries } from "./google-sheet/book-support-google-sheet";
 
 export async function getBookQuestionContext(question: string, openai: OpenAIApi) {
