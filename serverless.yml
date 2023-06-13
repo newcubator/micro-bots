@@ -190,11 +190,11 @@ functions:
   devSquadToBlogGenerator:
     environment:
       DEVSQUAD_AI_SECRET: ${env:DEVSQUAD_AI_SECRET}
-    timeout: 20
+    timeout: 60
     maximumRetryAttempts: 0
     events:
       - schedule:
-          enabled: true
+          enabled: false
           rate: cron(0 17 * * ? *)
     handler: src/functions/devsquad-to-blog-generator.handler
     memorySize: 128
