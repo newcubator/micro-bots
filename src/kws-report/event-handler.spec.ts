@@ -94,11 +94,12 @@ describe("eventHandler", () => {
 
     // Verify the expected function calls
     expect(getProject).toHaveBeenCalledWith(projectId.toString());
-    expect(getActivities).toHaveBeenCalledWith("2023-06-01", expect.any(String), projectId.toString());
+    expect(getActivities).toHaveBeenCalledWith("2022-06-01", expect.any(String), projectId.toString());
     expect(channelJoin).toHaveBeenCalledWith(channelId);
     expect(slackClient.files.upload).toHaveBeenCalledWith({
       channels: channelId,
       file: expect.any(Buffer),
+      filetype: "xlsx",
       title: `MikesProject_report_${dayjs().format("YYYY-MM-DD")}.xlsx`,
       filename: `MikesProject_report_${dayjs().format("YYYY-MM-DD")}.xlsx`,
     });
