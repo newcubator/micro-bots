@@ -19,8 +19,8 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
   const project: MocoProject = await getProject(event.detail.projectId);
 
   const activities = await getActivities(
-    dayjs(project.created_at).format("YYYY-MM-DD"),
-    dayjs().format("YYYY-MM-DD"),
+    dayjs(project.created_at).subtract(1, "year").format("YYYY-MM-DD"),
+    dayjs().add(1, "year").format("YYYY-MM-DD"),
     project.id.toString()
   );
 
@@ -47,6 +47,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
     channels: event.detail.channelId,
     file: buffer,
     title: filename,
+    filetype: "xlsx",
     filename: filename,
   });
 
