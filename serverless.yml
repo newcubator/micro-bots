@@ -207,17 +207,6 @@ functions:
           pattern:
             detail-type:
               - "PrivateChannelRequestedEvent"
-  devSquadToBlogGenerator:
-    environment:
-      DEVSQUAD_AI_SECRET: ${env:DEVSQUAD_AI_SECRET}
-    timeout: 60
-    maximumRetryAttempts: 0
-    events:
-      - schedule:
-          enabled: false
-          rate: cron(0 17 * * ? *)
-    handler: src/functions/devsquad-to-blog-generator.handler
-    memorySize: 128
 
   selectMenuHandler:
     handler: src/slack/select-menu-handler.selectMenuHandler

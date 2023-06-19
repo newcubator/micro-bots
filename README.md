@@ -62,7 +62,6 @@ To get a more detailed description of each bot, click on one of them below :arro
 | [Gitlab Issue Reminder](./docs/gitlab-issue-reminder.md) | reminds you of the open issues of a specific project |
 | [Mail Signature Bot](./docs/mail-signature.md)           | generates a personalized mail signature              |
 | [Private Channel](./docs/private-channel.md)             | opens a private Slack channel                        |
-| [Twitter Bot](./docs/twitter-bot.md)                     | posts DevSquad articles on twitter                   |
 | [Vacation Handover](./docs/vacation-handover.md)         | opens Gitlab issues for oncoming vacations           |
 | [Workload](./docs/workload.md)                           | returns information about the employees workload     |
 | [Lock Project](./docs/lock-project.md)                   | locks a moco project                                 |
