@@ -104,11 +104,6 @@ function createMailSignature(user: MocoUserType): string {
                         <table cellpadding="0" cellspacing="0" style="vertical-align: -webkit-baseline-middle; font-size: medium; font-family: Arial; display: inline-block;">
                           <tbody>
                             <tr style="text-align: center;">
-                              <td>
-                                <a href="https://twitter.com/newcubator" color="#50505E" style="display: inline-block; padding: 0px; background-color: rgba(255, 255, 255, 0);">
-                                  <img src="https://newcubator.com/images/mailsignature/twitter-icon-2x.png" alt="twitter" color="#50505E" height="24" style="background-color: rgba(255, 255, 255, 0); max-width: 135px; display: block;">
-                                </a>
-                              </td>
                               <td width="5">
                                 <div></div>
                               </td>
