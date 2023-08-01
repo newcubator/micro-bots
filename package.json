@@ -16,7 +16,7 @@
     "@aws-sdk/client-eventbridge": "3.379.1",
     "@aws-sdk/client-secrets-manager": "3.379.1",
     "@aws-sdk/client-ses": "3.379.1",
-    "@sentry/node": "7.60.1",
+    "@sentry/node": "7.61.0",
     "@slack/web-api": "6.8.1",
     "axios": "1.4.0",
     "dayjs": "1.11.9",
