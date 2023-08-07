@@ -21,7 +21,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
   const activities = await getActivities(
     dayjs(project.created_at).subtract(1, "year").format("YYYY-MM-DD"),
     dayjs().add(1, "year").format("YYYY-MM-DD"),
-    project.id.toString()
+    project.id.toString(),
   );
 
   const flatActivities = activities.flat();
@@ -33,7 +33,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
     ...(await generateReportRowsByGrouping(
       kwsReports.filter((report) => !report.key),
       "summary",
-      false
+      false,
     )),
   ];
 
@@ -55,7 +55,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
     await axios.post(event.detail.responseUrl, {
       replace_original: "false",
       text: `Here's the Excel file: ${upload.file.url_private}`,
-    })
+    }),
   );
 
   async function buildExcelReport(projectName: string): Promise<Buffer> {
@@ -164,7 +164,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
     currentValue: KwsReport,
     hoursBooked: number,
     billableHours: number,
-    ratio: number
+    ratio: number,
   ): ExcelReportRow {
     newExcelReport.tasks = [...previousValue.tasks, currentValue.task];
     newExcelReport.summaries = [...previousValue.summaries, currentValue.summary];
@@ -179,7 +179,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
   async function generateReportRowsByGrouping(
     reports: KwsReport[],
     groupingKey: string,
-    useIssueData: boolean
+    useIssueData: boolean,
   ): Promise<ExcelReportRow[]> {
     const groupedReports = groupBy(reports, (report) => report[groupingKey]);
     const reportRows: ExcelReportRow[] = [];
@@ -206,14 +206,17 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
   }
 
   function generateExcelReportRow(reports: KwsReport[], issueData: Issue): ExcelReportRow {
-    return reports.reduce((prevValue: ExcelReportRow, currValue: KwsReport) => {
-      const hoursBooked = prevValue.hoursBooked + currValue.hoursBooked;
-      const billableHours = prevValue.billableHours + currValue.billableHours;
-      const ratio =
-        hoursBooked && prevValue.storyPoints ? (hoursBooked / ((prevValue.storyPoints / 1.5) * 8)) * 100 : 0;
-      const newExcelReport = new ExcelReportRow(currValue, issueData);
+    return reports.reduce(
+      (prevValue: ExcelReportRow, currValue: KwsReport) => {
+        const hoursBooked = prevValue.hoursBooked + currValue.hoursBooked;
+        const billableHours = prevValue.billableHours + currValue.billableHours;
+        const ratio =
+          hoursBooked && prevValue.storyPoints ? (hoursBooked / ((prevValue.storyPoints / 1.5) * 8)) * 100 : 0;
+        const newExcelReport = new ExcelReportRow(currValue, issueData);
 
-      return buildExcelReportData(newExcelReport, prevValue, currValue, hoursBooked, billableHours, ratio);
-    }, ExcelReportRow.buildBasicExcelRowFrom(reports[0], issueData));
+        return buildExcelReportData(newExcelReport, prevValue, currValue, hoursBooked, billableHours, ratio);
+      },
+      ExcelReportRow.buildBasicExcelRowFrom(reports[0], issueData),
+    );
   }
 };

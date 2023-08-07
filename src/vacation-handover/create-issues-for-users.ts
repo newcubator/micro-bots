@@ -7,11 +7,11 @@ import { calculateDueDate } from "./calculate-due-date";
 export const createIssuesForUsers = (
   users: { user: MocoUserType; dates: string[]; employment: MocoEmployment }[],
   description: string,
-  issues: GitlabIssue[]
+  issues: GitlabIssue[],
 ): Array<Promise<GitlabIssue | void>> => {
   return users.map((user) => {
     const issueTitle = `Urlaubsübergabe ${user.user.firstname} (${dayjs(user.dates[0]).format("DD.MM.YYYY")} - ${dayjs(
-      user.dates[1]
+      user.dates[1],
     ).format("DD.MM.YYYY")})`;
     const dueDate = calculateDueDate(dayjs(user.dates[0]), user.employment).format("YYYY-MM-DD");
     const issue = issues.find((issue) => issue.title === issueTitle);
@@ -21,15 +21,15 @@ export const createIssuesForUsers = (
         issueTitle,
         description,
         ["VacationHandover"],
-        dueDate
+        dueDate,
       ).then((res) => {
         console.log(
-          `New issue for vacation of ${user.user.firstname} for vacation from ${user.dates[0]} to ${user.dates[1]} was created at ${res.web_url}. Due date: ${dueDate}`
+          `New issue for vacation of ${user.user.firstname} for vacation from ${user.dates[0]} to ${user.dates[1]} was created at ${res.web_url}. Due date: ${dueDate}`,
         );
       });
     } else {
       console.log(
-        `Issue for detected vacation of ${user.user.firstname} for vacation from ${user.dates[0]} to ${user.dates[1]} already exists with due date ${dueDate}`
+        `Issue for detected vacation of ${user.user.firstname} for vacation from ${user.dates[0]} to ${user.dates[1]} already exists with due date ${dueDate}`,
       );
     }
   });

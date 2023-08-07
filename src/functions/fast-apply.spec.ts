@@ -25,7 +25,7 @@ describe("FastApply", () => {
     });
     expect(console.log).toHaveBeenNthCalledWith(
       1,
-      'Contact Request from Fake Name (fake@email.de) with message: "Fake Nachricht mit Bewerbung"'
+      'Contact Request from Fake Name (fake@email.de) with message: "Fake Nachricht mit Bewerbung"',
     );
     expect(console.log).toHaveBeenNthCalledWith(2, "Send contact request mail");
     console.log = consoleLog;

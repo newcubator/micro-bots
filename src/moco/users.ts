@@ -38,7 +38,7 @@ export async function getUserById(id: string) {
 }
 
 export function findUserBySlackCommand(
-  command: Pick<SlackCommandType, "user_id" | "user_name">
+  command: Pick<SlackCommandType, "user_id" | "user_name">,
 ): (users: Array<MocoUserType>) => MocoUserType {
   return (users: Array<MocoUserType>): MocoUserType => {
     let user: MocoUserType;

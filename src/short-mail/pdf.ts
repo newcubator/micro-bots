@@ -32,7 +32,7 @@ export async function renderShortMailPdf(content: PdfContent) {
       size: 10,
       lineHeight: 15,
       maxWidth: 200,
-    }
+    },
   );
   pages[0].drawText(date.locale("de").format("D. MMMM YYYY"), {
     x: 465,

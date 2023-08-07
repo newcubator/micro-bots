@@ -23,8 +23,8 @@ export const createBirthdayChannels = async (birthdays: BirthdayType[]) => {
     const birthdayDate = dayjs(`${dayjs().year()}-${birthday.birthday.slice(5)}`);
     console.log(
       `Trying to open/unarchive channel for ${birthday.firstname} ${birthday.lastname} on ${birthdayDate.format(
-        "YYYY-MM-DD"
-      )}`
+        "YYYY-MM-DD",
+      )}`,
     );
     let channel: Channel;
     const channelName = createChannelName(birthday);
@@ -66,13 +66,13 @@ export const createBirthdayChannels = async (birthdays: BirthdayType[]) => {
 
     const messageResponse = await slackChatPostMessage(
       `Hey Leute! ${birthday.firstname} hat in ${Math.ceil(
-        birthdayDate.diff(dayjs()) / 86400000
+        birthdayDate.diff(dayjs()) / 86400000,
       )} Tagen am ${birthdayDate
         .locale("de")
         .format("DD MMM")} Geburtstag! Habt ihr euch bereits über eine kleine Überraschung Gedanken gemacht?`,
       channel.id,
       "Birthday Bot",
-      ":birthday:"
+      ":birthday:",
     );
     console.log(`Wrote message ${JSON.stringify(messageResponse)}`);
   }

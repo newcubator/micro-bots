@@ -41,7 +41,7 @@ export async function putProjectContract(projectId: string, contract: MocoContra
         headers: {
           Authorization: "Token token=" + MOCO_TOKEN,
         },
-      }
+      },
     )
     .then((response) => {
       console.log(response.data);

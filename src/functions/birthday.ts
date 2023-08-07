@@ -23,7 +23,7 @@ export const handler = async () => {
   const users: BirthdayType[] = response.data as BirthdayType[];
 
   console.log(
-    `Searching for birthdays from ${today.format("MM-DD")} to ${birthdayDate.format("MM-DD")} to open channel`
+    `Searching for birthdays from ${today.format("MM-DD")} to ${birthdayDate.format("MM-DD")} to open channel`,
   );
   const dateArray: Dayjs[] = [];
   let currentDate = today;
@@ -43,10 +43,10 @@ export const handler = async () => {
     console.log(
       `Searching for birthdays on the ${yesterday.format("MM-DD")}, ${yesterday
         .subtract(1, "day")
-        .format("MM-DD")}, ${yesterday.subtract(2, "day").format("MM-DD")} to archive channel`
+        .format("MM-DD")}, ${yesterday.subtract(2, "day").format("MM-DD")} to archive channel`,
     );
     await closeBirthdayChannels(
-      filterBirthdays(users, yesterday, yesterday.subtract(1, "day"), yesterday.subtract(2, "day"))
+      filterBirthdays(users, yesterday, yesterday.subtract(1, "day"), yesterday.subtract(2, "day")),
     );
   }
 };

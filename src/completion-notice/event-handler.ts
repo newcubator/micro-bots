@@ -48,6 +48,6 @@ export const eventHandler = async (event: EventBridgeEvent<string, CompletionNot
     await axios.post(event.detail.responseUrl, {
       replace_original: "true",
       text: `Die Fertigstellungsanzeige für '${project.name}' ist fertig! 🙌`,
-    })
+    }),
   );
 };

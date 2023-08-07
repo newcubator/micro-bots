@@ -37,7 +37,7 @@ export const handler = async (event: EventBridgeEvent<string, AiBookDemoRequeste
       ". Completion tokens used: " +
       openAIResponse.data.usage?.completion_tokens +
       ". Total tokens used: " +
-      openAIResponse.data.usage?.total_tokens
+      openAIResponse.data.usage?.total_tokens,
   );
 
   await axios.post(event.detail.responseUrl, {

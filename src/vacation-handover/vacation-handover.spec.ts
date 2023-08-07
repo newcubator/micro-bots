@@ -123,7 +123,7 @@ const exampleTemplateResponse = {
       data: {
         web_url: "cool-url.com",
       },
-    })
+    }),
 );
 
 describe("vacation-handover", () => {
@@ -162,7 +162,7 @@ describe("vacation-handover", () => {
         labels: ["VacationHandover"],
         title: "Urlaubsübergabe Peter (19.08.2021 - 01.09.2021)",
       },
-      { headers: { Authorization: "Bearer not a real gitlab token" } }
+      { headers: { Authorization: "Bearer not a real gitlab token" } },
     );
   });
 
@@ -212,7 +212,7 @@ describe("vacation-handover", () => {
     expect(axios.get).toHaveBeenCalledTimes(3);
     expect(axios.post).toHaveBeenCalledTimes(0);
     expect(console.log as jest.Mock).toHaveBeenCalledWith(
-      "Issue for detected vacation of Peter for vacation from 2021-08-19 to 2021-09-01 already exists with due date 2021-08-18"
+      "Issue for detected vacation of Peter for vacation from 2021-08-19 to 2021-09-01 already exists with due date 2021-08-18",
     );
   });
 
@@ -251,7 +251,7 @@ describe("vacation-handover", () => {
           am: [4.0, 4.0, 4.0, 4.0, 0],
           pm: [4.0, 4.0, 4.0, 4.0, 0],
         },
-      } as MocoEmployment)
+      } as MocoEmployment),
     ).toStrictEqual(dayjs("2021-10-14"));
 
     expect(
@@ -260,7 +260,7 @@ describe("vacation-handover", () => {
           am: [0, 0, 0, 0, 0],
           pm: [0, 0, 4.0, 0, 0],
         },
-      } as MocoEmployment)
+      } as MocoEmployment),
     ).toStrictEqual(dayjs("2021-10-13"));
   });
 
@@ -284,8 +284,8 @@ describe("vacation-handover", () => {
           },
         ],
         dayjs("2021-10-11"),
-        3
-      )[0].dates
+        3,
+      )[0].dates,
     ).toStrictEqual(["2021-10-08", "2021-10-13"]);
 
     expect(
@@ -314,8 +314,8 @@ describe("vacation-handover", () => {
           },
         ],
         dayjs("2021-10-13"),
-        3
-      )[0].dates
+        3,
+      )[0].dates,
     ).toStrictEqual(["2021-10-05", "2021-10-14"]);
 
     expect(
@@ -333,8 +333,8 @@ describe("vacation-handover", () => {
           },
         ],
         dayjs("2021-10-13"),
-        3
-      )
+        3,
+      ),
     ).toStrictEqual([]);
 
     expect(
@@ -360,8 +360,8 @@ describe("vacation-handover", () => {
           },
         ],
         dayjs("2021-10-13"),
-        3
-      )[0].dates
+        3,
+      )[0].dates,
     ).toStrictEqual(["2021-10-11", "2021-10-15"]);
   });
 });

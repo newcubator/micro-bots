@@ -46,14 +46,14 @@ export const handler = async (event: APIGatewayRequestAuthorizerEventV2) => {
         GITLAB_PROJECT_ID,
         attachment.contentBytes,
         attachment.contentType,
-        attachment.name
+        attachment.name,
       );
       if (attachment.isInline) {
         description = description.replace(`[cid:${attachment.contentId}]`, upload.markdown);
       } else {
         description += `\r\n${upload.markdown}`;
       }
-    })
+    }),
   );
 
   const issue = await createIssue(GITLAB_PROJECT_ID, message.subject, description);

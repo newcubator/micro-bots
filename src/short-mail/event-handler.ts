@@ -43,7 +43,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
       await axios.post(event.detail.responseUrl, {
         replace_original: "true",
         text: `Zu diesem Kontakt ist leider keine Adresse hinterlegt!`,
-      })
+      }),
     );
     return;
   }
@@ -53,7 +53,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
       await axios.post(event.detail.responseUrl, {
         replace_original: "true",
         text: `Ohne Text kann ich leider keinen Brief schreiben!`,
-      })
+      }),
     );
     return;
   }
@@ -131,7 +131,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
               },
             ],
           },
-        ]
+        ],
       );
     }
   } catch (error) {

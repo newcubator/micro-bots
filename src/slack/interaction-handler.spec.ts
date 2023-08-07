@@ -458,7 +458,7 @@ it("handle interaction for book support without creating index", async () => {
     {
       replace_original: "true",
       text: "Vielen Dank für deine Anfrage, ich werde mich sofort darum kümmern. ⏳",
-    }
+    },
   );
   expect(result.statusCode).toBe(200);
 });
@@ -480,7 +480,7 @@ it("handle interaction for book support with creating index", async () => {
     {
       replace_original: "true",
       text: "Vielen Dank für deine Anfrage, ich werde mich sofort darum kümmern. ⏳",
-    }
+    },
   );
   expect(result.statusCode).toBe(200);
 });

@@ -37,7 +37,7 @@ export function getAzureAccessToken(): Promise<string> {
       }),
       {
         headers: { "Content-Type": `application/x-www-form-urlencoded` },
-      }
+      },
     )
     .then((response) => {
       // update cache

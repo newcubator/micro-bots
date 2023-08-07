@@ -18,7 +18,7 @@ export const createVacationHandoverIssues = async (vacationIssues: GitlabIssue[]
   const dayFormatted = day.format("YYYY-MM-DD");
 
   const schedules = (await getSchedules(dayFormatted, dayFormatted)).filter((schedule) =>
-    ["Feiertag", "Urlaub"].includes(schedule.assignment.name)
+    ["Feiertag", "Urlaub"].includes(schedule.assignment.name),
   );
 
   const usersWithVacationsScheduled = filterUsersWithoutOpenVacationHandoverIssues(schedules, vacationIssues);
