@@ -3,7 +3,7 @@ import { MocoSchedule, MocoUserType } from "../moco/types/moco-types";
 
 export const filterUsersWithoutOpenVacationHandoverIssues = (
   schedules: MocoSchedule[],
-  issues: GitlabIssue[]
+  issues: GitlabIssue[],
 ): MocoUserType[] => {
   return schedules
     .map((schedule) => schedule.user)

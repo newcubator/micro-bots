@@ -13,7 +13,7 @@ export const getUsersWithVacationDatesAndEmployment = async (users: MocoUserType
             await getUserSchedules(
               date.subtract(28, "day").format("YYYY-MM-DD"),
               date.add(28, "day").format("YYYY-MM-DD"),
-              user.id
+              user.id,
             )
           ).data
             .filter((schedule) => ["Feiertag", "Urlaub"].includes(schedule.assignment.name))
@@ -23,13 +23,13 @@ export const getUsersWithVacationDatesAndEmployment = async (users: MocoUserType
             await getUserEmployments(
               date.subtract(28, "day").format("YYYY-MM-DD"),
               date.add(28, "day").format("YYYY-MM-DD"),
-              user.id
+              user.id,
             )
           ).data.find(
-            (employment) => date.isBetween(dayjs(employment.from), dayjs(employment.to)) || employment.to === null
+            (employment) => date.isBetween(dayjs(employment.from), dayjs(employment.to)) || employment.to === null,
           ),
         };
-      })
+      }),
     )
   ).filter((value) => !!value.employment);
 };

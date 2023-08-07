@@ -18,7 +18,7 @@ const ALLOWED_ORIGINS = ["https://newcubator.com", "http://localhost:8000", "htt
 export const handler = async (event: APIGatewayEvent) => {
   const command: ContactRequest = decode(event.body) as ContactRequest;
   console.log(
-    `Contact Request from ${command?.title} ${command.name} (${command.email}) on page ${command.page} with message: "${command.message}"`
+    `Contact Request from ${command?.title} ${command.name} (${command.email}) on page ${command.page} with message: "${command.message}"`,
   );
 
   const requestOrigin = event.headers?.["origin"];

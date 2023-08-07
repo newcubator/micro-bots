@@ -38,7 +38,7 @@ describe("getAzureAccessToken", () => {
         headers: {
           "Content-Type": "application/x-www-form-urlencoded",
         },
-      }
+      },
     );
 
     await expect(getAzureAccessToken()).resolves.toBe("mocked-access-token");

@@ -24,7 +24,7 @@ export const createIssue = (
   title: string,
   description?: string,
   labels?: string[],
-  due_date?: string
+  due_date?: string,
 ): Promise<GitlabIssue> => {
   return axios
     .post(
@@ -39,7 +39,7 @@ export const createIssue = (
         headers: {
           Authorization: `Bearer ${GITLAB_TOKEN}`,
         },
-      }
+      },
     )
     .then((response) => {
       return response.data;
@@ -52,7 +52,7 @@ export const createIssue = (
 export const updateIssueDescription = (
   projectId: string,
   issueIid: number,
-  description: string
+  description: string,
 ): Promise<GitlabIssue> => {
   return axios
     .put(
@@ -64,7 +64,7 @@ export const updateIssueDescription = (
         headers: {
           Authorization: `Bearer ${GITLAB_TOKEN}`,
         },
-      }
+      },
     )
     .then((response) => {
       return response.data;
@@ -78,7 +78,7 @@ export const uploadFile = (
   projectId: string,
   bytes: string,
   contentType: string,
-  name: string
+  name: string,
 ): Promise<GitlabUpload> => {
   const form = new FormData();
   const buff = Buffer.from(bytes, "base64");

@@ -24,7 +24,7 @@ export async function getMessage(userPrincipalName: string, messageId: string): 
 
 export async function getMessageAttachments(
   userPrincipalName: string,
-  messageId: string
+  messageId: string,
 ): Promise<MicrosoftAttachment[]> {
   const accessToken = await getAzureAccessToken();
 
@@ -57,7 +57,7 @@ export async function markMessageAsRead(userPrincipalName: string, messageId: st
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }
+      },
     )
     .then((response) => {
       console.debug(response.data);
@@ -82,7 +82,7 @@ export async function moveMessage(userPrincipalName: string, messageId: string, 
         headers: {
           Authorization: `Bearer ${accessToken}`,
         },
-      }
+      },
     )
     .then((response) => {
       console.debug(response.data);

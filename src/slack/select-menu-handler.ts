@@ -13,7 +13,7 @@ export const selectMenuHandler = async (event: APIGatewayEvent) => {
 
   const recipients = await loadAllRecipients;
   const filteredContacts = recipients.filter((person) =>
-    person.text.text.toLowerCase().includes(blockSuggestion.value.toLowerCase())
+    person.text.text.toLowerCase().includes(blockSuggestion.value.toLowerCase()),
   );
 
   return {

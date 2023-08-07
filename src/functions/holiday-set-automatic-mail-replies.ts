@@ -44,11 +44,11 @@ export const handler = async () => {
 
         await slackChatPostMessage(
           `Die E-Mail Response für ${mUserDisplayName} wurde ab dem ${mUserMailScheduledStart.format(
-            "DD.MM.YYYY"
+            "DD.MM.YYYY",
           )} gesetzt. Hab einen schönen Urlaub!`,
           HOLIDAY_MAIL_REPLIES_CHANGE_SLACK_CHANNEL,
           "Mail Bot",
-          ":e-mail:"
+          ":e-mail:",
         );
       }
     }
@@ -67,7 +67,7 @@ function buildMessage(displayName, standort, endDate) {
     Guten Tag,\n
     Vielen Dank für Ihre Nachricht. Ich befinde mich aktuell im Urlaub und habe währenddessen keinen Zugriff auf meine Mails. 
     Aus Vertraulichkeitsgründen wird Ihre E-Mail nicht automatisch weitergeleitet. Ich bin ab dem ${dateForEmail.format(
-      "DD.MM.YYYY"
+      "DD.MM.YYYY",
     )} wieder verfügbar. Bei dringenden Anliegen wenden Sie sich bitte an unser Büro unter 
     (<a href="mailto:info@newcubator.com">info@newcubator.com</a> / ${telForMail})\n
     Vielen Dank!\n

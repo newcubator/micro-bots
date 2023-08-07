@@ -21,7 +21,7 @@ export interface UsersWithVacations {
 export const getUsersWithStartAndEndDate = (
   users: UserWithDates[],
   date: dayjs.Dayjs,
-  MIN_VACATION_DURATION: number
+  MIN_VACATION_DURATION: number,
 ): UsersWithVacations[] => {
   return users
     .map((value) => {

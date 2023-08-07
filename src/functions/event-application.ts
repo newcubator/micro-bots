@@ -19,7 +19,7 @@ const ALLOWED_ORIGINS = ["https://newcubator.com", "http://localhost:8000", "htt
 export const handler = async (event: APIGatewayEvent) => {
   const command: EventApplication = decode(event.body) as EventApplication;
   console.log(
-    `Event Application for ${command.event}: ${command.firstname} ${command.lastname} ${command.company} ${command.attendanceType} (${command.email})`
+    `Event Application for ${command.event}: ${command.firstname} ${command.lastname} ${command.company} ${command.attendanceType} (${command.email})`,
   );
 
   const requestOrigin = event.headers?.["origin"];

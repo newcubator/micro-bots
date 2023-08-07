@@ -28,7 +28,7 @@ export function renderCompletionNoticePdf(content: PdfContent) {
       325,
       {
         maxWidth: 460,
-      }
+      },
     )
     .text("Wir bedanken uns für die gute Zusammenarbeit und verbleiben", 68, 360)
     .text("mit freundlichen Grüßen\n\nnewcubator GmbH\n\n\nJörg Herbst", 68, 400)
@@ -36,7 +36,7 @@ export function renderCompletionNoticePdf(content: PdfContent) {
     .text(
       "newcubator GmbH\nBödekerstraße 22\n30161 Hannover\n+49 (0) 511-95731300\ninfo@newcubator.com\nhttps://newcubator.com",
       68,
-      745
+      745,
     )
     .text("Geschäftsführer: Jörg Herbst\nSitz der Gesellschaft: Hannover\nAmtsgericht Hannover HRB 221930", 525, 745, {
       align: "right",

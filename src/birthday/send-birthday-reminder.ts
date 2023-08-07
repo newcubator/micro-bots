@@ -10,17 +10,17 @@ export const sendBirthdayReminder = async (birthdays: BirthdayType[]) => {
   const channels = await getBirthdayChannels();
   for (const birthday of birthdays) {
     console.log(
-      `Trying to send reminder for ${birthday.firstname} ${birthday.lastname} on ${birthday.birthday.slice(5)}`
+      `Trying to send reminder for ${birthday.firstname} ${birthday.lastname} on ${birthday.birthday.slice(5)}`,
     );
     const channel = channels.find((channel) =>
-      channel.name.endsWith(`${birthday.firstname.toLowerCase()}-${birthday.lastname.toLowerCase()}`)
+      channel.name.endsWith(`${birthday.firstname.toLowerCase()}-${birthday.lastname.toLowerCase()}`),
     );
     if (channel) {
       const messageResponse = await slackChatPostMessage(
         `Hey Leute! ${birthday.firstname} hat heute Geburtstag! Ich hoffe ihr hab bereits das Geschenk bestellt! Denkt daran zu gratulieren!`,
         channel.id,
         "Birthday Bot",
-        ":birthday:"
+        ":birthday:",
       );
       console.log(`Wrote message ${JSON.stringify(messageResponse)}`);
     } else {

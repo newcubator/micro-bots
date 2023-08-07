@@ -13,14 +13,14 @@ export const eventHandler = async (event: EventBridgeEvent<string, LockProjectRe
       putProjectContract(event.detail.projectId, {
         ...contract,
         active: false,
-      })
-    )
+      }),
+    ),
   );
 
   console.log(
     await axios.post(event.detail.responseUrl, {
       replace_original: "true",
       text: `Das Projekt '${project.name}' ist jetzt gesperrt!`,
-    })
+    }),
   );
 };

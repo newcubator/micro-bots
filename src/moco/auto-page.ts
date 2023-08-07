@@ -1,7 +1,7 @@
 import { AxiosResponse } from "axios";
 
 export const autoPage = async <T>(
-  pageableRequestFactory: (page: number) => Promise<AxiosResponse<T>>
+  pageableRequestFactory: (page: number) => Promise<AxiosResponse<T>>,
 ): Promise<T[]> => {
   const data: T[] = [];
   let page = 1;

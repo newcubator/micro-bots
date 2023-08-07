@@ -14,7 +14,7 @@ export const handler = async () => {
   console.log(`Found ${issues.length} issues due today`);
 
   await Promise.all(
-    issues.map((issue) => postSlackMessage(`⚠️ Das Ticket <${issue.web_url}|${issue.title}> ist heute fällig!`))
+    issues.map((issue) => postSlackMessage(`⚠️ Das Ticket <${issue.web_url}|${issue.title}> ist heute fällig!`)),
   ).catch((error) => {
     console.error(error);
   });

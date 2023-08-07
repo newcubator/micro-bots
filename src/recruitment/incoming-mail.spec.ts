@@ -48,12 +48,12 @@ describe("Recruitment Incoming Job Application Mail", () => {
     expect(updateIssueDescriptionMock.mock.calls[0]).toMatchSnapshot();
     expect(markMessageAsReadMock).toHaveBeenCalledWith(
       "info@newcubator.com",
-      "AQMkADQ3YTAyOWE2LTdjNjAtNDhjMy1iNWY4LTY0Y2RjODI0MmE0MABGAAAVc"
+      "AQMkADQ3YTAyOWE2LTdjNjAtNDhjMy1iNWY4LTY0Y2RjODI0MmE0MABGAAAVc",
     );
     expect(moveMessageMock).toHaveBeenCalledWith(
       "info@newcubator.com",
       "AQMkADQ3YTAyOWE2LTdjNjAtNDhjMy1iNWY4LTY0Y2RjODI0MmE0MABGAAAVc",
-      "AAMkAGJmODcwNWExLWM3ZmItNGNlZS04N2Q2LTc4YTJkMTZkOGJmOQAuAAAAAACsW_joJTKFSIXU5SXQHv11AQA4LQp9ObtJT7LiE4tqoOmkAAOkGk5ZAAA="
+      "AAMkAGJmODcwNWExLWM3ZmItNGNlZS04N2Q2LTc4YTJkMTZkOGJmOQAuAAAAAACsW_joJTKFSIXU5SXQHv11AQA4LQp9ObtJT7LiE4tqoOmkAAOkGk5ZAAA=",
     );
   });
 

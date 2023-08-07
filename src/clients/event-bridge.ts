@@ -24,6 +24,6 @@ export const eventBridgeSend = async (event: any): Promise<PutEventsCommandOutpu
           Detail: JSON.stringify(event),
         },
       ],
-    })
+    }),
   );
 };

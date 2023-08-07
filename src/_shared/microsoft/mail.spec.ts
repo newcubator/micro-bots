@@ -55,7 +55,7 @@ describe("getMessageAttachments", () => {
         headers: {
           Authorization: "Bearer mocked-access-token",
         },
-      }
+      },
     );
   });
 
@@ -77,7 +77,7 @@ describe("markMessageAsRead", () => {
         headers: {
           Authorization: "Bearer mocked-access-token",
         },
-      }
+      },
     );
   });
 
@@ -99,7 +99,7 @@ describe("moveMessage", () => {
         headers: {
           Authorization: "Bearer mocked-access-token",
         },
-      }
+      },
     );
   });
 

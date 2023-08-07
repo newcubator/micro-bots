@@ -23,7 +23,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, PrivateChanne
 
   const excludedUsers = event.detail.personId;
   const excludedUsersNames = await Promise.all(
-    excludedUsers.map((id) => getSlackUserProfile(id).then((user) => user.profile.real_name))
+    excludedUsers.map((id) => getSlackUserProfile(id).then((user) => user.profile.real_name)),
   );
 
   const channelName = event.detail.channelName;
@@ -82,6 +82,6 @@ export const eventHandler = async (event: EventBridgeEvent<string, PrivateChanne
     await axios.post(event.detail.responseUrl, {
       replace_original: "true",
       text: `Der Channel ${channelName} ohne ${excludedUsersNames.join(", ")} erstellt!`,
-    })
+    }),
   );
 };

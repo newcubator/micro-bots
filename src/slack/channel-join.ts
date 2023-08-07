@@ -4,6 +4,6 @@ export const channelJoin = async (channelId) => {
   console.log(
     await slackClient.conversations.join({
       channel: channelId,
-    })
+    }),
   );
 };
