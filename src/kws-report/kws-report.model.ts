@@ -27,9 +27,7 @@ export class ExcelReportRow extends AKwsReport {
     this.key = kwsReport.key;
     this.orderReference = jiraIssue?.fields.customfield_10089;
     this.storyPoints = jiraIssue?.fields.customfield_10027 ?? 0;
-    this.estimatedHours = jiraIssue?.fields.timetracking?.originalEstimateSeconds
-      ? jiraIssue?.fields.timetracking?.originalEstimateSeconds / 60 / 60
-      : 0;
+    this.estimatedHours = jiraIssue?.fields.timeestimate ? jiraIssue?.fields.timeestimate / 60 / 60 : 0;
     this.ratio = kwsReport.ratio;
 
     this.hoursBooked = kwsReport.hoursBooked;
@@ -37,7 +35,7 @@ export class ExcelReportRow extends AKwsReport {
   }
 
   public static buildBasicExcelRowFrom(kwsReport: KwsReport, jiraIssue?: Issue): ExcelReportRow {
-    return new ExcelReportRow({ ...kwsReport, billableHours: 0, hoursBooked: 0, estimatedHours: 0 }, jiraIssue);
+    return new ExcelReportRow({ ...kwsReport, billableHours: 0, hoursBooked: 0 }, jiraIssue);
   }
 
   toExcelRow(): any {

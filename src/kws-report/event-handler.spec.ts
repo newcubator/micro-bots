@@ -81,10 +81,8 @@ describe("eventHandler", () => {
             name: "issueType1",
           },
           customfield_10089: "orderReference1",
-          customfield_10027: 1,
-          timetracking: {
-            originalEstimateSeconds: 28000,
-          },
+          customfield_10027: null,
+          timeestimate: 28000,
         },
       },
     ]);
