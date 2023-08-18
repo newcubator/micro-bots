@@ -82,6 +82,9 @@ describe("eventHandler", () => {
           },
           customfield_10089: "orderReference1",
           customfield_10027: 1,
+          timetracking: {
+            originalEstimateSeconds: 28000,
+          },
         },
       },
     ]);
