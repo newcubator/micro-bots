@@ -52,7 +52,7 @@ describe("eventHandler", () => {
         {
           project: { id: "project1" },
           task: { name: "task1" },
-          tag: "tag1",
+          tag: "key1",
           description: "description1",
           hours: 1.0,
           billable: true,
@@ -62,7 +62,7 @@ describe("eventHandler", () => {
         {
           project: { id: "project1" },
           task: { name: "task1" },
-          tag: "tag2",
+          tag: "key2",
           description: "description1",
           hours: 1.0,
           billable: true,
