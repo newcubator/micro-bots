@@ -18,11 +18,7 @@ export interface Fields {
   customfield_10027?: number;
   customfield_10089?: string;
   customfield_10010?: AffectedSprints[];
-  timetracking?: TimeTracking;
-}
-
-export interface TimeTracking {
-  originalEstimateSeconds: number;
+  timeestimate?: number;
 }
 
 export interface IssueTypes {
