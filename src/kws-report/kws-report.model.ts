@@ -35,7 +35,7 @@ export class ExcelReportRow extends AKwsReport {
   }
 
   public static buildBasicExcelRowFrom(kwsReport: KwsReport, jiraIssue?: Issue): ExcelReportRow {
-    return new ExcelReportRow({ ...kwsReport, billableHours: 0, hoursBooked: 0 }, jiraIssue);
+    return new ExcelReportRow({ ...kwsReport, billableHours: 0, hoursBooked: 0, estimatedHours: 0 }, jiraIssue);
   }
 
   toExcelRow(): any {
