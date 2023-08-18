@@ -71,6 +71,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
       { header: "Order Reference", key: "orderReference" },
       { header: "Summaries", key: "summaries" },
       { header: "Story Points", key: "storyPoints" },
+      { header: "Estimated hours", key: "estimatedHours" },
       { header: "Hours Booked", key: "hoursBooked" },
       { header: "Billable Hours", key: "billableHours" },
       { header: "ratio", key: "sphb" },
@@ -210,8 +211,12 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
       (prevValue: ExcelReportRow, currValue: KwsReport) => {
         const hoursBooked = prevValue.hoursBooked + currValue.hoursBooked;
         const billableHours = prevValue.billableHours + currValue.billableHours;
-        const ratio =
-          hoursBooked && prevValue.storyPoints ? (hoursBooked / ((prevValue.storyPoints / 1.5) * 8)) * 100 : 0;
+        let ratio;
+        if (issueData?.fields?.timetracking?.originalEstimateSeconds) {
+          ratio = hoursBooked && prevValue.estimatedHours ? (hoursBooked / prevValue.estimatedHours) * 100 : 0;
+        } else {
+          ratio = hoursBooked && prevValue.storyPoints ? (hoursBooked / ((prevValue.storyPoints / 1.5) * 8)) * 100 : 0;
+        }
         const newExcelReport = new ExcelReportRow(currValue, issueData);
 
         return buildExcelReportData(newExcelReport, prevValue, currValue, hoursBooked, billableHours, ratio);

@@ -11,6 +11,7 @@ abstract class AKwsReport {
   hoursBooked: number; //Moco
   billableHours: number; //Moco
   ratio: number; //MocoJira
+  estimatedHours: number; //Jira
 }
 
 export class ExcelReportRow extends AKwsReport {
@@ -26,6 +27,7 @@ export class ExcelReportRow extends AKwsReport {
     this.key = kwsReport.key;
     this.orderReference = jiraIssue?.fields.customfield_10089;
     this.storyPoints = jiraIssue?.fields.customfield_10027 ?? 0;
+    this.estimatedHours = jiraIssue?.fields.timetracking?.originalEstimateSeconds * 60 * 60 ?? 0;
     this.ratio = kwsReport.ratio;
 
     this.hoursBooked = kwsReport.hoursBooked;
@@ -51,6 +53,7 @@ export class ExcelReportRow extends AKwsReport {
       this.orderReference,
       Array.from(new Set(this.summaries)).join(", "),
       this.storyPoints !== 0 ? this.storyPoints : undefined,
+      this.estimatedHours !== 0 ? this.estimatedHours : undefined,
       this.hoursBooked,
       this.billableHours,
       this.ratio !== 0 ? this.ratio.toString().concat("%") : "",
