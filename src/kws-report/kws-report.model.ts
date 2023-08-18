@@ -27,7 +27,7 @@ export class ExcelReportRow extends AKwsReport {
     this.key = kwsReport.key;
     this.orderReference = jiraIssue?.fields.customfield_10089;
     this.storyPoints = jiraIssue?.fields.customfield_10027 ?? 0;
-    this.estimatedHours = jiraIssue?.fields.timetracking?.originalEstimateSeconds * 60 * 60 ?? 0;
+    this.estimatedHours = jiraIssue?.fields.timetracking?.originalEstimateSeconds / 60 / 60 ?? 0;
     this.ratio = kwsReport.ratio;
 
     this.hoursBooked = kwsReport.hoursBooked;
