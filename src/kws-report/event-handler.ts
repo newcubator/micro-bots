@@ -53,7 +53,9 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
 
   console.log(
     await axios.post(event.detail.responseUrl, {
-      replace_original: "false",
+      channels: event.detail.channelId,
+      thread_ts: event.detail.messageTs,
+      broadcast: "true",
       text: `Here's the Excel file: ${upload.file.url_private}`,
     }),
   );
