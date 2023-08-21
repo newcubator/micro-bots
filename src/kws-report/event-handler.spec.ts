@@ -105,7 +105,9 @@ describe("eventHandler", () => {
       filename: `MikesProject_report_${dayjs().format("YYYY-MM-DD")}.xlsx`,
     });
     expect(axios.post).toHaveBeenCalledWith("https://example.com/response", {
-      replace_original: "false",
+      broadcast: "true",
+      channels: "67890",
+      thread_ts: "message-timestamp",
       text: "Here's the Excel file: https://example.com/file",
     });
   });
