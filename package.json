@@ -48,7 +48,7 @@
     "mockdate": "3.0.5",
     "prettier": "3.0.3",
     "serverless": "3.35.2",
-    "serverless-esbuild": "1.48.4",
+    "serverless-esbuild": "1.48.5",
     "serverless-sentry": "2.5.3",
     "ts-jest": "29.1.1",
     "typescript": "5.2.2"
