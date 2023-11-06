@@ -10,9 +10,6 @@ process.env.GITLAB_PROJECT = "1111111";
 process.env.SLACK_CHANNEL = "1111111";
 process.env.HOLIDAY_MAIL_REPLIES_CHANGE_SLACK_CHANNEL = "1111111";
 process.env.GITLAB_BOOK_PROJECT_ID = "11111111";
-process.env.TWITTER_APP_KEY = "Twitter_App_Key";
-process.env.TWITTER_APP_SECRET = "Twitter_Secret_Key";
-process.env.TWITTER_ACCESS_TOKEN = "Twitter_Access_Token";
 
 module.exports = {
   preset: "ts-jest",
