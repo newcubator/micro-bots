@@ -7,7 +7,7 @@ jest.mock("../moco/users", () => ({
       gender: "H",
       firstname: "Bill",
       lastname: "Musk",
-      work_address: "Twittermarket 1",
+      work_address: "1 Rocket Road",
     },
   ]),
 }));

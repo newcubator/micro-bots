@@ -22,7 +22,7 @@ To run the bots locally you first have to install all dependencies
 $ npm install
 ```
 
-Some Microbot functions depend on external services, e.g. Twitter, Slack or Moco. Please consult the individual documentation (below) for the required setup and further information.
+Some Microbot functions depend on external services, e.g. Slack or Moco. Please consult the individual documentation (below) for the required setup and further information.
 
 To then invoke the function locally you have to use
 
