@@ -19,6 +19,7 @@ export interface Fields {
   customfield_10089?: string;
   customfield_10010?: AffectedSprints[];
   timeestimate?: number;
+  timetracking?: TimeTracking;
 }
 
 export interface IssueTypes {
@@ -29,4 +30,13 @@ export interface AffectedSprints {
   name?: string;
   startDate?: Date;
   endDate?: Date;
+}
+
+export interface TimeTracking {
+  originalEstimate?: string;
+  remainingEstimate?: string;
+  timeSpent?: string;
+  originalEstimateSeconds?: number;
+  remainingEstimateSeconds?: number;
+  timeSpentSeconds?: number;
 }
