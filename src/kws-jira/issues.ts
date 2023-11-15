@@ -28,6 +28,10 @@ export async function getIssues(keys: string[], maxResults = 100): Promise<Issue
     url.searchParams.append("jql", jql);
     url.searchParams.append("startAt", String(startAt));
     url.searchParams.append("maxResults", String(maxResults));
+    url.searchParams.append(
+      "fields",
+      "issuetype,created,description,summary,customfield_10027,customfield_10089,customfield_10010,timeestimate,timetracking",
+    );
 
     const response = await axios.get<SprintIssues>(url.toString(), {
       auth: {

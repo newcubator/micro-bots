@@ -32,9 +32,6 @@ export class ExcelReportRow extends AKwsReport {
       : jiraIssue?.fields.timeestimate
         ? jiraIssue?.fields.timeestimate / 60 / 60
         : 0;
-    console.log("timetracking", jiraIssue?.fields.timetracking);
-    console.log("timetracking_originalEstimate", jiraIssue?.fields.timetracking?.originalEstimate);
-    console.log("timeestimate", jiraIssue?.fields.timeestimate);
     this.ratio = kwsReport.ratio;
 
     this.hoursBooked = kwsReport.hoursBooked;
