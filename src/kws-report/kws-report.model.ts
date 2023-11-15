@@ -27,7 +27,11 @@ export class ExcelReportRow extends AKwsReport {
     this.key = kwsReport.key;
     this.orderReference = jiraIssue?.fields.customfield_10089;
     this.storyPoints = jiraIssue?.fields.customfield_10027 ?? 0;
-    this.estimatedHours = jiraIssue?.fields.timeestimate ? jiraIssue?.fields.timeestimate / 60 / 60 : 0;
+    this.estimatedHours = jiraIssue?.fields.timetracking?.originalEstimate
+      ? ExcelReportRow.convertJiraTimeToHours(jiraIssue?.fields.timetracking?.originalEstimate)
+      : jiraIssue?.fields.timeestimate
+        ? jiraIssue?.fields.timeestimate / 60 / 60
+        : 0;
     this.ratio = kwsReport.ratio;
 
     this.hoursBooked = kwsReport.hoursBooked;
@@ -36,6 +40,33 @@ export class ExcelReportRow extends AKwsReport {
 
   public static buildBasicExcelRowFrom(kwsReport: KwsReport, jiraIssue?: Issue): ExcelReportRow {
     return new ExcelReportRow({ ...kwsReport, billableHours: 0, hoursBooked: 0 }, jiraIssue);
+  }
+
+  private static convertJiraTimeToHours(jiraTime: string): number {
+    const parts = jiraTime.split(" ");
+
+    let totalHours = 0;
+
+    for (const part of parts) {
+      if (part.endsWith("w")) {
+        const weeks = parseFloat(part.replace("w", ""));
+        totalHours += weeks * 5 * 8;
+      } else if (part.endsWith("d")) {
+        const days = parseFloat(part.replace("d", ""));
+        totalHours += days * 8;
+      } else if (part.endsWith("h")) {
+        const hours = parseFloat(part.replace("h", ""));
+        totalHours += hours;
+      } else if (part.endsWith("m")) {
+        const minutes = parseFloat(part.replace("m", ""));
+        totalHours += minutes / 60;
+      } else if (part.endsWith("s")) {
+        const seconds = parseFloat(part.replace("s", ""));
+        totalHours += seconds / 3600;
+      }
+    }
+
+    return totalHours;
   }
 
   toExcelRow(): any {

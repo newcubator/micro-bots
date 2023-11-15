@@ -83,6 +83,7 @@ describe("eventHandler", () => {
           customfield_10089: "orderReference1",
           customfield_10027: null,
           timeestimate: 28000,
+          timetracking: { originalEstimate: "1w 3d" },
         },
       },
     ]);
