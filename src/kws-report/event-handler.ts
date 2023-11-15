@@ -214,7 +214,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
         const hoursBooked = prevValue.hoursBooked + currValue.hoursBooked;
         const billableHours = prevValue.billableHours + currValue.billableHours;
         let ratio;
-        if (issueData?.fields?.timeestimate) {
+        if (issueData?.fields?.timetracking?.originalEstimate || issueData?.fields?.timeestimate) {
           ratio = hoursBooked && prevValue.estimatedHours ? (hoursBooked / prevValue.estimatedHours) * 100 : 0;
         } else {
           ratio = hoursBooked && prevValue.storyPoints ? (hoursBooked / ((prevValue.storyPoints / 1.5) * 8)) * 100 : 0;
