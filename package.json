@@ -13,9 +13,9 @@
     "invoke": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f $npm_config_function"
   },
   "dependencies": {
-    "@aws-sdk/client-eventbridge": "3.477.0",
-    "@aws-sdk/client-secrets-manager": "3.477.0",
-    "@aws-sdk/client-ses": "3.477.0",
+    "@aws-sdk/client-eventbridge": "3.478.0",
+    "@aws-sdk/client-secrets-manager": "3.478.0",
+    "@aws-sdk/client-ses": "3.478.0",
     "@sentry/node": "7.90.0",
     "@slack/web-api": "6.10.0",
     "axios": "1.6.2",
