@@ -235,6 +235,23 @@ functions:
           pattern:
             detail-type:
               - "ShortMailRequestedEvent"
+  sickNoteCommand:
+    handler: src/sick-note/command-handler.commandHandler
+    timeout: 3
+    events:
+      - http:
+          method: post
+          path: sick-note-command
+  sickNoteEvent:
+    handler: src/sick-note/event-handler.eventHandler
+    timeout: 20
+    maximumRetryAttempts: 0
+    events:
+      - eventBridge:
+          eventBus: micro-bots-event
+          pattern:
+            detail-type:
+              - "SickNoteRequestedEvent"
 
   slackInteraction:
     handler: src/slack/interaction-handler.interactionHandler

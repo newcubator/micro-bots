@@ -11,6 +11,7 @@ export enum ActionType {
   CANCEL = "CANCEL",
   BOOK_SUPPORT = "BOOK_SUPPORT",
   KWS_EXCEL_EXPORT = "KWS_EXCEL_EXPORT",
+  SICK_NOTE = "SICK_NOTE",
 }
 
 export enum ShortMailFields {

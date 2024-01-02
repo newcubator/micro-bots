@@ -32,3 +32,37 @@ export function getUserSchedules(from: string, to: string, user_id: string, abse
     },
   });
 }
+
+export function createMultipleUserSchedules(from: Date, to: Date, user_id: string, absence_code: number, am: boolean, pm: boolean, comment: string, symbole: number, overwrite: boolean) {
+    let dates = [];
+    while (from <= to) {
+      dates.push(from);
+      from.setDate(from.getDate() + 1);
+    }
+    return Promise.all(dates.map(date => {
+      return createUserSchedule(date.toISOString().split('T')[0], user_id, absence_code, am, pm, comment, symbole, overwrite);
+    })
+
+  );
+}
+
+export function createUserSchedule(date: string, user_id: string, absence_code: number, am: boolean, pm: boolean, comment: string, symbole: number, overwrite: boolean) {
+  return axios.post<MocoSchedule[]>(
+    "https://newcubator.mocoapp.com/api/v1/schedules",
+    {
+      date,
+      absence_code,
+      user_id,
+      am,
+      pm,
+      comment,
+      symbole,
+      overwrite
+    },
+    {
+      headers: {
+        Authorization: "Token token=" + MOCO_TOKEN,
+      },
+    },
+  );
+}
