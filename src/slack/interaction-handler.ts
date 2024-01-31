@@ -1,4 +1,4 @@
-import { APIGatewayEvent, APIGatewayProxyEventQueryStringParameters } from 'aws-lambda';
+import { APIGatewayEvent, APIGatewayProxyEventQueryStringParameters } from "aws-lambda";
 import axios from "axios";
 import { decode } from "querystring";
 import { eventBridgeSend } from "../clients/event-bridge";
@@ -8,25 +8,26 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
   const blockAction: BlockAction = JSON.parse(decode(event.body).payload as string) as BlockAction;
 
   const actionType: string = blockAction.actions[0].action_id;
-  console.log(JSON.stringify(event))
+  console.log(JSON.stringify(event));
   console.log(`${actionType} requested`);
 
-  console.log(JSON.stringify(blockAction))
+  console.log(JSON.stringify(blockAction));
 
   let requestedEvent;
 
   switch (actionType) {
     case ActionType.SICK_NOTE:
-      const forSingleDay = blockAction.state.values.radio_buttons_days.radio_buttons_action.selected_option.value === "single-day";
+      const forSingleDay =
+        blockAction.state.values.radio_buttons_days.radio_buttons_action.selected_option.value === "single-day";
       requestedEvent = new SickNoteRequestedEvent({
         channelId: blockAction.container.channel_id,
         actionType,
         responseUrl: blockAction.response_url,
         forSingleDay: forSingleDay,
         startDay: forSingleDay ? null : blockAction.state.values.dates.start_date.selected_date,
-        endDay: forSingleDay? null : blockAction.state.values.dates.end_date.selected_date,
+        endDay: forSingleDay ? null : blockAction.state.values.dates.end_date.selected_date,
         userId: blockAction.user.id,
-        userName: blockAction.user.username
+        userName: blockAction.user.username,
       });
       break;
     case ActionType.BOOK_SUPPORT:

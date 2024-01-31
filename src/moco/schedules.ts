@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Dayjs } from "dayjs";
 import { autoPage } from "./auto-page";
 import { MOCO_TOKEN } from "./token";
 import { MocoSchedule } from "./types/moco-types";
@@ -33,21 +34,43 @@ export function getUserSchedules(from: string, to: string, user_id: string, abse
   });
 }
 
-export function createMultipleUserSchedules(from: Date, to: Date, user_id: string, absence_code: number, am: boolean, pm: boolean, comment: string, symbole: number, overwrite: boolean) {
-    let dates = [];
-    while (from <= to) {
-      dates.push(from);
-      from.setDate(from.getDate() + 1);
-    }
-    return Promise.all(dates.map(date => {
-      return createUserSchedule(date.toISOString().split('T')[0], user_id, absence_code, am, pm, comment, symbole, overwrite);
-    })
-
-  );
+export async function createMultipleUserSchedules(
+  from: Dayjs,
+  to: Dayjs,
+  user_id: string,
+  absence_code: number,
+  am: boolean,
+  pm: boolean,
+  comment: string,
+  symbol: number,
+  overwrite: boolean,
+) {
+  while (from.isBefore(to) || from.isSame(to)) {
+    await createUserSchedule(
+      from.toISOString().split("T")[0],
+      user_id,
+      absence_code,
+      am,
+      pm,
+      comment,
+      symbol,
+      overwrite,
+    );
+    from = from.add(1, "day");
+  }
 }
 
-export function createUserSchedule(date: string, user_id: string, absence_code: number, am: boolean, pm: boolean, comment: string, symbole: number, overwrite: boolean) {
-  return axios.post<MocoSchedule[]>(
+export async function createUserSchedule(
+  date: string,
+  user_id: string,
+  absence_code: number,
+  am: boolean,
+  pm: boolean,
+  comment: string,
+  symbol: number,
+  overwrite: boolean,
+) {
+  return await axios.post<MocoSchedule[]>(
     "https://newcubator.mocoapp.com/api/v1/schedules",
     {
       date,
@@ -56,8 +79,8 @@ export function createUserSchedule(date: string, user_id: string, absence_code: 
       am,
       pm,
       comment,
-      symbole,
-      overwrite
+      symbol,
+      overwrite,
     },
     {
       headers: {

@@ -1,0 +1,93 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`command handler for sick note 1`] = `
+{
+  "blocks": [
+    {
+      "block_id": "radio_buttons_days",
+      "element": {
+        "action_id": "radio_buttons_action",
+        "options": [
+          {
+            "text": {
+              "emoji": true,
+              "text": "Ich möchte mich für heute krank melden",
+              "type": "plain_text",
+            },
+            "value": "single-day",
+          },
+          {
+            "text": {
+              "emoji": true,
+              "text": "Ich wurde krank geschrieben",
+              "type": "plain_text",
+            },
+            "value": "multiple-days",
+          },
+        ],
+        "type": "radio_buttons",
+      },
+      "label": {
+        "emoji": true,
+        "text": "Krankmeldung",
+        "type": "plain_text",
+      },
+      "type": "input",
+    },
+    {
+      "type": "divider",
+    },
+    {
+      "elements": [
+        {
+          "emoji": true,
+          "text": "Von wann bis wann gilt deine AU?",
+          "type": "plain_text",
+        },
+      ],
+      "type": "context",
+    },
+    {
+      "block_id": "dates",
+      "elements": [
+        {
+          "action_id": "start_date",
+          "placeholder": {
+            "emoji": true,
+            "text": "Start-Datum",
+            "type": "plain_text",
+          },
+          "type": "datepicker",
+        },
+        {
+          "action_id": "end_date",
+          "placeholder": {
+            "emoji": true,
+            "text": "End-Datum",
+            "type": "plain_text",
+          },
+          "type": "datepicker",
+        },
+      ],
+      "type": "actions",
+    },
+    {
+      "elements": [
+        {
+          "action_id": "SICK_NOTE",
+          "style": "primary",
+          "text": {
+            "emoji": true,
+            "text": "Krank melden",
+            "type": "plain_text",
+          },
+          "type": "button",
+          "value": "Confirmation",
+        },
+      ],
+      "type": "actions",
+    },
+  ],
+  "text": "Krankschreibung angefragt",
+}
+`;

@@ -1,163 +1,158 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import MockDate from "mockdate";
+import { createMultipleUserSchedules } from "../moco/schedules";
+import { findUserBySlackCommand, getUsers } from "../moco/users";
+import { ActionType } from "../slack/types/slack-types";
 import { eventHandler } from "./event-handler";
-import { getCompanyById } from "../moco/companies";
-import { getContactById } from "../moco/contacts";
-import { getSlackUserProfile, slackChatPostEphemeral } from "../slack/slack";
-import { renderShortMailPdf } from "./pdf";
-import { slackClient } from "../clients/slack";
+
+jest.mock("../moco/users");
+jest.mock("../moco/schedules");
 
 MockDate.set("2022-01-02");
 
-jest.mock("../moco/companies");
-jest.mock("../moco/contacts");
-jest.mock("../slack/slack");
-jest.mock("./pdf");
-
 const axiosPostMock = axios.post as jest.Mock;
-const mocoCompanieMock = getCompanyById as jest.Mock;
-const mocoContactMock = getContactById as jest.Mock;
-const shortMailRenderPdfMock = renderShortMailPdf as jest.Mock;
-const slackConversationsJoinMock = slackClient.conversations.join as jest.Mock;
-const slackFileUploadMock = slackClient.files.upload as jest.Mock;
-const slackPostEphemeralMock = slackChatPostEphemeral as jest.Mock;
-const slackUserProfileMock = getSlackUserProfile as jest.Mock;
+const mocoScheduleMock = createMultipleUserSchedules as jest.Mock;
+const getUsersMock = getUsers as unknown as jest.Mock;
+const findUserBySlackCommandMock = findUserBySlackCommand as jest.Mock;
 
-describe("ShortmailEventHandler", () => {
+const exampleMocoUser = {
+  id: 1,
+  firstname: "Max",
+  lastname: "Mustermann",
+  email: "max.mustermann@test.de",
+};
+
+describe("SicknoteEventHandler", () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
 
-  it("should handle event short mail generation hannover to female without company adress", async () => {
-    mocoContactMock.mockResolvedValueOnce({
-      id: 2,
-      gender: "F",
-      firstname: "Melinda",
-      lastname: "Gates",
-      work_address: "\nFensterstraße 1\n12345 Fensterhausen ",
-      company: null,
-    });
-
-    shortMailRenderPdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
-
-    slackUserProfileMock.mockResolvedValueOnce({
-      ok: true,
-      profile: {
-        real_name: "Max Mustermann",
+  it("should handle sick note event with single day selection", async () => {
+    getUsersMock.mockResolvedValueOnce([exampleMocoUser]);
+    findUserBySlackCommandMock.mockReturnValueOnce(() => ({
+      firstname: "Max",
+      lastname: "Mustermann",
+      id: "42",
+      email: "max.mustermann@newcubator.com",
+      custom_properties: {
+        ["Job Bezeichnung"]: "Testsubject",
+        Standort: "Hannover",
       },
-    });
+    }));
+    mocoScheduleMock.mockImplementationOnce(() => Promise.resolve());
 
     await eventHandler({
       detail: {
-        responseUrl: "https://slack.com/response_url",
-        personId: "2",
-        message: "Testnachricht an Melinda",
-        sender: "1337",
-        messageTs: "1633540187.000600",
         channelId: "C02BBA8DWVD",
-        location: "H",
+        responseUrl: "https://slack.com/response_url",
+        actionType: ActionType.SICK_NOTE,
+        forSingleDay: true,
+        startDay: null,
+        endDay: null,
+        userId: "1337",
+        userName: "Max",
       },
     } as any);
 
-    expect(mocoCompanieMock).toHaveBeenCalledTimes(0);
-    expect(slackUserProfileMock).toHaveBeenCalledWith("1337");
-    expect(mocoContactMock).toHaveBeenCalledWith("2");
-    expect(shortMailRenderPdfMock).toHaveBeenCalledWith({
-      sender: "Max Mustermann",
-      location: "H",
-      recipient: {
-        salutation: "Sehr geehrte Frau Gates",
-        firstname: "Melinda",
-        lastname: "Gates",
-        address: "\nFensterstraße 1\n12345 Fensterhausen ",
-      },
-      date: dayjs(),
-      text: "Testnachricht an Melinda",
-    });
-    expect(slackConversationsJoinMock).toHaveBeenCalledWith({ channel: "C02BBA8DWVD" });
-    expect(slackFileUploadMock).toHaveBeenCalledWith({
-      file: expect.anything(),
-      filename: "Kurzbrief Gates.pdf",
-      initial_comment: "",
-      channels: "C02BBA8DWVD",
-      thread_ts: "1633540187.000600",
-      broadcast: "true",
-    });
+    expect(getUsersMock).toHaveBeenCalledTimes(1);
+    expect(findUserBySlackCommandMock).toHaveBeenCalledTimes(1);
+    expect(findUserBySlackCommandMock).toHaveBeenCalledWith({ user_id: "1337", user_name: "Max" });
     expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
       replace_original: "true",
-      text: expect.stringContaining("Melinda Gates"),
+      text: expect.stringMatching("Deine Krankmeldung wurde erfolgreich eingereicht! Gut Besserung!"),
     });
-    expect(slackPostEphemeralMock).toHaveBeenCalled();
+    expect(mocoScheduleMock).toHaveBeenCalledWith(
+      dayjs("2022-01-02T00:00:00.000Z"),
+      dayjs("2022-01-02T00:00:00.000Z"),
+      "42",
+      3,
+      true,
+      true,
+      expect.stringMatching("Krankheit ohne AU"),
+      null,
+      true,
+    );
   });
 
-  it("should handle event short mail generation dortmund to male with company address", async () => {
-    mocoContactMock.mockResolvedValueOnce({
-      id: 1,
-      gender: "H",
-      firstname: "Bill",
-      lastname: "Gates",
-      work_address: "\nFensterstraße 1\n12345 Fensterhausen ",
-      company: {
-        id: 42,
-        type: "Firma",
-        name: "Guugel",
+  it("should handle sick note event with multiple days", async () => {
+    getUsersMock.mockResolvedValueOnce([exampleMocoUser]);
+    findUserBySlackCommandMock.mockReturnValueOnce(() => ({
+      firstname: "Max",
+      lastname: "Mustermann",
+      id: "42",
+      email: "max.mustermann@newcubator.com",
+      custom_properties: {
+        ["Job Bezeichnung"]: "Testsubject",
+        Standort: "Hannover",
       },
-    });
-    mocoCompanieMock.mockResolvedValueOnce({
-      id: 42,
-      name: "Guugel",
-      address: "Suchallee 42\n54321 Suchstadt",
-    });
-
-    shortMailRenderPdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
-
-    slackUserProfileMock.mockResolvedValueOnce({
-      ok: true,
-      profile: {
-        real_name: "Max Mustermann",
-      },
-    });
+    }));
+    mocoScheduleMock.mockImplementationOnce(() => Promise.resolve());
 
     await eventHandler({
       detail: {
-        responseUrl: "https://slack.com/response_url",
-        personId: "1",
-        message: "Testnachricht an Bill",
-        sender: "1337",
-        messageTs: "1633540187.000600",
         channelId: "C02BBA8DWVD",
-        location: "D",
+        responseUrl: "https://slack.com/response_url",
+        actionType: ActionType.SICK_NOTE,
+        forSingleDay: false,
+        startDay: "2024-01-01",
+        endDay: "2024-01-04",
+        userId: "1337",
+        userName: "Max",
       },
     } as any);
 
-    expect(mocoCompanieMock).toHaveBeenCalledWith(42);
-    expect(slackUserProfileMock).toHaveBeenCalledWith("1337");
-    expect(mocoContactMock).toHaveBeenCalledWith("1");
-    expect(shortMailRenderPdfMock).toHaveBeenCalledWith({
-      sender: "Max Mustermann",
-      location: "D",
-      recipient: {
-        salutation: "Sehr geehrter Herr Gates",
-        firstname: "Bill",
-        lastname: "Gates",
-        address: "Suchallee 42\n54321 Suchstadt",
-      },
-      date: dayjs(),
-      text: "Testnachricht an Bill",
-    });
-    expect(slackConversationsJoinMock).toHaveBeenCalledWith({ channel: "C02BBA8DWVD" });
-    expect(slackFileUploadMock).toHaveBeenCalledWith({
-      file: expect.anything(),
-      filename: "Kurzbrief Gates.pdf",
-      initial_comment: "",
-      channels: "C02BBA8DWVD",
-      thread_ts: "1633540187.000600",
-      broadcast: "true",
-    });
+    expect(getUsersMock).toHaveBeenCalledTimes(1);
+    expect(findUserBySlackCommandMock).toHaveBeenCalledTimes(1);
+    expect(findUserBySlackCommandMock).toHaveBeenCalledWith({ user_id: "1337", user_name: "Max" });
     expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
       replace_original: "true",
-      text: expect.stringContaining("Bill Gates"),
+      text: expect.stringMatching("Deine Krankmeldung wurde erfolgreich eingereicht! Gut Besserung!"),
     });
+    expect(mocoScheduleMock).toHaveBeenCalledWith(
+      dayjs("2024-01-01"),
+      dayjs("2024-01-04"),
+      "42",
+      3,
+      true,
+      true,
+      expect.stringMatching("Krankheit mit AU"),
+      null,
+      true,
+    );
+  });
+
+  it("should return an error message with invalid dates", async () => {
+    getUsersMock.mockResolvedValueOnce([exampleMocoUser]);
+    findUserBySlackCommandMock.mockReturnValueOnce(() => ({
+      firstname: "Max",
+      lastname: "Mustermann",
+      id: "42",
+      email: "max.mustermann@newcubator.com",
+      custom_properties: {
+        ["Job Bezeichnung"]: "Testsubject",
+        Standort: "Hannover",
+      },
+    }));
+    mocoScheduleMock.mockImplementationOnce(() => Promise.resolve());
+
+    await eventHandler({
+      detail: {
+        channelId: "C02BBA8DWVD",
+        responseUrl: "https://slack.com/response_url",
+        actionType: ActionType.SICK_NOTE,
+        forSingleDay: false,
+        startDay: "2024-01-02",
+        endDay: "2024-01-01",
+        userId: "1337",
+        userName: "Max",
+      },
+    } as any);
+
+    expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
+      replace_original: "true",
+      text: expect.stringMatching("Das Start-Datum darf nicht nach dem End-Datum liegen."),
+    });
+    expect(mocoScheduleMock).not.toHaveBeenCalled();
   });
 });
