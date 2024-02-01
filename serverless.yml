@@ -6,7 +6,6 @@ provider:
   name: aws
   runtime: nodejs16.x
   region: eu-central-1
-  versionFunctions: false
   stage: production
   stackTags:
     Project: micro-bots
@@ -46,6 +45,7 @@ provider:
 plugins:
   - serverless-esbuild
   - serverless-sentry
+  - serverless-prune-plugin
 
 custom:
   esbuild:
@@ -53,6 +53,9 @@ custom:
     sourcemap: true
   sentry:
     dsn: ${env:SENTRY_DSN}
+  prune:
+    automatic: true
+    number: 5
 
 functions:
   birthday:
