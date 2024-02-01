@@ -1,4 +1,4 @@
-import { APIGatewayEvent, APIGatewayProxyEventQueryStringParameters } from "aws-lambda";
+import { APIGatewayEvent } from "aws-lambda";
 import axios from "axios";
 import { decode } from "querystring";
 import { eventBridgeSend } from "../clients/event-bridge";
@@ -8,10 +8,8 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
   const blockAction: BlockAction = JSON.parse(decode(event.body).payload as string) as BlockAction;
 
   const actionType: string = blockAction.actions[0].action_id;
-  console.log(JSON.stringify(event));
-  console.log(`${actionType} requested`);
 
-  console.log(JSON.stringify(blockAction));
+  console.log(`${actionType} requested`);
 
   let requestedEvent;
 
