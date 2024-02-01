@@ -8,11 +8,26 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
   const blockAction: BlockAction = JSON.parse(decode(event.body).payload as string) as BlockAction;
 
   const actionType: string = blockAction.actions[0].action_id;
+
   console.log(`${actionType} requested`);
 
   let requestedEvent;
 
   switch (actionType) {
+    case ActionType.SICK_NOTE:
+      const forSingleDay =
+        blockAction.state.values.radio_buttons_days.radio_buttons_action.selected_option.value === "single-day";
+      requestedEvent = new SickNoteRequestedEvent({
+        channelId: blockAction.container.channel_id,
+        actionType,
+        responseUrl: blockAction.response_url,
+        forSingleDay: forSingleDay,
+        startDay: forSingleDay ? null : blockAction.state.values.dates.start_date.selected_date,
+        endDay: forSingleDay ? null : blockAction.state.values.dates.end_date.selected_date,
+        userId: blockAction.user.id,
+        userName: blockAction.user.username,
+      });
+      break;
     case ActionType.BOOK_SUPPORT:
       requestedEvent = new AiBookDemoRequestedEvent({
         text: blockAction.actions[0].value,
@@ -167,6 +182,28 @@ export class KWSExcelExportRequestedEvent {
     this.messageTs = messageTs;
     this.channelId = channelId;
     this.actionId = actionType;
+  }
+}
+
+export class SickNoteRequestedEvent {
+  channelId: string;
+  actionType: ActionType;
+  responseUrl: string;
+  forSingleDay: boolean;
+  startDay: string | null;
+  endDay: string | null;
+  userId: string;
+  userName: string;
+
+  constructor({ channelId, actionType, responseUrl, forSingleDay, startDay, endDay, userId, userName }) {
+    this.channelId = channelId;
+    this.actionType = actionType;
+    this.responseUrl = responseUrl;
+    this.forSingleDay = forSingleDay;
+    this.startDay = startDay;
+    this.endDay = endDay;
+    this.userId = userId;
+    this.userName = userName;
   }
 }
 

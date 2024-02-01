@@ -1,4 +1,5 @@
 import axios from "axios";
+import { Dayjs } from "dayjs";
 import { autoPage } from "./auto-page";
 import { MOCO_TOKEN } from "./token";
 import { MocoSchedule } from "./types/moco-types";
@@ -31,4 +32,60 @@ export function getUserSchedules(from: string, to: string, user_id: string, abse
       absence_code,
     },
   });
+}
+
+export async function createMultipleUserSchedules(
+  from: Dayjs,
+  to: Dayjs,
+  user_id: string,
+  absence_code: number,
+  am: boolean,
+  pm: boolean,
+  comment: string,
+  symbol: number,
+  overwrite: boolean,
+) {
+  while (from.isBefore(to) || from.isSame(to)) {
+    await createUserSchedule(
+      from.toISOString().split("T")[0],
+      user_id,
+      absence_code,
+      am,
+      pm,
+      comment,
+      symbol,
+      overwrite,
+    );
+    from = from.add(1, "day");
+  }
+}
+
+export async function createUserSchedule(
+  date: string,
+  user_id: string,
+  absence_code: number,
+  am: boolean,
+  pm: boolean,
+  comment: string,
+  symbol: number,
+  overwrite: boolean,
+) {
+  return await axios.post<MocoSchedule[]>(
+    "https://newcubator.mocoapp.com/api/v1/schedules",
+    {
+      date,
+      absence_code,
+      user_id,
+      am,
+      pm,
+      comment,
+      symbol,
+      overwrite,
+    },
+    {
+      headers: {
+        Authorization: "Token token=" + MOCO_TOKEN,
+      },
+    },
+  );
 }
