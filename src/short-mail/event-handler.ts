@@ -17,8 +17,10 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
   let address;
   let salutation;
 
-  if (event.detail.personId.length <= 6) {
-    //the ID of contacts in moco has a maximum of 6 digits, while the employee IDs always have more digits
+  if (event.detail.personId.length <= 7) {
+    //the ID of contacts in moco has a maximum of 7 digits, while the employee IDs always have more digits
+    //TODO: this is a hack, we should find a better way to distinguish between contacts and employees
+
     recipient = await getContactById(event.detail.personId);
     let recipientCompanyAddress = "";
     if (recipient.company != null) {
