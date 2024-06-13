@@ -114,6 +114,7 @@ export interface MocoProject {
   tasks: Task[];
   contracts: MocoContract[];
   deal: genericIdString;
+  contact: MocoContactSlim;
   created_at: Date;
   updated_at: Date;
 }
@@ -209,10 +210,22 @@ export interface MocoContact {
   info: string;
 }
 
+export interface MocoContactSlim {
+  id: string;
+  firstname: string;
+  lastname: string;
+}
+
 export interface MocoCompany {
   id: number;
   name: string;
   address: string;
+}
+
+export interface MocoBillingContact {
+  id: string;
+  firstname: string;
+  lastname: string;
 }
 
 export interface MocoBillingContact {
