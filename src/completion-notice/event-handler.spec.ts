@@ -29,7 +29,7 @@ test("handle event", async () => {
     custom_properties: {
       Bestellnummer: "B01",
     },
-    billing_contact: {
+    contact: {
       id: "person-01",
     },
   });

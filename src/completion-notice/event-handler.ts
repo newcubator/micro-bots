@@ -12,7 +12,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, CompletionNot
   console.log(`Handling event ${JSON.stringify(event.detail)}`);
 
   const project = await getProject(event.detail.projectId);
-  const contact = await getContactById(project.billing_contact.id);
+  const contact = await getContactById(project.contact.id);
 
   const pdf = renderCompletionNoticePdf({
     project: {
