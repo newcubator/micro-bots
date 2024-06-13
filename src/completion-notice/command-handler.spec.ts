@@ -16,7 +16,7 @@ test("command handler", async () => {
     },
     {
       id: "2",
-      name: "Should be filtered out becouse if missing deal",
+      name: "Should not be filtered out even if has missing deal",
       deal: null,
       custom_properties: {
         Bestellnummer: "B2021-02",

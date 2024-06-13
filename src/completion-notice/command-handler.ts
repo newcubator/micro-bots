@@ -7,7 +7,6 @@ export const commandHandler = async (event: APIGatewayEvent) => {
 
   const projects = await getProjects({ include_archived: false });
   const options = projects
-    .filter((project) => project.deal)
     .slice(0, 100) // slack allows 100 options max
     .map((project) => {
       return {
