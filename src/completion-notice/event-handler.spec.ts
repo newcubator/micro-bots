@@ -15,7 +15,6 @@ jest.mock("../moco/deals");
 jest.mock("../moco/contacts");
 jest.mock("./pdf");
 const getProjectMock = getProject as jest.Mock;
-const getDealByIdMock = getDealById as jest.Mock;
 const getContactByIdMock = getContactById as jest.Mock;
 const renderCompletionNoticePdfMock = renderCompletionNoticePdf as jest.Mock;
 const conversationsJoinMock = slackClient.conversations.join as jest.Mock;
@@ -27,15 +26,10 @@ test("handle event", async () => {
     id: "project-01",
     name: "Mars Cultivation Season Manager",
     billing_address: "\n1 Rocket Road\nHawthorne, CA 90250\nUnited States\n",
-    deal: {
-      id: "deal-01",
-    },
     custom_properties: {
       Bestellnummer: "B01",
     },
-  });
-  getDealByIdMock.mockResolvedValueOnce({
-    person: {
+    billing_contact: {
       id: "person-01",
     },
   });
@@ -57,7 +51,6 @@ test("handle event", async () => {
   } as any);
 
   expect(getProjectMock).toHaveBeenCalledWith("project-01");
-  expect(getDealByIdMock).toHaveBeenCalledWith("deal-01");
   expect(getContactByIdMock).toHaveBeenCalledWith("person-01");
   expect(renderCompletionNoticePdfMock).toHaveBeenCalledWith({
     project: {

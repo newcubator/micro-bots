@@ -98,6 +98,7 @@ export interface MocoProject {
   billing_email_to: null;
   billing_email_cc: null;
   billing_notes: null;
+  billing_contact: MocoBillingContact;
   setting_include_time_report: boolean;
   budget: number;
   budget_expenses: number;
@@ -212,4 +213,10 @@ export interface MocoCompany {
   id: number;
   name: string;
   address: string;
+}
+
+export interface MocoBillingContact {
+  id: string;
+  firstname: string;
+  lastname: string;
 }
