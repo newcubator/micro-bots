@@ -3,7 +3,6 @@ import { CompletionNoticeRequestedEvent } from "../slack/interaction-handler";
 import { renderCompletionNoticePdf } from "./pdf";
 import { EventBridgeEvent } from "aws-lambda";
 import { getContactById } from "../moco/contacts";
-import { getDealById } from "../moco/deals";
 import { getProject } from "../moco/projects";
 import { slackClient } from "../clients/slack";
 import dayjs from "dayjs";
@@ -13,8 +12,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, CompletionNot
   console.log(`Handling event ${JSON.stringify(event.detail)}`);
 
   const project = await getProject(event.detail.projectId);
-  const deal = await getDealById(project.deal.id);
-  const contact = await getContactById(deal.person.id);
+  const contact = await getContactById(project.billing_contact.id);
 
   const pdf = renderCompletionNoticePdf({
     project: {
