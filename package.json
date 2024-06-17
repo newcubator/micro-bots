@@ -46,7 +46,7 @@
     "jest": "29.7.0",
     "jest-file-snapshot": "0.5.0",
     "mockdate": "3.0.5",
-    "prettier": "3.2.5",
+    "prettier": "3.3.2",
     "serverless": "3.38.0",
     "serverless-esbuild": "1.52.1",
     "serverless-prune-plugin": "2.0.2",
