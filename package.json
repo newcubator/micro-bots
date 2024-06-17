@@ -18,7 +18,7 @@
     "@aws-sdk/client-ses": "3.598.0",
     "@sentry/node": "7.117.0",
     "@slack/web-api": "6.12.0",
-    "axios": "1.6.8",
+    "axios": "1.7.2",
     "dayjs": "1.11.11",
     "dayjs-business-time": "1.0.4",
     "exceljs": "4.4.0",
