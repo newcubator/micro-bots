@@ -1,7 +1,7 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": ["config:recommended"],
   "rangeStrategy": "pin",
-  "prHourlyLimit": 2,
   "prConcurrentLimit": 10,
   "labels": ["Renovate"],
   "packageRules": [
