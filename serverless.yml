@@ -313,7 +313,7 @@ functions:
     timeout: 3
     events:
       - schedule:
-          enabled: true
+          enabled: false
           rate: cron(5 4 * * ? *) # at 4:05 AM (UTC) every day
     environment:
       HOLIDAY_MAIL_REPLIES_CHANGE_SLACK_CHANNEL: ${env:HOLIDAY_MAIL_REPLIES_CHANGE_SLACK_CHANNEL}
