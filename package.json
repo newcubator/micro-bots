@@ -52,6 +52,6 @@
     "serverless-prune-plugin": "2.0.2",
     "serverless-sentry": "2.5.3",
     "ts-jest": "29.2.3",
-    "typescript": "5.5.3"
+    "typescript": "5.5.4"
   }
 }
