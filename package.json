@@ -27,7 +27,7 @@
     "googleapis": "140.0.1",
     "html-to-text": "9.0.5",
     "jspdf": "2.5.1",
-    "openai": "3.3.0",
+    "openai": "4.55.1",
     "pdf-lib": "1.17.1",
     "rss-parser": "3.13.0",
     "serverless-sentry-lib": "2.5.2",
