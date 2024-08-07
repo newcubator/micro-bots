@@ -28,15 +28,6 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
         userName: blockAction.user.username,
       });
       break;
-    case ActionType.BOOK_SUPPORT:
-      requestedEvent = new AiBookDemoRequestedEvent({
-        text: blockAction.actions[0].value,
-        responseUrl: blockAction.response_url,
-        channelId: blockAction.container.channel_id,
-        actionType: blockAction.actions[0].action_id,
-        createIndex: blockAction.actions[0].value.startsWith("CREATE"),
-      });
-      break;
     case ActionType.KWS_EXCEL_EXPORT:
       requestedEvent = new KWSExcelExportRequestedEvent({
         projectId: blockAction.actions[0].selected_option.value,
@@ -204,22 +195,6 @@ export class SickNoteRequestedEvent {
     this.endDay = endDay;
     this.userId = userId;
     this.userName = userName;
-  }
-}
-
-export class AiBookDemoRequestedEvent {
-  text: string;
-  channelId: string;
-  actionType: ActionType;
-  responseUrl: string;
-  createIndex: boolean;
-
-  constructor({ text, channelId, actionType, responseUrl, createIndex }) {
-    this.text = text;
-    this.channelId = channelId;
-    this.actionType = actionType;
-    this.responseUrl = responseUrl;
-    this.createIndex = createIndex;
   }
 }
 
