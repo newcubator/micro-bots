@@ -63,7 +63,6 @@ To get a more detailed description of each bot, click on one of them below :arro
 | [Mail Signature Bot](./docs/mail-signature.md)           | generates a personalized mail signature              |
 | [Private Channel](./docs/private-channel.md)             | opens a private Slack channel                        |
 | [Vacation Handover](./docs/vacation-handover.md)         | opens Gitlab issues for oncoming vacations           |
-| [Workload](./docs/workload.md)                           | returns information about the employees workload     |
 | [Lock Project](./docs/lock-project.md)                   | locks a moco project                                 |
 | [Short Mail](./docs/shortmail.md)                        | helps you create a short letter faster               |
 
