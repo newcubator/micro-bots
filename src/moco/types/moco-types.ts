@@ -155,7 +155,7 @@ export interface MocoDeal {
   currency: string;
   info: string;
   tags: any[];
-  custom_properties: {};
+  custom_properties: Record<string, string>;
   user: {
     id: string;
     firstname: string;
@@ -194,7 +194,7 @@ export interface MocoContact {
   birthday: string;
   avatar_url: string;
   tags: [string];
-  custom_properties: {};
+  custom_properties: Record<string, string>;
   company: {
     id: string;
     type: string;

@@ -30,7 +30,7 @@ export async function initAllRecipients() {
       return {
         value: contact.id.toString(),
         text: {
-          type: "plain_text" as "plain_text",
+          type: "plain_text" as const,
           text: contact.firstname + " " + contact.lastname,
           emoji: true,
         },
@@ -42,7 +42,7 @@ export async function initAllRecipients() {
     return contacts.map((contact) => ({
       value: contact.id.toString(),
       text: {
-        type: "plain_text" as "plain_text",
+        type: "plain_text" as const,
         text: contact.firstname + " " + contact.lastname,
         emoji: true,
       },

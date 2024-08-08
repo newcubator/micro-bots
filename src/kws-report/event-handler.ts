@@ -127,7 +127,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
         return; // skip the header row
       }
 
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const fuzz = require("fuzzball");
 
       if (typeof cell.value === "string" && cell.value) {

@@ -4,7 +4,7 @@ import MockDate from "mockdate";
 import { eventHandler } from "./event-handler";
 import { getCompanyById } from "../moco/companies";
 import { getContactById } from "../moco/contacts";
-import { getSlackUserProfile, slackChatPostEphemeral } from "../slack/slack";
+import { getSlackUserProfile } from "../slack/slack";
 import { renderShortMailPdf } from "./pdf";
 import { slackClient } from "../clients/slack";
 
@@ -21,7 +21,6 @@ const mocoContactMock = getContactById as jest.Mock;
 const shortMailRenderPdfMock = renderShortMailPdf as jest.Mock;
 const slackConversationsJoinMock = slackClient.conversations.join as jest.Mock;
 const slackFileUploadMock = slackClient.files.upload as jest.Mock;
-const slackPostEphemeralMock = slackChatPostEphemeral as jest.Mock;
 const slackUserProfileMock = getSlackUserProfile as jest.Mock;
 
 describe("ShortmailEventHandler", () => {

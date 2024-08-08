@@ -35,7 +35,7 @@ describe("getMessage", () => {
   it("throw exception when loading message attachments fails", async () => {
     axiosGetMock.mockRejectedValueOnce(new Error("some error"));
 
-    await expect(getMessage("test@jestjs.io", "abc123")).rejects.toThrowError(/some error/);
+    await expect(getMessage("test@jestjs.io", "abc123")).rejects.toThrow(/some error/);
   });
 });
 
@@ -62,7 +62,7 @@ describe("getMessageAttachments", () => {
   it("throw exception when loading message attachments fails", async () => {
     axiosGetMock.mockRejectedValueOnce(new Error("some error"));
 
-    await expect(getMessageAttachments("test@jestjs.io", "abc123")).rejects.toThrowError(/some error/);
+    await expect(getMessageAttachments("test@jestjs.io", "abc123")).rejects.toThrow(/some error/);
   });
 });
 
@@ -84,7 +84,7 @@ describe("markMessageAsRead", () => {
   it("throw exception when marking message as read fails", async () => {
     axiosPatchMock.mockRejectedValueOnce(new Error("some error"));
 
-    await expect(markMessageAsRead("test@jestjs.io", "abc123")).rejects.toThrowError(/some error/);
+    await expect(markMessageAsRead("test@jestjs.io", "abc123")).rejects.toThrow(/some error/);
   });
 });
 
@@ -106,6 +106,6 @@ describe("moveMessage", () => {
   it("throw exception when moving message fails", async () => {
     axiosPostMock.mockRejectedValueOnce(new Error("some error"));
 
-    await expect(moveMessage("test@jestjs.io", "abc123", "def456")).rejects.toThrowError(/some error/);
+    await expect(moveMessage("test@jestjs.io", "abc123", "def456")).rejects.toThrow(/some error/);
   });
 });

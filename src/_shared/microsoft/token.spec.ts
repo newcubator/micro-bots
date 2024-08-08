@@ -17,7 +17,7 @@ describe("getAzureAccessToken", () => {
   it("throw exception when getting access token fails", async () => {
     axiosPostMock.mockRejectedValueOnce(new Error("some error"));
 
-    await expect(getAzureAccessToken()).rejects.toThrowError(/some error/);
+    await expect(getAzureAccessToken()).rejects.toThrow(/some error/);
   });
 
   it("should get access token", async () => {
@@ -30,8 +30,8 @@ describe("getAzureAccessToken", () => {
 
     await expect(getAzureAccessToken()).resolves.toBe("mocked-access-token");
 
-    expect(axiosPostMock).toBeCalledTimes(1);
-    expect(axiosPostMock).toBeCalledWith(
+    expect(axiosPostMock).toHaveBeenCalledTimes(1);
+    expect(axiosPostMock).toHaveBeenCalledWith(
       "https://login.microsoftonline.com/mocked-microsoft-token/oauth2/v2.0/token",
       "client_id=mocked-microsoft-client-id&client_secret=mocked-microsoft-client-secret&scope=https%3A%2F%2Fgraph.microsoft.com%2F.default&grant_type=client_credentials",
       {
@@ -43,24 +43,24 @@ describe("getAzureAccessToken", () => {
 
     await expect(getAzureAccessToken()).resolves.toBe("mocked-access-token");
 
-    expect(axiosPostMock).toBeCalledTimes(1);
+    expect(axiosPostMock).toHaveBeenCalledTimes(1);
   });
 
   it("throw exception when microsoft token is not configured", async () => {
     delete process.env.MICROSOFT_TOKEN;
 
-    await expect(getAzureAccessToken()).rejects.toThrowError(/api token/);
+    await expect(getAzureAccessToken()).rejects.toThrow(/api token/);
   });
 
   it("throw exception when microsoft client id is not configured", async () => {
     delete process.env.MICROSOFT_CLIENT_ID;
 
-    await expect(getAzureAccessToken()).rejects.toThrowError(/client id/);
+    await expect(getAzureAccessToken()).rejects.toThrow(/client id/);
   });
 
   it("throw exception when microsoft client secret is not configured", async () => {
     delete process.env.MICROSOFT_CLIENT_SECRET;
 
-    await expect(getAzureAccessToken()).rejects.toThrowError(/client secret/);
+    await expect(getAzureAccessToken()).rejects.toThrow(/client secret/);
   });
 });

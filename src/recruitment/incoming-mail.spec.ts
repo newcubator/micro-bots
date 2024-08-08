@@ -69,7 +69,7 @@ describe("Recruitment Incoming Job Application Mail", () => {
       body: "Missing 'messageId'",
     });
 
-    expect(getMessageMock).toBeCalledTimes(0);
+    expect(getMessageMock).toHaveBeenCalledTimes(0);
   });
 });
 
