@@ -1,16 +1,18 @@
 {
+  "$schema": "https://json.schemastore.org/tsconfig",
+  "_version": "20.1.0",
+
   "compilerOptions": {
-    "preserveConstEnums": true,
-    "strictNullChecks": false,
-    "inlineSources": true,
-    "inlineSourceMap": true,
-    "target": "es2017",
-    "module": "commonjs",
-    "moduleResolution": "node",
+    "lib": ["es2023"],
+    "module": "node16",
+    "target": "es2022",
+
+    "strict": true,
     "esModuleInterop": true,
-    "allowSyntheticDefaultImports": true,
-    "lib": ["es2017"],
-    "resolveJsonModule": true
+    "skipLibCheck": true,
+    "moduleResolution": "node16",
+
+    "inlineSourceMap": true
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]
