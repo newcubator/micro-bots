@@ -1,6 +1,6 @@
 import axios, { AxiosResponse } from "axios";
 import { MOCO_TOKEN } from "./token";
-import { MocoCompany, MocoUserType } from "./types/moco-types";
+import { MocoCompany } from "./types/moco-types";
 
 export function getCompanies(): Promise<Array<MocoCompany>> {
   return axios

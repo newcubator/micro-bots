@@ -16,7 +16,7 @@ export async function renderShortMailPdf(content: PdfContent) {
   const pages = pdfDoc.getPages();
   const helveticaFont = await pdfDoc.embedFont(StandardFonts.Helvetica);
   const firstPage = pages[0];
-  const { width, height } = firstPage.getSize();
+  const { height } = firstPage.getSize();
   pages[0].drawText(`${senderAddressHeader}`, {
     x: 68,
     y: height - 140,

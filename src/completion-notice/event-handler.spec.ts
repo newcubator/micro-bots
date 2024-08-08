@@ -1,6 +1,5 @@
 import { eventHandler } from "./event-handler";
 import { getProject } from "../moco/projects";
-import { getDealById } from "../moco/deals";
 import { getContactById } from "../moco/contacts";
 import { slackClient } from "../clients/slack";
 import { renderCompletionNoticePdf } from "./pdf";

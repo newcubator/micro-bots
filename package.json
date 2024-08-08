@@ -6,7 +6,7 @@
     "lint": "npm run lint:prettier && npm run lint:eslint",
     "lint:prettier": "prettier --check .",
     "lint:prettier-fix": "prettier --write .",
-    "lint:eslint": "eslint --max-warnings=34 src",
+    "lint:eslint": "eslint --max-warnings=11 src",
     "test": "jest",
     "deploy:dev": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless deploy --stage dev",
     "deploy:prod": "NODE_OPTIONS='-r dotenv/config' serverless deploy",

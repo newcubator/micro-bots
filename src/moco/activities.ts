@@ -1,7 +1,7 @@
 import axios from "axios";
 import { autoPage } from "./auto-page";
 import { MOCO_TOKEN } from "./token";
-import { MocoActivity, MocoUserType } from "./types/moco-types";
+import { MocoActivity } from "./types/moco-types";
 import { AxiosResponse } from "axios/index";
 
 /*

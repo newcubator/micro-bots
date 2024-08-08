@@ -1,7 +1,7 @@
 import { EventBridgeEvent } from "aws-lambda";
 import axios from "axios";
 import dayjs from "dayjs";
-import { createMultipleUserSchedules, createUserSchedule } from "../moco/schedules";
+import { createMultipleUserSchedules } from "../moco/schedules";
 import { MocoUserType } from "../moco/types/moco-types";
 import { findUserBySlackCommand, getUsers } from "../moco/users";
 import { SickNoteRequestedEvent } from "../slack/interaction-handler";
