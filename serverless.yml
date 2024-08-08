@@ -285,20 +285,6 @@ functions:
             detail-type:
               - "UnLockProjectRequestedEvent"
 
-  uploadLetterXpress:
-    environment:
-      LETTERXPRESS_KEY: ${env:LETTERXPRESS_KEY}
-      LETTERXPRESS_USER: ${env:LETTERXPRESS_USER}
-    handler: src/short-mail/letterxpress/letterxpress-upload.uploadHandler
-    timeout: 3
-    maximumRetryAttempts: 0
-    events:
-      - eventBridge:
-          eventBus: micro-bots-event
-          pattern:
-            detail-type:
-              - "UploadLetterXpressEvent"
-
   vacationHandover:
     events:
       - schedule:

@@ -88,7 +88,6 @@ describe("ShortmailEventHandler", () => {
       replace_original: "true",
       text: expect.stringContaining("Melinda Gates"),
     });
-    expect(slackPostEphemeralMock).toHaveBeenCalled();
   });
 
   it("should handle event short mail generation dortmund to male with company address", async () => {
