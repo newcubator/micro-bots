@@ -96,45 +96,6 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
         replace_original: "true",
         text: `Der Kurzbrief für '${recipient.firstname} ${recipient.lastname}' ist fertig! 🙌`,
       });
-      await slackChatPostEphemeral(
-        event.detail.channelId,
-        "Möchtest du den Brief direkt verschicken?",
-        event.detail.sender,
-        [
-          {
-            text: {
-              type: "mrkdwn",
-              text: `Möchtest du den Brief direkt per LetterXpress verschicken?`,
-            },
-            type: "section",
-          },
-          {
-            type: "actions",
-            block_id: "uploadButton",
-            elements: [
-              {
-                type: "button",
-                text: {
-                  type: "plain_text",
-                  text: "Verschicken",
-                },
-                value: upload.file?.url_private,
-                style: "primary",
-                action_id: ActionType.UPLOAD_LETTERXPRESS,
-              },
-              {
-                type: "button",
-                text: {
-                  type: "plain_text",
-                  text: "Abbrechen",
-                },
-                style: "danger",
-                action_id: ActionType.CANCEL,
-              },
-            ],
-          },
-        ],
-      );
     }
   } catch (error) {
     console.error(error);
