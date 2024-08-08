@@ -23,9 +23,7 @@
     "exceljs": "4.4.0",
     "form-data": "4.0.0",
     "fuzzball": "2.1.2",
-    "googleapis": "140.0.1",
     "jspdf": "2.5.1",
-    "openai": "3.3.0",
     "pdf-lib": "1.17.1",
     "serverless-sentry-lib": "2.5.2",
     "tmp-promise": "3.0.3"
