@@ -1,5 +1,5 @@
 default:
-  image: registry.gitlab.com/newcubator/newcubator/micro-bots/buildutil-node:18.14.2-alpine
+  image: registry.gitlab.com/newcubator/newcubator/micro-bots/buildutil-node:20.16.0-alpine
   cache:
     key:
       files:
@@ -8,7 +8,9 @@ default:
     paths:
       - node_modules/
   before_script:
-    - npm ci
+    - grep -q $(node -v | cut -c2-) .nvmrc
+    - >
+      [[ -d node_modules ]] || npm ci
 
 test:
   stage: test
