@@ -15,7 +15,7 @@
   "dependencies": {
     "@aws-sdk/client-eventbridge": "3.629.0",
     "@aws-sdk/client-ses": "3.629.0",
-    "@sentry/node": "8.25.0",
+    "@sentry/node": "8.26.0",
     "@slack/web-api": "6.12.0",
     "axios": "1.7.4",
     "dayjs": "1.11.12",
