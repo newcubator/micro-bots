@@ -29,7 +29,7 @@ exports[`command handler for short mail 1`] = `
       },
       "label": {
         "emoji": true,
-        "text": "Channel Name:",
+        "text": "Channel Name (keine Leerzeichen und nur Kleinbuchstaben):",
         "type": "plain_text",
       },
       "type": "input",

@@ -33,7 +33,7 @@ export const commandHandler = async () => {
           },
           label: {
             type: "plain_text",
-            text: "Channel Name:",
+            text: "Channel Name (keine Leerzeichen und nur Kleinbuchstaben):",
             emoji: true,
           },
         },
