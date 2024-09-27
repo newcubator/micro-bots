@@ -33,7 +33,7 @@
     "@types/aws-lambda": "8.10.145",
     "@types/eslint__js": "8.42.3",
     "@types/jest": "29.5.13",
-    "@types/node": "20.14.15",
+    "@types/node": "20.16.6",
     "dotenv": "16.4.5",
     "esbuild": "0.20.2",
     "eslint": "9.11.1",
