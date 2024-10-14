@@ -18,7 +18,7 @@ export const addGitlabIdToUsers = async (users: UserWithVacations[]): Promise<Us
         member.name.toLowerCase().includes(user.user.lastname.toLowerCase()),
     )?.id;
     if (gitlabId === undefined) {
-      console.log(`No Gitlab ID found for ${user.user.firstname}`);
+      console.log(`No Gitlab ID found for ${user.user.firstname} ${user.user.lastname}`);
     }
     return {
       ...user,
