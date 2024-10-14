@@ -10,6 +10,7 @@ process.env.GITLAB_PROJECT = "1111111";
 process.env.SLACK_CHANNEL = "1111111";
 process.env.HOLIDAY_MAIL_REPLIES_CHANGE_SLACK_CHANNEL = "1111111";
 process.env.GITLAB_BOOK_PROJECT_ID = "11111111";
+process.env.GITLAB_NEWCUBATOR_GROUP_ID = "1234567";
 
 module.exports = {
   preset: "ts-jest",

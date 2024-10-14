@@ -3,6 +3,7 @@ import isBetween from "dayjs/plugin/isBetween";
 import { GitlabIssue } from "../gitlab/gitlab";
 import { getIssueTemplateByName } from "../gitlab/templates";
 import { getSchedules } from "../moco/schedules";
+import { addGitlabIdToUsers } from "./add-gitlab-id-to-users";
 import { createIssuesForUsers } from "./create-issues-for-users";
 import { filterUsersWithoutOpenVacationHandoverIssues } from "./filter-users-without-open-vacation-handover-issues";
 import { getUsersWithStartAndEndDate } from "./get-users-with-start-and-end-date";
@@ -31,6 +32,8 @@ export const createVacationHandoverIssues = async (vacationIssues: GitlabIssue[]
     await getIssueTemplateByName(process.env.GITLAB_BOOK_PROJECT_ID, "Urlaubsübergabe")
   ).content;
 
+  const usersWithGitlabId = await addGitlabIdToUsers(usersWithStartAndEndDates);
+
   // open new issues if no closed issues were found with the expected title
-  await Promise.all(createIssuesForUsers(usersWithStartAndEndDates, vacationHandoverDescription, vacationIssues));
+  await Promise.all(createIssuesForUsers(usersWithGitlabId, vacationHandoverDescription, vacationIssues));
 };

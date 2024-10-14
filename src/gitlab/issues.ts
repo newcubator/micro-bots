@@ -25,6 +25,7 @@ export const createIssue = (
   description?: string,
   labels?: string[],
   due_date?: string,
+  assignee_ids?: string[],
 ): Promise<GitlabIssue> => {
   return axios
     .post(
@@ -34,7 +35,8 @@ export const createIssue = (
         description,
         labels,
         due_date,
-      } as GitlabIssue,
+        assignee_ids,
+      },
       {
         headers: {
           Authorization: `Bearer ${GITLAB_TOKEN}`,
