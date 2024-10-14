@@ -7,7 +7,7 @@ import { getUsers as mocoGetUsers } from "./users";
 dayjs.extend(isBetween);
 const MIN_VACATION_DURATION = 3;
 
-export async function getUsersWithVacation(): Promise<Array<UserWithVacations>> {
+export async function getUsersWithVacation(): Promise<UserWithVacations[]> {
   const day = dayjs().add(7, "day");
 
   const mocoUsers = await mocoGetUsers();
