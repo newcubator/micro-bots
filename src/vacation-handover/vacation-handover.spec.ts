@@ -98,6 +98,35 @@ const exampleUserSchedulesResponse = {
   ],
 };
 
+const exampleGitlabUsers = {
+  data: [
+    {
+      id: 11111111,
+      name: "Peter Silie",
+      username: "peter.silie",
+      state: "active",
+      avatar_url: "https://gitlab.com/uploads/-/system/user/avatar/11111111/avatar.png",
+      web_url: "https://gitlab.com/peter.silie",
+      access_level: 30,
+      created_at: "2021-08-24T10:00:00.000Z",
+      expires_at: "2021-08-24T10:00:00.000Z",
+      membership_state: "active",
+    },
+    {
+      id: 2222222,
+      name: "Petra Salie",
+      username: "petra salie",
+      state: "active",
+      avatar_url: "https://gitlab.com/uploads/-/system/user/avatar/11111111/avatar.png",
+      web_url: "https://gitlab.com/petra.salie",
+      access_level: 30,
+      created_at: "2021-08-24T10:00:00.000Z",
+      expires_at: "2021-08-24T10:00:00.000Z",
+      membership_state: "active",
+    },
+  ],
+};
+
 const exampleUserEmploymentResponse = {
   data: [
     {
@@ -135,7 +164,8 @@ describe("vacation-handover", () => {
     (axios.get as jest.Mock)
       .mockReturnValueOnce(exampleSchedulesResponse)
       .mockReturnValueOnce(exampleUserSchedulesResponse)
-      .mockReturnValueOnce(exampleUserEmploymentResponse);
+      .mockReturnValueOnce(exampleUserEmploymentResponse)
+      .mockReturnValueOnce(exampleGitlabUsers);
     getIssueTemplateByNameMock.mockResolvedValueOnce(exampleTemplateResponse);
 
     await createVacationHandoverIssues([]);
@@ -152,7 +182,13 @@ describe("vacation-handover", () => {
       headers: { Authorization: "Token token=not a real moco token" },
       params: { from: "2021-08-03", to: "2021-09-28", user_id: 444555666 },
     });
-    expect(axios.get).toHaveBeenCalledTimes(3);
+
+    expect(axios.get).toHaveBeenNthCalledWith(4, "https://gitlab.com/api/v4/groups/1234567/members/all", {
+      headers: { Authorization: "Bearer not a real gitlab token" },
+      params: { per_page: 100 },
+    });
+
+    expect(axios.get).toHaveBeenCalledTimes(4);
 
     expect(axios.post).toHaveBeenCalledWith(
       "https://gitlab.com/api/v4/projects/11111111/issues",
@@ -161,6 +197,7 @@ describe("vacation-handover", () => {
         due_date: "2021-08-18",
         labels: ["VacationHandover"],
         title: "Urlaubsübergabe Peter (19.08.2021 - 01.09.2021)",
+        assignee_ids: [11111111],
       },
       { headers: { Authorization: "Bearer not a real gitlab token" } },
     );
@@ -192,6 +229,7 @@ describe("vacation-handover", () => {
         ],
       })
       .mockReturnValueOnce(exampleUserEmploymentResponse);
+
     getIssueTemplateByNameMock.mockResolvedValueOnce(exampleTemplateResponse);
 
     await createVacationHandoverIssues([]);
@@ -204,12 +242,14 @@ describe("vacation-handover", () => {
     (axios.get as jest.Mock)
       .mockReturnValueOnce(exampleSchedulesResponse)
       .mockReturnValueOnce(exampleUserSchedulesResponse)
-      .mockReturnValueOnce(exampleUserEmploymentResponse);
+      .mockReturnValueOnce(exampleUserEmploymentResponse)
+      .mockReturnValueOnce(exampleGitlabUsers);
+
     getIssueTemplateByNameMock.mockResolvedValueOnce(exampleTemplateResponse);
 
     await createVacationHandoverIssues([{ title: "Urlaubsübergabe Peter (19.08.2021 - 01.09.2021)" } as GitlabIssue]);
 
-    expect(axios.get).toHaveBeenCalledTimes(3);
+    expect(axios.get).toHaveBeenCalledTimes(4);
     expect(axios.post).toHaveBeenCalledTimes(0);
     expect(console.log as jest.Mock).toHaveBeenCalledWith(
       "Issue for detected vacation of Peter for vacation from 2021-08-19 to 2021-09-01 already exists with due date 2021-08-18",
@@ -220,7 +260,9 @@ describe("vacation-handover", () => {
     (axios.get as jest.Mock)
       .mockReturnValueOnce(exampleSchedulesResponse)
       .mockReturnValueOnce(exampleUserSchedulesResponse)
-      .mockReturnValueOnce(exampleUserEmploymentResponse);
+      .mockReturnValueOnce(exampleUserEmploymentResponse)
+      .mockReturnValueOnce(exampleGitlabUsers);
+
     getIssueTemplateByNameMock.mockResolvedValueOnce(exampleTemplateResponse);
 
     await createVacationHandoverIssues([

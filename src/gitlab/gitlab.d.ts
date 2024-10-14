@@ -47,6 +47,19 @@ interface Author {
   web_url: string;
 }
 
+interface GitlabUser {
+  id: string;
+  name: string;
+  username: string;
+  state: string;
+  avatar_url: string;
+  web_url: string;
+  access_level: number;
+  created_at: string;
+  expires_at: string;
+  membership_state: string;
+}
+
 interface References {
   short: string;
   relative: string;

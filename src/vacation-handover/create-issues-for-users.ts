@@ -1,11 +1,11 @@
 import dayjs from "dayjs";
 import { GitlabIssue } from "../gitlab/gitlab";
 import { createIssue } from "../gitlab/issues";
-import { MocoEmployment, MocoUserType } from "../moco/types/moco-types";
+import { UserWithGitlabId } from "./add-gitlab-id-to-users";
 import { calculateDueDate } from "./calculate-due-date";
 
 export const createIssuesForUsers = (
-  users: { user: MocoUserType; dates: string[]; employment: MocoEmployment }[],
+  users: UserWithGitlabId[],
   description: string,
   issues: GitlabIssue[],
 ): Array<Promise<GitlabIssue | void>> => {
@@ -22,6 +22,7 @@ export const createIssuesForUsers = (
         description,
         ["VacationHandover"],
         dueDate,
+        user.gitlabId ? [user.gitlabId] : [],
       ).then((res) => {
         console.log(
           `New issue for vacation of ${user.user.firstname} for vacation from ${user.dates[0]} to ${user.dates[1]} was created at ${res.web_url}. Due date: ${dueDate}`,
