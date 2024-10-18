@@ -13,7 +13,7 @@
     "invoke": "DOTENV_CONFIG_PATH=.env.local NODE_OPTIONS='-r dotenv/config' serverless invoke local -f $npm_config_function"
   },
   "dependencies": {
-    "@aws-sdk/client-eventbridge": "3.670.0",
+    "@aws-sdk/client-eventbridge": "3.674.0",
     "@aws-sdk/client-ses": "3.670.0",
     "@sentry/node": "8.34.0",
     "@slack/web-api": "6.13.0",
