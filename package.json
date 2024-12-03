@@ -34,7 +34,7 @@
     "@types/eslint__js": "8.42.3",
     "@types/jest": "29.5.14",
     "@types/node": "20.17.6",
-    "dotenv": "16.4.5",
+    "dotenv": "16.4.6",
     "esbuild": "0.24.0",
     "eslint": "9.16.0",
     "eslint-plugin-jest": "28.9.0",
