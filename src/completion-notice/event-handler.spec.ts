@@ -6,18 +6,21 @@ import { renderCompletionNoticePdf } from "./pdf";
 import dayjs from "dayjs";
 import axios from "axios";
 import MockDate from "mockdate";
+import { uploadFileToSlackChannel } from "../slack/upload-file-to-slack-channel";
 
 MockDate.set("2022-01-02");
 
 jest.mock("../moco/projects");
 jest.mock("../moco/deals");
 jest.mock("../moco/contacts");
+jest.mock("../slack/upload-file-to-slack-channel");
 jest.mock("./pdf");
+
 const getProjectMock = getProject as jest.Mock;
 const getContactByIdMock = getContactById as jest.Mock;
 const renderCompletionNoticePdfMock = renderCompletionNoticePdf as jest.Mock;
 const conversationsJoinMock = slackClient.conversations.join as jest.Mock;
-const fileUploadMock = slackClient.files.upload as jest.Mock;
+const uploadFileToSlackChannelMock = uploadFileToSlackChannel as jest.Mock;
 const axiosPostMock = axios.post as jest.Mock;
 
 test("handle event", async () => {
@@ -32,6 +35,7 @@ test("handle event", async () => {
       id: "person-01",
     },
   });
+  uploadFileToSlackChannelMock.mockResolvedValueOnce({ ok: true });
   getContactByIdMock.mockResolvedValueOnce({
     firstname: "Elon",
     lastname: "Musk",
@@ -65,13 +69,12 @@ test("handle event", async () => {
     date: dayjs(),
   });
   expect(conversationsJoinMock).toHaveBeenCalledWith({ channel: "C02BBA8DWVD" });
-  expect(fileUploadMock).toHaveBeenCalledWith({
+  expect(uploadFileToSlackChannelMock).toHaveBeenCalledWith({
     file: expect.anything(),
     filename: "Fertigstellungsanzeige_B01.pdf",
     initial_comment: "",
     channels: "C02BBA8DWVD",
     thread_ts: "1633540187.000600",
-    broadcast: "true",
   });
   expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
     replace_original: "true",

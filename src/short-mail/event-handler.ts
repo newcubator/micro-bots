@@ -1,7 +1,6 @@
 import { EventBridgeEvent } from "aws-lambda";
 import axios from "axios";
 import dayjs from "dayjs";
-import { slackClient } from "../clients/slack";
 import { getCompanyById } from "../moco/companies";
 import { getContactById } from "../moco/contacts";
 import { getUserById } from "../moco/users";
@@ -9,6 +8,7 @@ import { channelJoin } from "../slack/channel-join";
 import { ShortMailRequestedEvent } from "../slack/interaction-handler";
 import { getSlackUserProfile } from "../slack/slack";
 import { renderShortMailPdf } from "./pdf";
+import { uploadFileToSlackChannel } from "../slack/upload-file-to-slack-channel";
 
 export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequestedEvent>) => {
   console.log(`Handling event ${JSON.stringify(event.detail)}`);
@@ -82,13 +82,12 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
   await channelJoin(event.detail.channelId);
 
   try {
-    const upload = await slackClient.files.upload({
+    const upload = await uploadFileToSlackChannel({
       file: pdf,
       filename: `Kurzbrief ${recipient.lastname}.pdf`,
       initial_comment: ``,
       channels: event.detail.channelId,
       thread_ts: event.detail.messageTs,
-      broadcast: "true",
     });
     if (upload.ok) {
       await axios.post(event.detail.responseUrl, {
@@ -97,6 +96,10 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
       });
     }
   } catch (error) {
+    await axios.post(event.detail.responseUrl, {
+      replace_original: "true",
+      text: `Es ist ein Fehler beim Erstellen des Kurzbriefs für '${recipient.firstname} ${recipient.lastname}' aufgetreten! 😔`,
+    });
     console.error(error);
     throw new Error(error);
   }

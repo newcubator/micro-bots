@@ -4,9 +4,9 @@ import { renderCompletionNoticePdf } from "./pdf";
 import { EventBridgeEvent } from "aws-lambda";
 import { getContactById } from "../moco/contacts";
 import { getProject } from "../moco/projects";
-import { slackClient } from "../clients/slack";
 import dayjs from "dayjs";
 import axios from "axios";
+import { uploadFileToSlackChannel } from "../slack/upload-file-to-slack-channel";
 
 export const eventHandler = async (event: EventBridgeEvent<string, CompletionNoticeRequestedEvent>) => {
   console.log(`Handling event ${JSON.stringify(event.detail)}`);
@@ -28,16 +28,15 @@ export const eventHandler = async (event: EventBridgeEvent<string, CompletionNot
     date: dayjs(),
   });
 
-  // Only user/bots that have joined a channel can post fiels
+  // Only user/bots that have joined a channel can post files
   await channelJoin(event.detail.channelId);
 
-  const upload = await slackClient.files.upload({
+  const upload = await uploadFileToSlackChannel({
     file: pdf,
     filename: `Fertigstellungsanzeige_${project.custom_properties.Bestellnummer}.pdf`,
     initial_comment: ``,
     channels: event.detail.channelId,
     thread_ts: event.detail.messageTs,
-    broadcast: "true",
   });
   console.log(upload);
   if (!upload.ok) throw new Error(upload.error);

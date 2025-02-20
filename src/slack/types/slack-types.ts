@@ -113,6 +113,14 @@ export interface Channel {
   num_members: number;
 }
 
+export type UploadPayload = {
+  file: Buffer<ArrayBufferLike>;
+  filename: string;
+  initial_comment?: string;
+  channels?: string;
+  thread_ts?: string;
+};
+
 export interface Purpose {
   value: string;
   creator: string;

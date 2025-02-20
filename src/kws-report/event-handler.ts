@@ -6,7 +6,6 @@ import { groupBy } from "../util/groupBy";
 import { KwsReport, ExcelReportRow } from "./kws-report.model";
 import { getIssues } from "../kws-jira/issues";
 import axios from "axios";
-import { slackClient } from "../clients/slack";
 import { tmpName } from "tmp-promise";
 import { promises as fsPromises } from "fs";
 import { Issue } from "../kws-jira/types/jira-types";
@@ -14,6 +13,7 @@ import { channelJoin } from "../slack/channel-join";
 import { getProject } from "../moco/projects";
 import { MocoProject } from "../moco/types/moco-types";
 import dayjs from "dayjs";
+import { uploadFileToSlackChannel } from "../slack/upload-file-to-slack-channel";
 
 export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExportRequestedEvent>) => {
   const project: MocoProject = await getProject(event.detail.projectId);
@@ -43,11 +43,9 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
   await channelJoin(event.detail.channelId);
 
   const filename = `${project.name}_report_${dayjs().format("YYYY-MM-DD")}.xlsx`;
-  const upload = await slackClient.files.upload({
+  const upload = await uploadFileToSlackChannel({
     channels: event.detail.channelId,
     file: buffer,
-    title: filename,
-    filetype: "xlsx",
     filename: filename,
   });
 
@@ -55,8 +53,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, KWSExcelExpor
     await axios.post(event.detail.responseUrl, {
       channels: event.detail.channelId,
       thread_ts: event.detail.messageTs,
-      broadcast: "true",
-      text: `Here's the Excel file: ${upload.file.url_private}`,
+      text: `Here's the Excel file: ${upload.url_private}`,
     }),
   );
 
