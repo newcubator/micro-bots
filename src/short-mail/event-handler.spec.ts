@@ -7,12 +7,14 @@ import { getContactById } from "../moco/contacts";
 import { getSlackUserProfile } from "../slack/slack";
 import { renderShortMailPdf } from "./pdf";
 import { slackClient } from "../clients/slack";
+import { uploadFileToSlackChannel } from "../slack/upload-file-to-slack-channel";
 
 MockDate.set("2022-01-02");
 
 jest.mock("../moco/companies");
 jest.mock("../moco/contacts");
 jest.mock("../slack/slack");
+jest.mock("../slack/upload-file-to-slack-channel");
 jest.mock("./pdf");
 
 const axiosPostMock = axios.post as jest.Mock;
@@ -20,7 +22,7 @@ const mocoCompanieMock = getCompanyById as jest.Mock;
 const mocoContactMock = getContactById as jest.Mock;
 const shortMailRenderPdfMock = renderShortMailPdf as jest.Mock;
 const slackConversationsJoinMock = slackClient.conversations.join as jest.Mock;
-const slackFileUploadMock = slackClient.files.upload as jest.Mock;
+const uploadFileToSlackChannelMock = uploadFileToSlackChannel as jest.Mock;
 const slackUserProfileMock = getSlackUserProfile as jest.Mock;
 
 describe("ShortmailEventHandler", () => {
@@ -28,7 +30,7 @@ describe("ShortmailEventHandler", () => {
     jest.clearAllMocks();
   });
 
-  it("should handle event short mail generation hannover to female without company adress", async () => {
+  it("should handle event short mail generation hannover to female without company address", async () => {
     mocoContactMock.mockResolvedValueOnce({
       id: 2,
       gender: "F",
@@ -39,6 +41,8 @@ describe("ShortmailEventHandler", () => {
     });
 
     shortMailRenderPdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
+
+    uploadFileToSlackChannelMock.mockResolvedValueOnce({ ok: true });
 
     slackUserProfileMock.mockResolvedValueOnce({
       ok: true,
@@ -75,13 +79,12 @@ describe("ShortmailEventHandler", () => {
       text: "Testnachricht an Melinda",
     });
     expect(slackConversationsJoinMock).toHaveBeenCalledWith({ channel: "C02BBA8DWVD" });
-    expect(slackFileUploadMock).toHaveBeenCalledWith({
+    expect(uploadFileToSlackChannelMock).toHaveBeenCalledWith({
       file: expect.anything(),
       filename: "Kurzbrief Gates.pdf",
       initial_comment: "",
       channels: "C02BBA8DWVD",
       thread_ts: "1633540187.000600",
-      broadcast: "true",
     });
     expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
       replace_original: "true",
@@ -109,6 +112,8 @@ describe("ShortmailEventHandler", () => {
     });
 
     shortMailRenderPdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
+
+    uploadFileToSlackChannelMock.mockResolvedValueOnce({ ok: true });
 
     slackUserProfileMock.mockResolvedValueOnce({
       ok: true,
@@ -145,13 +150,12 @@ describe("ShortmailEventHandler", () => {
       text: "Testnachricht an Bill",
     });
     expect(slackConversationsJoinMock).toHaveBeenCalledWith({ channel: "C02BBA8DWVD" });
-    expect(slackFileUploadMock).toHaveBeenCalledWith({
+    expect(uploadFileToSlackChannelMock).toHaveBeenCalledWith({
       file: expect.anything(),
       filename: "Kurzbrief Gates.pdf",
       initial_comment: "",
       channels: "C02BBA8DWVD",
       thread_ts: "1633540187.000600",
-      broadcast: "true",
     });
     expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
       replace_original: "true",
