@@ -77,7 +77,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
         responseUrl: blockAction.response_url,
         messageTs: blockAction.container.message_ts,
         channelId: blockAction.container.channel_id,
-        sender: blockAction.user.id,
+        sender: blockAction.state.values.SHORT_MAIL_SENDER.SHORT_MAIL_SENDER.selected_user,
         actionType,
       });
       break;

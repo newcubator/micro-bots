@@ -1,5 +1,6 @@
 import { APIGatewayEvent } from "aws-lambda";
 import { ActionType, ShortMailFields } from "../slack/types/slack-types";
+import { decode } from "querystring";
 
 export const commandHandler = async (event: APIGatewayEvent) => {
   return {
@@ -72,6 +73,23 @@ export const commandHandler = async (event: APIGatewayEvent) => {
                 value: "H",
               },
             ],
+          },
+        },
+        {
+          type: "input",
+          block_id: ShortMailFields.SHORT_MAIL_SENDER,
+          label: {
+            type: "plain_text",
+            text: "Wähle den Absender aus:",
+          },
+          element: {
+            type: "users_select",
+            action_id: ShortMailFields.SHORT_MAIL_SENDER,
+            initial_user: decode(event.body)["user_id"],
+            placeholder: {
+              type: "plain_text",
+              text: "Absender wählen...",
+            },
           },
         },
         {
