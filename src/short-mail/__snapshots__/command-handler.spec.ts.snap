@@ -71,6 +71,22 @@ exports[`command handler for short mail 1`] = `
       "type": "input",
     },
     {
+      "block_id": "SHORT_MAIL_SENDER",
+      "element": {
+        "action_id": "SHORT_MAIL_SENDER",
+        "placeholder": {
+          "text": "Absender wählen...",
+          "type": "plain_text",
+        },
+        "type": "users_select",
+      },
+      "label": {
+        "text": "Wähle den Absender aus:",
+        "type": "plain_text",
+      },
+      "type": "input",
+    },
+    {
       "block_id": "confirmationButton",
       "elements": [
         {
@@ -157,6 +173,22 @@ exports[`respond when loads no contacts 1`] = `
       },
       "label": {
         "text": "Wähle deinen Standort aus:",
+        "type": "plain_text",
+      },
+      "type": "input",
+    },
+    {
+      "block_id": "SHORT_MAIL_SENDER",
+      "element": {
+        "action_id": "SHORT_MAIL_SENDER",
+        "placeholder": {
+          "text": "Absender wählen...",
+          "type": "plain_text",
+        },
+        "type": "users_select",
+      },
+      "label": {
+        "text": "Wähle den Absender aus:",
         "type": "plain_text",
       },
       "type": "input",

@@ -1,6 +1,7 @@
 import { slackClient } from "../clients/slack";
 import { UploadPayload } from "./types/slack-types";
 import { FilesCompleteUploadExternalResponse } from "@slack/web-api";
+import axios from "axios";
 
 export const uploadFileToSlackChannel = async (
   payload: UploadPayload,
@@ -10,10 +11,7 @@ export const uploadFileToSlackChannel = async (
     length: payload.file.length,
   });
 
-  await fetch(response.upload_url, {
-    method: "POST",
-    body: payload.file,
-  });
+  await axios.post(response.upload_url, payload.file);
 
   return await slackClient.files.completeUploadExternal({
     files: [

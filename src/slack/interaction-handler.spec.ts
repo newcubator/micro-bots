@@ -109,6 +109,7 @@ const samplePayload4 = {
               },
             },
           },
+          SHORT_MAIL_SENDER: { SHORT_MAIL_SENDER: { selected_user: "maxMustermannId" } },
           SHORT_MAIL_TEXT: { SHORT_MAIL_TEXT: { type: "plain_text_input", value: "Testnachricht an Bill" } },
           SHORT_MAIL_LOCATION: {
             SHORT_MAIL_LOCATION: {
