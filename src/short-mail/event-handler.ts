@@ -29,7 +29,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
     salutation =
       recipient.gender === "F"
         ? `Sehr geehrte Frau ${recipient.lastname}`
-        : recipient.gender === "H"
+        : recipient.gender === "M"
           ? `Sehr geehrter Herr ${recipient.lastname}`
           : `Sehr geehrte/r Frau/Herr ${recipient.lastname}`;
     address = recipientCompanyAddress || recipient.work_address || recipient.home_address;

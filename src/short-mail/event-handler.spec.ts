@@ -95,7 +95,7 @@ describe("ShortmailEventHandler", () => {
   it("should handle event short mail generation dortmund to male with company address", async () => {
     mocoContactMock.mockResolvedValueOnce({
       id: 1,
-      gender: "H",
+      gender: "M",
       firstname: "Bill",
       lastname: "Gates",
       work_address: "\nFensterstraße 1\n12345 Fensterhausen ",
