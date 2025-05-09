@@ -1,5 +1,5 @@
 import axios from "axios";
-const qs = require("qs");
+import { stringify } from "node:querystring";
 
 // Cache
 let cachedAccessToken: string = undefined;
@@ -29,7 +29,7 @@ export function getAzureAccessToken(): Promise<string> {
   return axios
     .post(
       `https://login.microsoftonline.com/${MICROSOFT_TOKEN}/oauth2/v2.0/token`,
-      qs.stringify({
+      stringify({
         client_id: MICROSOFT_CLIENT_ID,
         client_secret: MICROSOFT_CLIENT_SECRET,
         scope: "https://graph.microsoft.com/.default",
