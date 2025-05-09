@@ -35,8 +35,6 @@ provider:
     AWS_SECRET_ACCESS_KEY_GOOGLE: ${env:AWS_SECRET_ACCESS_KEY_GOOGLE}
     GITLAB_BOOK_PROJECT_ID: ${env:GITLAB_BOOK_PROJECT_ID}
     GITLAB_TOKEN: ${env:GITLAB_TOKEN}
-    JIRA_PASSWORD_KWS: ${env:JIRA_PASSWORD_KWS}
-    JIRA_USER_KWS: ${env:JIRA_USER_KWS}
     MOCO_TOKEN: ${env:MOCO_TOKEN}
     SLACK_TOKEN: ${env:SLACK_TOKEN}
     GENERAL_CHANNEL: ${env:GENERAL_CHANNEL}
@@ -116,24 +114,6 @@ functions:
           path: eventApplication
     handler: src/functions/event-application.handler
     memorySize: 128
-
-  kwsReport:
-    handler: src/kws-report/command-handler.commandHandler
-    timeout: 25
-    events:
-      - http:
-          method: post
-          path: kws-report
-
-  kwsReportEvent:
-    handler: src/kws-report/event-handler.eventHandler
-    timeout: 25
-    events:
-      - eventBridge:
-          eventBus: micro-bots-event
-          pattern:
-            detail-type:
-              - "KWSExcelExportRequestedEvent"
 
   ##
   ## Lock Project
