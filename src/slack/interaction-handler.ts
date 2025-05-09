@@ -28,16 +28,6 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
         userName: blockAction.user.username,
       });
       break;
-    case ActionType.KWS_EXCEL_EXPORT:
-      requestedEvent = new KWSExcelExportRequestedEvent({
-        projectId: blockAction.actions[0].selected_option.value,
-        projectName: blockAction.actions[0].selected_option.text.text,
-        responseUrl: blockAction.response_url,
-        messageTs: blockAction.container.message_ts,
-        channelId: blockAction.container.channel_id,
-        actionType: blockAction.actions[0].action_id,
-      });
-      break;
     case ActionType.LOCK_PROJECT:
       requestedEvent = new LockProjectRequestedEvent({
         projectId: blockAction.actions[0].selected_option.value,
@@ -133,24 +123,6 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
 };
 
 export class LockProjectRequestedEvent {
-  projectId: string;
-  projectName: string;
-  responseUrl: string;
-  messageTs: string;
-  channelId: string;
-  actionId: ActionType;
-
-  constructor({ projectId, projectName, responseUrl, messageTs, channelId, actionType }) {
-    this.projectId = projectId;
-    this.projectName = projectName;
-    this.responseUrl = responseUrl;
-    this.messageTs = messageTs;
-    this.channelId = channelId;
-    this.actionId = actionType;
-  }
-}
-
-export class KWSExcelExportRequestedEvent {
   projectId: string;
   projectName: string;
   responseUrl: string;
