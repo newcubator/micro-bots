@@ -106,14 +106,6 @@ functions:
           path: contactRequest
     handler: src/functions/contact-request.handler
     memorySize: 128
-  eventApplication:
-    events:
-      - http:
-          cors: true
-          method: post
-          path: eventApplication
-    handler: src/functions/event-application.handler
-    memorySize: 128
 
   ##
   ## Lock Project
