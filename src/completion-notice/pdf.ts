@@ -12,7 +12,7 @@ export function renderCompletionNoticePdf(content: PdfContent) {
 
   doc
     .setCreationDate(new Date("1995-12-17T03:24:00"))
-    .addImage(base64, 385, 45, 140, 28)
+    .addImage(base64, 385, 45, 140, 16)
     .setFontSize(7)
     .text("newcubator GmbH | Bödekerstraße 22 | 30161 Hannover", 68, 130)
     .setFontSize(10)
