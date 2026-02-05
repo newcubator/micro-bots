@@ -1,12 +1,14 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import MockDate from "mockdate";
+import { removeUserPresences } from "../moco/presences";
 import { createMultipleUserSchedules } from "../moco/schedules";
 import { findUserBySlackCommand, getUsers } from "../moco/users";
 import { ActionType } from "../slack/types/slack-types";
 import { eventHandler } from "./event-handler";
 
 jest.mock("../moco/users");
+jest.mock("../moco/presences");
 jest.mock("../moco/schedules");
 
 MockDate.set("2022-01-02");
@@ -15,6 +17,7 @@ const axiosPostMock = axios.post as jest.Mock;
 const mocoScheduleMock = createMultipleUserSchedules as jest.Mock;
 const getUsersMock = getUsers as unknown as jest.Mock;
 const findUserBySlackCommandMock = findUserBySlackCommand as jest.Mock;
+const removeUserPresencesMock = removeUserPresences as jest.Mock;
 
 const exampleMocoUser = {
   id: 1,
@@ -41,6 +44,7 @@ describe("SicknoteEventHandler", () => {
       },
     }));
     mocoScheduleMock.mockImplementationOnce(() => Promise.resolve());
+    removeUserPresencesMock.mockReturnValueOnce(Promise.resolve());
 
     await eventHandler({
       detail: {
@@ -73,6 +77,11 @@ describe("SicknoteEventHandler", () => {
       null,
       true,
     );
+    expect(removeUserPresencesMock).toHaveBeenCalledWith(
+      "42",
+      dayjs("2022-01-02T00:00:00.000Z"),
+      dayjs("2022-01-02T00:00:00.000Z"),
+    );
   });
 
   it("should handle sick note event with multiple days", async () => {
@@ -88,6 +97,7 @@ describe("SicknoteEventHandler", () => {
       },
     }));
     mocoScheduleMock.mockImplementationOnce(() => Promise.resolve());
+    removeUserPresencesMock.mockReturnValueOnce(Promise.resolve());
 
     await eventHandler({
       detail: {
@@ -120,6 +130,7 @@ describe("SicknoteEventHandler", () => {
       null,
       true,
     );
+    expect(removeUserPresencesMock).toHaveBeenCalledWith("42", dayjs("2024-01-01"), dayjs("2024-01-04"));
   });
 
   it("should return an error message with invalid dates", async () => {

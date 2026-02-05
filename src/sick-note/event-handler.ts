@@ -1,6 +1,7 @@
 import { EventBridgeEvent } from "aws-lambda";
 import axios from "axios";
 import dayjs from "dayjs";
+import { removeUserPresences } from "../moco/presences";
 import { createMultipleUserSchedules } from "../moco/schedules";
 import { MocoUserType } from "../moco/types/moco-types";
 import { findUserBySlackCommand, getUsers } from "../moco/users";
@@ -38,6 +39,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, SickNoteReque
   }
   try {
     await createMultipleUserSchedules(startDate, endDate, user.id, 3, true, true, comment, null, true);
+    await removeUserPresences(user.id, startDate, endDate);
     await slackChatPostMessage(generalChannelMessage, process.env.GENERAL_CHANNEL, "Krankschreibung", "😷");
   } catch (e) {
     console.error(e);
