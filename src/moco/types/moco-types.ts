@@ -233,3 +233,14 @@ export interface MocoBillingContact {
   firstname: string;
   lastname: string;
 }
+
+export interface MocoUserPresence {
+  id: number;
+  date: Date;
+  from: string; // start time on the date, e.g. "08:30"
+  to: string; // end time on the date, e.g. "16:30"
+  is_home_office: boolean;
+  user: Pick<MocoUserType, "id" | "firstname" | "lastname">;
+  created_at: string;
+  updated_at: string;
+}
