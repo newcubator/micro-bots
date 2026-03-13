@@ -28,7 +28,7 @@
   },
   "devDependencies": {
     "@eslint/js": "9.39.2",
-    "@types/aws-lambda": "8.10.160",
+    "@types/aws-lambda": "8.10.161",
     "@types/jest": "30.0.0",
     "@types/node": "20.19.24",
     "dotenv": "17.2.3",
