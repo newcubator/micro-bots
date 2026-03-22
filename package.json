@@ -40,7 +40,7 @@
     "jest-file-snapshot": "0.7.0",
     "mockdate": "3.0.5",
     "prettier": "3.8.1",
-    "serverless": "3.40.0",
+    "serverless": "4.33.0",
     "serverless-esbuild": "1.57.0",
     "serverless-prune-plugin": "2.1.0",
     "serverless-sentry": "2.5.3",
