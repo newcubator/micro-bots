@@ -41,15 +41,12 @@ provider:
 
 plugins:
   - serverless-esbuild
-  - serverless-sentry
   - serverless-prune-plugin
 
 custom:
   esbuild:
     bundle: true
     sourcemap: true
-  sentry:
-    dsn: ${env:SENTRY_DSN}
   prune:
     automatic: true
     number: 5
