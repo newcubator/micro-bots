@@ -104,27 +104,6 @@ functions:
     handler: src/functions/contact-request.handler
     memorySize: 128
 
-  ##
-  ## Lock Project
-  ##
-
-  lockProjectCommand:
-    handler: src/lock-project/command-handler.commandHandler
-    timeout: 3
-    events:
-      - http:
-          method: post
-          path: lock-project-command
-
-  lockProjectEvent:
-    handler: src/lock-project/event-handler.eventHandler
-    events:
-      - eventBridge:
-          eventBus: micro-bots-event
-          pattern:
-            detail-type:
-              - "LockProjectRequestedEvent"
-
   mailSignature:
     events:
       - http:
@@ -212,26 +191,6 @@ functions:
       - http:
           method: post
           path: slack-interaction
-  ##
-  ## Unlock Project
-  ##
-
-  unlockProjectCommand:
-    handler: src/unlock-project/command-handler.commandHandler
-    timeout: 3
-    events:
-      - http:
-          method: post
-          path: unlock-project-command
-  unlockProjectEvent:
-    handler: src/unlock-project/event-handler.eventHandler
-    events:
-      - eventBridge:
-          eventBus: micro-bots-event
-          pattern:
-            detail-type:
-              - "UnLockProjectRequestedEvent"
-
   vacationHandover:
     events:
       - schedule:
