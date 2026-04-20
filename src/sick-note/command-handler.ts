@@ -1,6 +1,4 @@
-import { APIGatewayEvent } from "aws-lambda";
-
-export const commandHandler = async (event: APIGatewayEvent) => {
+export const commandHandler = async () => {
   return {
     statusCode: 200,
     body: JSON.stringify({

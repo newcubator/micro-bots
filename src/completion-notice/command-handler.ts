@@ -1,8 +1,7 @@
-import { APIGatewayEvent } from "aws-lambda";
 import { getProjects } from "../moco/projects";
 import { ActionType } from "../slack/types/slack-types";
 
-export const commandHandler = async (event: APIGatewayEvent) => {
+export const commandHandler = async () => {
   // no need to parse the command input
 
   const projects = await getProjects({ include_archived: false });

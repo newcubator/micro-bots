@@ -101,6 +101,6 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
       text: `Es ist ein Fehler beim Erstellen des Kurzbriefs für '${recipient.firstname} ${recipient.lastname}' aufgetreten! 😔`,
     });
     console.error(error);
-    throw new Error(error);
+    throw new Error("Failed to create short mail", { cause: error });
   }
 };
