@@ -30,7 +30,7 @@
     "@types/jest": "30.0.0",
     "@types/node": "20.19.39",
     "dotenv": "17.4.2",
-    "esbuild": "0.27.4",
+    "esbuild": "0.28.0",
     "eslint": "9.39.4",
     "eslint-plugin-jest": "29.15.2",
     "eslint-plugin-only-warn": "1.2.1",
