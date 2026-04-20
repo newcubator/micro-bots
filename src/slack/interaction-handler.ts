@@ -14,7 +14,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
   let requestedEvent;
 
   switch (actionType) {
-    case ActionType.SICK_NOTE:
+    case ActionType.SICK_NOTE: {
       const forSingleDay =
         blockAction.state.values.radio_buttons_days.radio_buttons_action.selected_option.value === "single-day";
       requestedEvent = new SickNoteRequestedEvent({
@@ -28,26 +28,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
         userName: blockAction.user.username,
       });
       break;
-    case ActionType.LOCK_PROJECT:
-      requestedEvent = new LockProjectRequestedEvent({
-        projectId: blockAction.actions[0].selected_option.value,
-        projectName: blockAction.actions[0].selected_option.text.text,
-        responseUrl: blockAction.response_url,
-        messageTs: blockAction.container.message_ts,
-        channelId: blockAction.container.channel_id,
-        actionType: blockAction.actions[0].action_id,
-      });
-      break;
-    case ActionType.UNLOCK_PROJECT:
-      requestedEvent = new UnLockProjectRequestedEvent({
-        projectId: blockAction.actions[0].selected_option.value,
-        projectName: blockAction.actions[0].selected_option.text.text,
-        responseUrl: blockAction.response_url,
-        messageTs: blockAction.container.message_ts,
-        channelId: blockAction.container.channel_id,
-        actionType,
-      });
-      break;
+    }
     case ActionType.COMPLETION_NOTICE:
       requestedEvent = new CompletionNoticeRequestedEvent({
         projectId: blockAction.actions[0].selected_option.value,
@@ -122,24 +103,6 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
   };
 };
 
-export class LockProjectRequestedEvent {
-  projectId: string;
-  projectName: string;
-  responseUrl: string;
-  messageTs: string;
-  channelId: string;
-  actionId: ActionType;
-
-  constructor({ projectId, projectName, responseUrl, messageTs, channelId, actionType }) {
-    this.projectId = projectId;
-    this.projectName = projectName;
-    this.responseUrl = responseUrl;
-    this.messageTs = messageTs;
-    this.channelId = channelId;
-    this.actionId = actionType;
-  }
-}
-
 export class SickNoteRequestedEvent {
   channelId: string;
   actionType: ActionType;
@@ -163,24 +126,6 @@ export class SickNoteRequestedEvent {
 }
 
 export class CompletionNoticeRequestedEvent {
-  projectId: string;
-  projectName: string;
-  responseUrl: string;
-  messageTs: string;
-  channelId: string;
-  actionId: ActionType;
-
-  constructor({ projectId, projectName, responseUrl, messageTs, channelId, actionType }) {
-    this.projectId = projectId;
-    this.projectName = projectName;
-    this.responseUrl = responseUrl;
-    this.messageTs = messageTs;
-    this.channelId = channelId;
-    this.actionId = actionType;
-  }
-}
-
-export class UnLockProjectRequestedEvent {
   projectId: string;
   projectName: string;
   responseUrl: string;
