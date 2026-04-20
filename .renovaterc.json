@@ -6,9 +6,9 @@
   "labels": ["Renovate"],
   "packageRules": [
     {
-      "description": "Do not update node above 20.x",
+      "description": "Do not update node above 24.x",
       "matchDepNames": ["node", "@types/node"],
-      "allowedVersions": "^20"
+      "allowedVersions": "^24"
     },
     {
       "description": "Group aws-sdk updates in one MR",
