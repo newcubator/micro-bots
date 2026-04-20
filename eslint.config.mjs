@@ -3,7 +3,6 @@
 import eslint from "@eslint/js";
 import jest from "eslint-plugin-jest";
 import tseslint from "typescript-eslint";
-import "eslint-plugin-only-warn";
 
 export default tseslint.config(
   eslint.configs.recommended,
