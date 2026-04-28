@@ -40,6 +40,6 @@
     "serverless-prune-plugin": "2.1.0",
     "ts-jest": "29.4.9",
     "typescript": "5.9.3",
-    "typescript-eslint": "8.59.0"
+    "typescript-eslint": "8.59.1"
   }
 }
