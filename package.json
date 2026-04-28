@@ -14,7 +14,7 @@
   },
   "dependencies": {
     "@aws-sdk/client-eventbridge": "3.1038.0",
-    "@slack/web-api": "6.13.0",
+    "@slack/web-api": "7.15.1",
     "axios": "1.15.2",
     "dayjs": "1.11.20",
     "dayjs-business-time": "1.0.4",
