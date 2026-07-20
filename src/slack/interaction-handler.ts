@@ -5,7 +5,7 @@ import { eventBridgeSend } from "../clients/event-bridge";
 import { ActionType, BlockAction } from "./types/slack-types";
 
 export const interactionHandler = async (event: APIGatewayEvent) => {
-  const blockAction: BlockAction = JSON.parse(decode(event.body).payload as string) as BlockAction;
+  const blockAction: BlockAction = JSON.parse(decode(event.body ?? "").payload as string) as BlockAction;
 
   const actionType: string = blockAction.actions[0].action_id;
 
@@ -113,7 +113,7 @@ export class SickNoteRequestedEvent {
   userId: string;
   userName: string;
 
-  constructor({ channelId, actionType, responseUrl, forSingleDay, startDay, endDay, userId, userName }) {
+  constructor({ channelId, actionType, responseUrl, forSingleDay, startDay, endDay, userId, userName }: SickNoteEvent) {
     this.channelId = channelId;
     this.actionType = actionType;
     this.responseUrl = responseUrl;
@@ -133,7 +133,7 @@ export class CompletionNoticeRequestedEvent {
   channelId: string;
   actionId: ActionType;
 
-  constructor({ projectId, projectName, responseUrl, messageTs, channelId, actionType }) {
+  constructor({ projectId, projectName, responseUrl, messageTs, channelId, actionType }: CompletionNoticeEvent) {
     this.projectId = projectId;
     this.projectName = projectName;
     this.responseUrl = responseUrl;
@@ -154,7 +154,17 @@ export class ShortMailRequestedEvent {
   sender: string;
   actionId: ActionType;
 
-  constructor({ personId, personName, message, location, responseUrl, messageTs, channelId, sender, actionType }) {
+  constructor({
+    personId,
+    personName,
+    message,
+    location,
+    responseUrl,
+    messageTs,
+    channelId,
+    sender,
+    actionType,
+  }: ShortMailEvent) {
     this.personId = personId;
     this.personName = personName;
     this.message = message;
@@ -175,7 +185,7 @@ export class PrivateChannelRequestedEvent {
   channelId: string;
   actionId: ActionType;
 
-  constructor({ personId, channelName, responseUrl, messageTs, channelId, actionType }) {
+  constructor({ personId, channelName, responseUrl, messageTs, channelId, actionType }: PrivateChannelEvent) {
     this.personId = personId;
     this.channelName = channelName;
     this.responseUrl = responseUrl;
@@ -184,3 +194,44 @@ export class PrivateChannelRequestedEvent {
     this.actionId = actionType;
   }
 }
+
+type SickNoteEvent = {
+  channelId: string;
+  actionType: ActionType;
+  responseUrl: string;
+  forSingleDay: boolean;
+  startDay: string | null;
+  endDay: string | null;
+  userId: string;
+  userName: string;
+};
+
+type CompletionNoticeEvent = {
+  projectId: string;
+  projectName: string;
+  responseUrl: string;
+  messageTs: string;
+  channelId: string;
+  actionType: ActionType;
+};
+
+type ShortMailEvent = {
+  personId: string;
+  personName: string;
+  message: string;
+  location: string;
+  responseUrl: string;
+  messageTs: string;
+  channelId: string;
+  sender: string;
+  actionType: ActionType;
+};
+
+type PrivateChannelEvent = {
+  personId: string[];
+  channelName: string;
+  responseUrl: string;
+  messageTs: string;
+  channelId: string;
+  actionType: ActionType;
+};

@@ -3,7 +3,7 @@ import { decode } from "querystring";
 import { SlackCommandType } from "../slack/types/slack-types";
 
 export const handler = async (event: APIGatewayEvent) => {
-  const command: SlackCommandType = decode(event.body) as SlackCommandType;
+  const command: SlackCommandType = decode(event.body ?? "") as SlackCommandType;
 
   const responseBody = {
     blocks: [

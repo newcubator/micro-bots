@@ -9,7 +9,7 @@ import { BlockSuggestion } from "./types/slack-types";
 const loadAllRecipients: Promise<PlainTextOption[]> = initAllRecipients(); //cache the contacts so that a new search is faster
 
 export const selectMenuHandler = async (event: APIGatewayEvent) => {
-  const blockSuggestion: BlockSuggestion = JSON.parse(decode(event.body).payload as string) as BlockSuggestion;
+  const blockSuggestion: BlockSuggestion = JSON.parse(decode(event.body ?? "").payload as string) as BlockSuggestion;
 
   const recipients = await loadAllRecipients;
   const filteredContacts = recipients.filter((person) =>

@@ -8,11 +8,11 @@ import { AxiosResponse } from "axios";
  * @See https://github.com/hundertzehn/mocoapp-api-docs/blob/master/sections/activities.md
  */
 
-export async function getActivities(from: string, to: string, projectId: string = undefined) {
-  return autoPage<MocoActivity[]>((page: number) => getActivitiesPaged(from, to, page, projectId));
+export async function getActivities(from: string, to: string, projectId?: string) {
+  return autoPage<MocoActivity>((page: number) => getActivitiesPaged(from, to, page, projectId));
 }
 
-const getActivitiesPaged = (from: string, to: string, page: number, projectId: string) => {
+const getActivitiesPaged = (from: string, to: string, page: number, projectId?: string) => {
   return axios
     .get<MocoActivity[]>("https://newcubator.mocoapp.com/api/v1/activities", {
       headers: {

@@ -85,7 +85,7 @@ export const commandHandler = async (event: APIGatewayEvent) => {
           element: {
             type: "users_select",
             action_id: ShortMailFields.SHORT_MAIL_SENDER,
-            initial_user: decode(event.body)["user_id"],
+            initial_user: decode(event.body ?? "")["user_id"],
             placeholder: {
               type: "plain_text",
               text: "Absender wählen...",

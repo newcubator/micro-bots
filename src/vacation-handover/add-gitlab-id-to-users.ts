@@ -10,8 +10,14 @@ export type UserWithGitlabId = {
 };
 
 export const addGitlabIdToUsers = async (users: UserWithVacations[]): Promise<UserWithGitlabId[]> => {
+  const gitlabNewcubatorGroupId = process.env.GITLAB_NEWCUBATOR_GROUP_ID;
+
+  if (typeof gitlabNewcubatorGroupId === "undefined") {
+    throw new Error("No GitLab newcubator group ID given!");
+  }
+
   const usersWithGitlabIdPromises = users.map(async (user) => {
-    const members = await getMembers(process.env.GITLAB_NEWCUBATOR_GROUP_ID);
+    const members = await getMembers(gitlabNewcubatorGroupId);
     const gitlabId = members.find(
       (member) =>
         member.name.toLowerCase().includes(user.user.firstname.toLowerCase()) &&

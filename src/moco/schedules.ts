@@ -42,7 +42,7 @@ export async function createMultipleUserSchedules(
   am: boolean,
   pm: boolean,
   comment: string,
-  symbol: number,
+  symbol: number | null,
   overwrite: boolean,
 ) {
   while (from.isBefore(to) || from.isSame(to)) {
@@ -67,7 +67,7 @@ export async function createUserSchedule(
   am: boolean,
   pm: boolean,
   comment: string,
-  symbol: number,
+  symbol: number | null,
   overwrite: boolean,
 ) {
   return await axios.post<MocoSchedule[]>(

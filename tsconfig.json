@@ -7,7 +7,7 @@
     "module": "nodenext",
     "target": "es2024",
 
-    // "strict": true,
+    "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
     "moduleResolution": "node16",

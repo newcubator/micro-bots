@@ -57,7 +57,7 @@ export const slackConversationsInvite = async (channelId: string, users: string)
 };
 
 export const getSlackUsers = async () => {
-  return (await slack.users.list()) as SlackUsersListResponse;
+  return (await slack.users.list()) as unknown as SlackUsersListResponse;
 };
 
 export const slackChatPostMessage = async (text: string, channelId: string, username: string, icon_emoji?: string) => {
@@ -84,7 +84,12 @@ export const getSlackUserProfile = async (user: string) => {
   })) as UsersProfileGetResponse;
 };
 
-export const slackUploadFileToChannel = async (channels, file, filename, initial_comment) => {
+export const slackUploadFileToChannel = async (
+  channels: string,
+  file: Buffer,
+  filename: string,
+  initial_comment: string,
+) => {
   return await slack.files.upload({
     channels,
     file,

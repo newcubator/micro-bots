@@ -15,7 +15,7 @@ export async function removeUserPresences(user_id: string, from: Dayjs, to?: Day
   );
 
   console.log(
-    `Found ${existingPresences.data.length} presences for user ${user_id} in the given time frame ${from.toISOString()} - ${to.toISOString()}. Deleting them now`,
+    `Found ${existingPresences.data.length} presences for user ${user_id} in the given time frame ${from.toISOString()} - ${to?.toISOString()}. Deleting them now`,
   );
 
   for (const presence of existingPresences.data) {

@@ -62,7 +62,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
   const text = event.detail.message;
 
   const userProfile = await getSlackUserProfile(event.detail.sender);
-  const userName = userProfile.profile.real_name;
+  const userName = userProfile.profile?.real_name ?? event.detail.sender;
 
   const pdf = await renderShortMailPdf({
     sender: userName,

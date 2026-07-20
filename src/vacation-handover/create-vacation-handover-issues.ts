@@ -14,6 +14,12 @@ const MIN_VACATION_DURATION = 3;
 dayjs.extend(isBetween);
 
 export const createVacationHandoverIssues = async (vacationIssues: GitlabIssue[]) => {
+  const gitlabBookProjectId = process.env.GITLAB_BOOK_PROJECT_ID;
+
+  if (typeof gitlabBookProjectId === "undefined") {
+    throw new Error("No GitLab book project ID given!");
+  }
+
   // get scheduled vacations in 7 days
   const day = dayjs().add(7, "day");
   const dayFormatted = day.format("YYYY-MM-DD");
@@ -28,12 +34,12 @@ export const createVacationHandoverIssues = async (vacationIssues: GitlabIssue[]
 
   const usersWithStartAndEndDates = getUsersWithStartAndEndDate(vacationUsers, day, MIN_VACATION_DURATION);
 
-  const vacationHandoverDescription = (
-    await getIssueTemplateByName(process.env.GITLAB_BOOK_PROJECT_ID, "Urlaubsübergabe")
-  ).content;
+  const vacationHandoverDescription = (await getIssueTemplateByName(gitlabBookProjectId, "Urlaubsübergabe")).content;
 
   const usersWithGitlabId = await addGitlabIdToUsers(usersWithStartAndEndDates);
 
   // open new issues if no closed issues were found with the expected title
-  await Promise.all(createIssuesForUsers(usersWithGitlabId, vacationHandoverDescription, vacationIssues));
+  await Promise.all(
+    createIssuesForUsers(gitlabBookProjectId, usersWithGitlabId, vacationHandoverDescription, vacationIssues),
+  );
 };

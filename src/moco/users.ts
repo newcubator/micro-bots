@@ -38,10 +38,12 @@ export async function getUserById(id: string) {
 }
 
 export function findUserBySlackCommand(
-  command: Pick<SlackCommandType, "user_id" | "user_name">,
-): (users: Array<MocoUserType>) => MocoUserType {
-  return (users: Array<MocoUserType>): MocoUserType => {
-    let user: MocoUserType;
+  command:
+    | Pick<SlackCommandType, "user_id" | "user_name">
+    | { user_id?: string | string[]; user_name?: string | string[] },
+): (users: Array<MocoUserType>) => MocoUserType | undefined {
+  return (users: Array<MocoUserType>): MocoUserType | undefined => {
+    let user: MocoUserType | undefined;
     user = findUserBySlackId(users, command.user_id);
     if (!user) {
       user = findUserByMailPrefix(users, command.user_name);
@@ -50,10 +52,20 @@ export function findUserBySlackCommand(
   };
 }
 
-function findUserBySlackId(users: Array<MocoUserType>, slackId: string): MocoUserType {
+function findUserBySlackId(
+  users: Array<MocoUserType>,
+  slackId: string | string[] | undefined,
+): MocoUserType | undefined {
   return users.find((user) => user.custom_properties.SlackId == slackId);
 }
 
-function findUserByMailPrefix(users: Array<MocoUserType>, prefix: string): MocoUserType {
+function findUserByMailPrefix(
+  users: Array<MocoUserType>,
+  prefix: string | string[] | undefined,
+): MocoUserType | undefined {
+  if (typeof prefix !== "string") {
+    return undefined;
+  }
+
   return users.find((user) => user.email.startsWith(prefix));
 }

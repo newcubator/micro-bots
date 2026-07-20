@@ -322,7 +322,7 @@ describe("vacation-handover", () => {
               "2021-10-18",
               "2021-10-19",
             ],
-            employment: exampleUserEmploymentResponse.data[0] as MocoEmployment,
+            employment: exampleUserEmploymentResponse.data[0] as unknown as MocoEmployment,
           },
         ],
         dayjs("2021-10-11"),
