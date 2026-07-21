@@ -4,25 +4,25 @@ This project hosts a collection of our internal bots which are little useful too
 
 ## Prerequisites
 
-- [Node.js](https://nodejs.org/en/download), we use Node.js 14
-- [Serverless Framework](https://www.serverless.com)
+- [Node.js](https://nodejs.org/en/download), use the version from [`.nvmrc`](./.nvmrc)
+- [Serverless Framework](https://www.serverless.com), installed through the project dependencies
 - [AWS Account](https://aws.amazon.com/)
 
 The project uses the Serverless Framework to create lambda functions (serverless functions) on AWS.
 
-Please read the [documentation guide for Serverless with AWS](https://www.serverless.com/framework/docs/providers/aws/guide/credentials) and make sure that you have completed the necessary steps.
+Please read the [documentation guide for Serverless with AWS](https://www.serverless.com/framework/docs/providers/aws/guide/credentials) and make sure that you have completed the necessary steps for local deployments.
 
-Add the `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` to the environment variables in Gitlab (Settings > CI/CD > Variables).
+Production deployments from GitLab CI use OpenID Connect to assume the `GitlabCi` role in AWS. Do not add long-lived `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` values to GitLab for deployments.
 
 ## Getting started
 
-To run the bots locally you first have to install all dependencies
+To run the bots locally you first have to install all dependencies:
 
 ```
-$ npm install
+npm install
 ```
 
-Some Microbot functions depend on external services, e.g. Slack or Moco. Please consult the individual documentation (below) for the required setup and further information.
+Some Microbot functions depend on external services, e.g. Slack or Moco. Please consult the individual documentation (below) for the required setup and further information. Local scripts load environment variables from `.env.local`.
 
 To then invoke the function locally you have to use
 
@@ -41,11 +41,19 @@ visit [serverless invoke local](https://www.serverless.com/framework/docs/provid
 
 ## Deployment
 
-For deployment use
+For a development deployment, use:
 
 ```
-$ serverless deploy
+npm run deploy:dev
 ```
+
+For a production deployment from your local machine, use:
+
+```
+npm run deploy:prod
+```
+
+The regular production deployment is handled by GitLab CI. The `deploy` job runs on `main`, assumes the AWS role `arn:aws:iam::931595285256:role/GitlabCi`, and deploys the Serverless stack to the `production` stage in `eu-central-1`.
 
 If you want to get more information about the deployment click [here](https://www.serverless.com/framework/docs/providers/aws/guide/deploying).
 
