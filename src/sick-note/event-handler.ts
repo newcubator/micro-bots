@@ -10,12 +10,25 @@ import { slackChatPostMessage } from "../slack/slack";
 
 export const eventHandler = async (event: EventBridgeEvent<string, SickNoteRequestedEvent>) => {
   console.log(`Handling event ${JSON.stringify(event.detail)}`);
-  const user: MocoUserType = await getUsers().then(
+  const user: MocoUserType | undefined = await getUsers().then(
     findUserBySlackCommand({
       user_id: event.detail.userId,
       user_name: event.detail.userName,
     }),
   );
+  const generalChannel = process.env.GENERAL_CHANNEL;
+
+  if (!user) {
+    await axios.post(event.detail.responseUrl, {
+      replace_original: "true",
+      text: `Wir konnten deinen aktuellen Benutzer nicht in Moco finden. Prüfe deinen Benutzernamen und setze im Zweifel manuell deine SlackID in Moco`,
+    });
+    return;
+  }
+
+  if (typeof generalChannel === "undefined") {
+    throw new Error("No general Slack Channel given to post the message in!");
+  }
 
   const isSingleDay = event.detail.forSingleDay;
   const startDate = isSingleDay ? dayjs() : dayjs(event.detail.startDay);
@@ -40,7 +53,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, SickNoteReque
   try {
     await createMultipleUserSchedules(startDate, endDate, user.id, 3, true, true, comment, null, true);
     await removeUserPresences(user.id, startDate, endDate);
-    await slackChatPostMessage(generalChannelMessage, process.env.GENERAL_CHANNEL, "Krankschreibung", "😷");
+    await slackChatPostMessage(generalChannelMessage, generalChannel, "Krankschreibung", "😷");
   } catch (e) {
     console.error(e);
     await axios.post(event.detail.responseUrl, {

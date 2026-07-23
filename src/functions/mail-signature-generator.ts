@@ -3,10 +3,11 @@ import { MocoUserType } from "../moco/types/moco-types";
 import { findUserBySlackCommand, getUsers } from "../moco/users";
 
 export const handler = async (event: APIGatewayEvent) => {
-  const { user_id, user_name } = event.queryStringParameters;
+  const user_id = event.queryStringParameters?.user_id;
+  const user_name = event.queryStringParameters?.user_name;
   console.log("Query Params:", user_id, user_name);
 
-  const user: MocoUserType = await getUsers().then(findUserBySlackCommand({ user_id, user_name }));
+  const user: MocoUserType | undefined = await getUsers().then(findUserBySlackCommand({ user_id, user_name }));
 
   if (!user) {
     return {

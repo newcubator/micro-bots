@@ -7,12 +7,16 @@ import { MocoContract, MocoProject } from "./types/moco-types";
  * @See https://github.com/hundertzehn/mocoapp-api-docs/blob/master/sections/projects.md
  */
 
-export async function getProjects(parameters = { include_archived: true }) {
+type ProjectSearchParameters = {
+  include_archived: boolean;
+};
+
+export async function getProjects(parameters: ProjectSearchParameters = { include_archived: true }) {
   return autoPage<MocoProject>((page: number) => getProjectsPaged(parameters, page));
 }
 
-const getProjectsPaged = (parameters, page) =>
-  axios.get<MocoProject>("https://newcubator.mocoapp.com/api/v1/projects", {
+const getProjectsPaged = (parameters: ProjectSearchParameters, page: number) =>
+  axios.get<MocoProject[]>("https://newcubator.mocoapp.com/api/v1/projects", {
     headers: {
       Authorization: "Token token=" + MOCO_TOKEN,
     },

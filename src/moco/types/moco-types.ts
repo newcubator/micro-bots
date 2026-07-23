@@ -179,7 +179,7 @@ export interface MocoDeal {
 
 export interface MocoContact {
   id: number;
-  gender: "F" | "H";
+  gender: "F" | "M" | "H";
   firstname: string;
   lastname: string;
   title: string;

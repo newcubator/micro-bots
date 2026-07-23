@@ -5,6 +5,7 @@ import { UserWithGitlabId } from "./add-gitlab-id-to-users";
 import { calculateDueDate } from "./calculate-due-date";
 
 export const createIssuesForUsers = (
+  gitlabBookProjectId: string,
   users: UserWithGitlabId[],
   description: string,
   issues: GitlabIssue[],
@@ -17,7 +18,7 @@ export const createIssuesForUsers = (
     const issue = issues.find((issue) => issue.title === issueTitle);
     if (issue === undefined) {
       return createIssue(
-        process.env.GITLAB_BOOK_PROJECT_ID,
+        gitlabBookProjectId,
         issueTitle,
         description,
         ["VacationHandover"],
@@ -32,6 +33,7 @@ export const createIssuesForUsers = (
       console.log(
         `Issue for detected vacation of ${user.user.firstname} for vacation from ${user.dates[0]} to ${user.dates[1]} already exists with due date ${dueDate}`,
       );
+      return Promise.resolve();
     }
   });
 };

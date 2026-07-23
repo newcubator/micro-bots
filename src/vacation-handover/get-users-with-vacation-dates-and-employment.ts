@@ -1,9 +1,18 @@
 import dayjs from "dayjs";
 import { getUserEmployments } from "../moco/employments";
 import { getUserSchedules } from "../moco/schedules";
-import { MocoUserType } from "../moco/types/moco-types";
+import { MocoEmployment, MocoUserType } from "../moco/types/moco-types";
 
-export const getUsersWithVacationDatesAndEmployment = async (users: MocoUserType[], date: dayjs.Dayjs) => {
+type UserWithVacationDatesAndEmployment = {
+  user: MocoUserType;
+  vacationDates: string[];
+  employment: MocoEmployment;
+};
+
+export const getUsersWithVacationDatesAndEmployment = async (
+  users: MocoUserType[],
+  date: dayjs.Dayjs,
+): Promise<UserWithVacationDatesAndEmployment[]> => {
   return (
     await Promise.all(
       users.map(async (user) => {
@@ -31,5 +40,5 @@ export const getUsersWithVacationDatesAndEmployment = async (users: MocoUserType
         };
       }),
     )
-  ).filter((value) => !!value.employment);
+  ).filter((value): value is UserWithVacationDatesAndEmployment => !!value.employment);
 };
