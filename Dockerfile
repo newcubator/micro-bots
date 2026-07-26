@@ -21,7 +21,7 @@ RUN npm ci --omit=dev && npm cache clean --force
 
 COPY --from=build --chown=node:node /app/dist ./dist
 
-USER node
+USER 1000:1000
 EXPOSE 3000
 
 CMD ["node", "dist/server.js"]
