@@ -19,5 +19,5 @@ This can look like this, for example:
 
 The birthday bot runs every day at 4:05 AM (UTC). It loads the data from moco, processes it, and uploads it to slack.
 
-You can easily modify time by changing the execution time of the [AWS EventBridge](https://docs.aws.amazon.com/eventbridge/) in the serverless.yml [here](https://gitlab.com/newcubator/micro-bots/-/blob/main/serverless.yml).
+The schedule is defined as the `micro-bots-birthday` Kubernetes CronJob in [`infrastructure/index.ts`](../infrastructure/index.ts).
 There you can also adjust `LEAD_TIME`, which is the time in advance when it opens the channel (currently it is 21 days).

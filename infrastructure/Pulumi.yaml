@@ -1,0 +1,6 @@
+name: micro-bots
+description: Kubernetes deployment for newcubator micro-bots on Hubertus
+runtime:
+  name: nodejs
+  options:
+    packagemanager: npm

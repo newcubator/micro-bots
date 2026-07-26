@@ -1,8 +1,8 @@
-import { APIGatewayEvent } from "aws-lambda";
 import { decode } from "querystring";
+import { HttpRequest, HttpResponse } from "../http/types";
 import { SlackCommandType } from "../slack/types/slack-types";
 
-export const handler = async (event: APIGatewayEvent) => {
+export const handler = async (event: HttpRequest): Promise<HttpResponse> => {
   const command: SlackCommandType = decode(event.body ?? "") as SlackCommandType;
 
   const responseBody = {
@@ -11,7 +11,7 @@ export const handler = async (event: APIGatewayEvent) => {
         type: "section",
         text: {
           type: "mrkdwn",
-          text: `Du kannst deine Mail Signatur unter https://kceiclszhf.execute-api.eu-central-1.amazonaws.com/production/mailSignatureGenerator?user_id=${command.user_id}&user_name=${command.user_name} abrufen.`,
+          text: `Du kannst deine Mail Signatur unter https://microbots.hubertus.newcubator.com/mailSignatureGenerator?user_id=${command.user_id}&user_name=${command.user_name} abrufen.`,
         },
       },
     ],

@@ -1,4 +1,3 @@
-import { EventBridgeEvent } from "aws-lambda";
 import axios from "axios";
 import dayjs from "dayjs";
 import { getCompanyById } from "../moco/companies";
@@ -10,17 +9,17 @@ import { getSlackUserProfile } from "../slack/slack";
 import { renderShortMailPdf } from "./pdf";
 import { uploadFileToSlackChannel } from "../slack/upload-file-to-slack-channel";
 
-export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequestedEvent>) => {
-  console.log(`Handling event ${JSON.stringify(event.detail)}`);
+export const eventHandler = async (event: ShortMailRequestedEvent) => {
+  console.log(`Handling event ${JSON.stringify(event)}`);
   let recipient;
   let address;
   let salutation;
 
-  if (event.detail.personId.length <= 7) {
+  if (event.personId.length <= 7) {
     //the ID of contacts in moco has a maximum of 7 digits, while the employee IDs always have more digits
     //TODO: this is a hack, we should find a better way to distinguish between contacts and employees
 
-    recipient = await getContactById(event.detail.personId);
+    recipient = await getContactById(event.personId);
     let recipientCompanyAddress = "";
     if (recipient.company != null) {
       const recipientCompany = await getCompanyById(recipient.company.id);
@@ -34,14 +33,14 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
           : `Sehr geehrte/r Frau/Herr ${recipient.lastname}`;
     address = recipientCompanyAddress || recipient.work_address || recipient.home_address;
   } else {
-    recipient = await getUserById(event.detail.personId);
+    recipient = await getUserById(event.personId);
     address = recipient.home_address;
     salutation = `Hallo ${recipient.firstname}`;
   }
 
   if (!address) {
     console.log(
-      await axios.post(event.detail.responseUrl, {
+      await axios.post(event.responseUrl, {
         replace_original: "true",
         text: `Zu diesem Kontakt ist leider keine Adresse hinterlegt!`,
       }),
@@ -49,9 +48,9 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
     return;
   }
 
-  if (!event.detail.message) {
+  if (!event.message) {
     console.log(
-      await axios.post(event.detail.responseUrl, {
+      await axios.post(event.responseUrl, {
         replace_original: "true",
         text: `Ohne Text kann ich leider keinen Brief schreiben!`,
       }),
@@ -59,14 +58,14 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
     return;
   }
 
-  const text = event.detail.message;
+  const text = event.message;
 
-  const userProfile = await getSlackUserProfile(event.detail.sender);
-  const userName = userProfile.profile?.real_name ?? event.detail.sender;
+  const userProfile = await getSlackUserProfile(event.sender);
+  const userName = userProfile.profile?.real_name ?? event.sender;
 
   const pdf = await renderShortMailPdf({
     sender: userName,
-    location: event.detail.location,
+    location: event.location,
 
     recipient: {
       salutation,
@@ -79,24 +78,24 @@ export const eventHandler = async (event: EventBridgeEvent<string, ShortMailRequ
   });
 
   // Only user/bots that have joined a channel can post files
-  await channelJoin(event.detail.channelId);
+  await channelJoin(event.channelId);
 
   try {
     const upload = await uploadFileToSlackChannel({
       file: pdf,
       filename: `Kurzbrief ${recipient.lastname}.pdf`,
       initial_comment: ``,
-      channels: event.detail.channelId,
-      thread_ts: event.detail.messageTs,
+      channels: event.channelId,
+      thread_ts: event.messageTs,
     });
     if (upload.ok) {
-      await axios.post(event.detail.responseUrl, {
+      await axios.post(event.responseUrl, {
         replace_original: "true",
         text: `Der Kurzbrief für '${recipient.firstname} ${recipient.lastname}' ist fertig! 🙌`,
       });
     }
   } catch (error) {
-    await axios.post(event.detail.responseUrl, {
+    await axios.post(event.responseUrl, {
       replace_original: "true",
       text: `Es ist ein Fehler beim Erstellen des Kurzbriefs für '${recipient.firstname} ${recipient.lastname}' aufgetreten! 😔`,
     });

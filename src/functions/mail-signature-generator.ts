@@ -1,10 +1,10 @@
-import { APIGatewayEvent } from "aws-lambda";
+import { HttpRequest, HttpResponse } from "../http/types";
 import { MocoUserType } from "../moco/types/moco-types";
 import { findUserBySlackCommand, getUsers } from "../moco/users";
 
-export const handler = async (event: APIGatewayEvent) => {
-  const user_id = event.queryStringParameters?.user_id;
-  const user_name = event.queryStringParameters?.user_name;
+export const handler = async (event: HttpRequest): Promise<HttpResponse> => {
+  const user_id = event.query?.user_id;
+  const user_name = event.query?.user_name;
   console.log("Query Params:", user_id, user_name);
 
   const user: MocoUserType | undefined = await getUsers().then(findUserBySlackCommand({ user_id, user_name }));

@@ -1,18 +1,35 @@
 import { PlainTextOption } from "@slack/web-api";
-import { APIGatewayEvent } from "aws-lambda";
 import { decode } from "querystring";
+import { HttpRequest, HttpResponse } from "../http/types";
 import { getAllContacts } from "../moco/contacts";
 import { MocoContact, MocoUserType } from "../moco/types/moco-types";
 import { getUsers } from "../moco/users";
 import { BlockSuggestion } from "./types/slack-types";
 
-const loadAllRecipients: Promise<PlainTextOption[]> = initAllRecipients(); //cache the contacts so that a new search is faster
+let recipients: Promise<PlainTextOption[]> | undefined;
 
-export const selectMenuHandler = async (event: APIGatewayEvent) => {
+const loadAllRecipients = () => {
+  if (!recipients) {
+    recipients = initAllRecipients().catch((error) => {
+      recipients = undefined;
+      console.error(
+        JSON.stringify({
+          service: "micro-bots",
+          status: "recipient_load_failed",
+          error: error instanceof Error ? error.message : String(error),
+        }),
+      );
+      throw error;
+    });
+  }
+  return recipients;
+};
+
+export const selectMenuHandler = async (event: HttpRequest): Promise<HttpResponse> => {
   const blockSuggestion: BlockSuggestion = JSON.parse(decode(event.body ?? "").payload as string) as BlockSuggestion;
 
-  const recipients = await loadAllRecipients;
-  const filteredContacts = recipients.filter((person) =>
+  const allRecipients = await loadAllRecipients();
+  const filteredContacts = allRecipients.filter((person) =>
     person.text.text.toLowerCase().includes(blockSuggestion.value.toLowerCase()),
   );
 
