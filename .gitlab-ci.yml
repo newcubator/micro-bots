@@ -128,5 +128,3 @@ deploy:
     - pulumi config set --secret gitlabBookProjectId "$GITLAB_BOOK_PROJECT_ID"
     - pulumi config set --secret gitlabNewcubatorGroupId "$GITLAB_NEWCUBATOR_GROUP_ID"
     - pulumi up --yes --refresh --diff
-  only:
-    - main
