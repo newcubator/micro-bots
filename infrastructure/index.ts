@@ -17,6 +17,7 @@ const imageRepository = config.require("imageRepository");
 const imageTag = config.require("imageTag");
 const registryUsername = config.require("gitlabRegistryUsername");
 const registryPassword = config.requireSecret("gitlabRegistryPassword");
+const suspendCronJobs = config.getBoolean("suspendCronJobs") ?? true;
 const namespace = new Namespace("namespace", {
   metadata: { name: namespaceName, labels },
 });
@@ -134,6 +135,7 @@ const createCronJob = (name: string, command: string) =>
     spec: {
       schedule: "5 4 * * *",
       timeZone: "Etc/UTC",
+      suspend: suspendCronJobs,
       concurrencyPolicy: "Forbid",
       successfulJobsHistoryLimit: 3,
       failedJobsHistoryLimit: 3,

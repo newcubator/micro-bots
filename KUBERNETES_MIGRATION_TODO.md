@@ -21,6 +21,7 @@ Zielbild: `micro-bots` laeuft nicht mehr ueber Serverless Framework, API Gateway
 - Ziel-Domain ist `microbots.hubertus.newcubator.com`.
 - Secrets werden direkt als Pulumi Secrets verwaltet.
 - CronJobs laufen in UTC, wie bisher.
+- CronJobs werden beim ersten Kubernetes-Deploy pausiert angelegt. `SUSPEND_CRON_JOBS` ist in CI optional und standardmaessig `true`; erst nach dem Abschalten der AWS-Schedules wird es bewusst auf `false` gesetzt.
 - Background Tasks werden ohne zusaetzliches Interface in-process umgesetzt.
 - Der HTTP-Service startet mit einer Replica.
 - Die alten API-Gateway-URLs werden beim Cutover abgerissen.
@@ -110,6 +111,7 @@ Zielbild: `micro-bots` laeuft nicht mehr ueber Serverless Framework, API Gateway
   - `src/functions/vacation-handover.ts`
 - Kubernetes CronJobs mit Zeitplan `5 4 * * *` anlegen.
 - Die aktuelle Serverless-Zeit `04:05 UTC` beibehalten.
+- CronJobs waehrend des Parallelbetriebs pausieren und erst nach dem Abschalten der AWS-Schedules mit `SUSPEND_CRON_JOBS=false` aktivieren.
 - CronJob-Policies festlegen:
   - `concurrencyPolicy: Forbid`
   - `restartPolicy: Never`

@@ -126,6 +126,7 @@ deploy:
     - pulumi config set domain microbots.hubertus.newcubator.com
     - pulumi config set imageRepository "$CI_REGISTRY_IMAGE"
     - pulumi config set imageTag "sha-$CI_COMMIT_SHORT_SHA"
+    - pulumi config set suspendCronJobs "${SUSPEND_CRON_JOBS:-true}"
     - pulumi config set gitlabRegistryUsername "$GITLAB_REGISTRY_PULL_USERNAME"
     - pulumi config set --secret gitlabRegistryPassword "$GITLAB_REGISTRY_PULL_PASSWORD"
     - pulumi config set --secret slackToken "$SLACK_TOKEN"
