@@ -7,7 +7,7 @@ Zielbild: `micro-bots` laeuft nicht mehr ueber Serverless Framework, API Gateway
 - Erledigt: Node HTTP-Service mit Healthcheck, CLI fuer die drei taeglichen Aufgaben, Dockerfile, Pulumi-Definition fuer Deployment, Service, IngressRoute und CronJobs sowie GitLab CI fuer Image-Build und Pulumi-Deploy.
 - Erledigt: EventBridge, Lambda-Typen, Serverless Framework und AWS-spezifische Runtime-Konfiguration wurden entfernt. Slack-Aktionen laufen als geloggte In-Process-Background-Tasks mit `operationId`.
 - Erledigt: Unit-Tests wurden auf direkte Payloads umgestellt; der HTTP-Healthcheck und der Background-Task-Runner sind abgedeckt.
-- Vor dem ersten Deploy: Namespace `micro-bots` auf Hubertus bereitstellen, das GitLab-Projekt beim Hubertus-Agenten freischalten und die in `.gitlab-ci.yml` erwarteten geschuetzten Variablen setzen.
+- Vor dem ersten Deploy: die in `.gitlab-ci.yml` erwarteten geschuetzten CI-Variablen fuer GitLab OIDC, GCP Workload Identity, Kubernetes, Registry und Anwendung setzen.
 
 ## Zielarchitektur
 

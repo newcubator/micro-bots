@@ -42,20 +42,53 @@ container:image:
     - echo "$CI_REGISTRY_PASSWORD" | docker login -u "$CI_REGISTRY_USER" --password-stdin "$CI_REGISTRY"
     - docker build --pull -t "$CI_REGISTRY_IMAGE:sha-$CI_COMMIT_SHORT_SHA" .
     - docker push "$CI_REGISTRY_IMAGE:sha-$CI_COMMIT_SHORT_SHA"
-  only:
-    - main
+  rules:
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: on_success
+    - if: '$ENABLE_CONTAINER_BUILD == "true"'
+      when: manual
+    - when: never
 
 deploy:
   stage: deploy
-  image: ghcr.io/jansauer/pulumi-nodejs-gcloud:3.225.1
+  image: registry.gitlab.com/newcubator/newcubator/ci-images/pulumi-gcloud-node:node24
   needs:
     - container:image
+  variables:
+    CLOUDSDK_COMPONENT_MANAGER_DISABLE_UPDATE_CHECK: "1"
+    CLOUDSDK_CORE_DISABLE_PROMPTS: "1"
+    PULUMI_K8S_ENABLE_PATCH_FORCE: "true"
   environment:
-    name: production
+    name: micro-bots-hubertus
+    url: https://microbots.hubertus.newcubator.com
     deployment_tier: production
-  resource_group: production
+  resource_group: micro-bots-hubertus
+  id_tokens:
+    GITLAB_OIDC_TOKEN:
+      aud: https://gitlab.com
+  rules:
+    - if: >
+        $CI_COMMIT_BRANCH == "main" &&
+        $GCP_WORKLOAD_IDENTITY_PROVIDER &&
+        $GCP_SERVICE_ACCOUNT &&
+        $KUBERNETES_CONTEXT &&
+        $GITLAB_REGISTRY_PULL_USERNAME &&
+        $GITLAB_REGISTRY_PULL_PASSWORD &&
+        $PULUMI_CONFIG_PASSPHRASE &&
+        $SLACK_TOKEN &&
+        $MOCO_TOKEN &&
+        $GITLAB_TOKEN &&
+        $GENERAL_CHANNEL &&
+        $GITLAB_BOOK_PROJECT_ID &&
+        $GITLAB_NEWCUBATOR_GROUP_ID
+      when: on_success
+    - if: '$CI_COMMIT_BRANCH == "main"'
+      when: manual
+      allow_failure: true
+    - when: never
   before_script:
-    - test -n "$KUBECONFIG_DATA" || (echo "KUBECONFIG_DATA is required" && exit 1)
+    - test -n "$GCP_WORKLOAD_IDENTITY_PROVIDER" || (echo "GCP_WORKLOAD_IDENTITY_PROVIDER is required" && exit 1)
+    - test -n "$GCP_SERVICE_ACCOUNT" || (echo "GCP_SERVICE_ACCOUNT is required" && exit 1)
     - test -n "$PULUMI_CONFIG_PASSPHRASE" || (echo "PULUMI_CONFIG_PASSPHRASE is required" && exit 1)
     - test -n "$GITLAB_REGISTRY_PULL_USERNAME" || (echo "GITLAB_REGISTRY_PULL_USERNAME is required" && exit 1)
     - test -n "$GITLAB_REGISTRY_PULL_PASSWORD" || (echo "GITLAB_REGISTRY_PULL_PASSWORD is required" && exit 1)
@@ -65,15 +98,21 @@ deploy:
     - test -n "$GENERAL_CHANNEL" || (echo "GENERAL_CHANNEL is required" && exit 1)
     - test -n "$GITLAB_BOOK_PROJECT_ID" || (echo "GITLAB_BOOK_PROJECT_ID is required" && exit 1)
     - test -n "$GITLAB_NEWCUBATOR_GROUP_ID" || (echo "GITLAB_NEWCUBATOR_GROUP_ID is required" && exit 1)
-    - mkdir -p ~/.kube
-    - echo "$KUBECONFIG_DATA" | base64 -d > ~/.kube/config
-    - export KUBECONFIG=~/.kube/config
+    - echo "$GITLAB_OIDC_TOKEN" > "$CI_PROJECT_DIR/.ci_job_jwt_file"
+    - >
+      gcloud --quiet iam workload-identity-pools create-cred-config "$GCP_WORKLOAD_IDENTITY_PROVIDER"
+      --service-account="$GCP_SERVICE_ACCOUNT"
+      --output-file=/tmp/.gcp_temp_cred.json
+      --credential-source-file="$CI_PROJECT_DIR/.ci_job_jwt_file"
+    - gcloud --quiet auth login --cred-file=/tmp/.gcp_temp_cred.json
+    - export GOOGLE_APPLICATION_CREDENTIALS=/tmp/.gcp_temp_cred.json
     - cd infrastructure
     - npm ci
-    - pulumi login gs://infrastructure-hubertus
+    - pulumi login gs://newcubator-pulumi
     - pulumi stack select production --create
   script:
-    - pulumi config set namespace "${KUBERNETES_NAMESPACE:-micro-bots}"
+    - pulumi config set kubernetes:context "$KUBERNETES_CONTEXT"
+    - pulumi config set namespace micro-bots
     - pulumi config set domain microbots.hubertus.newcubator.com
     - pulumi config set imageRepository "$CI_REGISTRY_IMAGE"
     - pulumi config set imageTag "sha-$CI_COMMIT_SHORT_SHA"

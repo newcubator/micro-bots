@@ -17,7 +17,9 @@ const imageRepository = config.require("imageRepository");
 const imageTag = config.require("imageTag");
 const registryUsername = config.require("gitlabRegistryUsername");
 const registryPassword = config.requireSecret("gitlabRegistryPassword");
-const namespace = Namespace.get(namespaceName, namespaceName);
+const namespace = new Namespace("namespace", {
+  metadata: { name: namespaceName, labels },
+});
 
 const applicationSecret = new Secret("application-secret", {
   metadata: { name: appName, namespace: namespace.metadata.name, labels },
