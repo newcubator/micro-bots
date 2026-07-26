@@ -5,7 +5,7 @@ This could look like this:
 ![Vacation-Handover](vacation-handover-image.png)
 
 Currently, it runs at 4:05 AM (UTC) every day and always lets us know 7 days before the vacation. You can simply adjust that [here](https://gitlab.com/newcubator/micro-bots/-/blob/main/src/vacation-handover/create-vacation-handover-issues.ts) by changing the day value.
-To adjust this, you can simply change the execution time of the [AWS EventBridge](https://docs.aws.amazon.com/eventbridge/) [here](https://gitlab.com/newcubator/micro-bots/-/blob/main/serverless.yml).
+The execution time is defined as the `micro-bots-vacation-handover` Kubernetes CronJob in [`infrastructure/index.ts`](../infrastructure/index.ts).
 
 ### Prerequisites
 
@@ -23,5 +23,6 @@ The bot checks the moco API for scheduled vacations and calculates the whole vac
 To run the vacation handover bot locally, run the following command:
 
 ```
-npm run invoke --function=vacationHandover
+npm run build
+npm run start:cli -- vacation-handover
 ```

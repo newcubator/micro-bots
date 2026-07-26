@@ -52,15 +52,13 @@ describe("ShortmailEventHandler", () => {
     });
 
     await eventHandler({
-      detail: {
-        responseUrl: "https://slack.com/response_url",
-        personId: "2",
-        message: "Testnachricht an Melinda",
-        sender: "1337",
-        messageTs: "1633540187.000600",
-        channelId: "C02BBA8DWVD",
-        location: "H",
-      },
+      responseUrl: "https://slack.com/response_url",
+      personId: "2",
+      message: "Testnachricht an Melinda",
+      sender: "1337",
+      messageTs: "1633540187.000600",
+      channelId: "C02BBA8DWVD",
+      location: "H",
     } as any);
 
     expect(mocoCompanieMock).toHaveBeenCalledTimes(0);
@@ -123,15 +121,13 @@ describe("ShortmailEventHandler", () => {
     });
 
     await eventHandler({
-      detail: {
-        responseUrl: "https://slack.com/response_url",
-        personId: "1",
-        message: "Testnachricht an Bill",
-        sender: "1337",
-        messageTs: "1633540187.000600",
-        channelId: "C02BBA8DWVD",
-        location: "D",
-      },
+      responseUrl: "https://slack.com/response_url",
+      personId: "1",
+      message: "Testnachricht an Bill",
+      sender: "1337",
+      messageTs: "1633540187.000600",
+      channelId: "C02BBA8DWVD",
+      location: "D",
     } as any);
 
     expect(mocoCompanieMock).toHaveBeenCalledWith(42);

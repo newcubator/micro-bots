@@ -15,13 +15,13 @@ This can look like this, for example:
 
 ## How to Use
 
-The Gitlab project id and the Slack channel id have to be specified as environment variables at GITLAB_PROJECT and SLACK_CHANNEL.
+The Gitlab project id and the Slack channel id are configured through `GITLAB_BOOK_PROJECT_ID` and `GENERAL_CHANNEL`.
 The project id is the id of the project for which you want to receive a reminder.
 The Slack channel id is the id of the Slack channel where you want to post the reminder.
-This can be done by adding your specific GITLAB_PROJECT and SLACK_CHANNEL to the environment variables in Gitlab (Settings > CI/CD > Variables).
+This can be done by adding the corresponding protected GitLab CI variables.
 
 ## How it works
 
 The Gitlab Issue Reminder runs every day at 4:05 AM (UTC). It loads the data from Gitlab, processes it, and uploads it to slack.
 
-You can easily modify time by changing the execution time of the [AWS EventBridge](https://docs.aws.amazon.com/eventbridge/) in the serverless.yml [here](https://gitlab.com/newcubator/micro-bots/-/blob/main/serverless.yml).
+The schedule is defined as the `micro-bots-book-issue-reminder` Kubernetes CronJob in [`infrastructure/index.ts`](../infrastructure/index.ts).

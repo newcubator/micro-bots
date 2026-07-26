@@ -1,8 +1,8 @@
-import { APIGatewayEvent } from "aws-lambda";
 import { ActionType, ShortMailFields } from "../slack/types/slack-types";
 import { decode } from "querystring";
+import { HttpRequest, HttpResponse } from "../http/types";
 
-export const commandHandler = async (event: APIGatewayEvent) => {
+export const commandHandler = async (event: HttpRequest): Promise<HttpResponse> => {
   return {
     statusCode: 200,
     body: JSON.stringify({

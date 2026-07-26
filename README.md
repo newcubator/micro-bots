@@ -5,14 +5,9 @@ This project hosts a collection of our internal bots which are little useful too
 ## Prerequisites
 
 - [Node.js](https://nodejs.org/en/download), use the version from [`.nvmrc`](./.nvmrc)
-- [Serverless Framework](https://www.serverless.com), installed through the project dependencies
-- [AWS Account](https://aws.amazon.com/)
+- Docker, when you want to run the production container locally
 
-The project uses the Serverless Framework to create lambda functions (serverless functions) on AWS.
-
-Please read the [documentation guide for Serverless with AWS](https://www.serverless.com/framework/docs/providers/aws/guide/credentials) and make sure that you have completed the necessary steps for local deployments.
-
-Production deployments from GitLab CI use OpenID Connect to assume the `GitlabCi` role in AWS. Do not add long-lived `AWS_ACCESS_KEY_ID` and `AWS_SECRET_ACCESS_KEY` values to GitLab for deployments.
+The project runs as a Node.js service and three Kubernetes CronJobs on Hubertus. Pulumi manages the deployment, the Traefik route, CronJobs and application secrets.
 
 ## Getting started
 
@@ -24,38 +19,25 @@ npm install
 
 Some Microbot functions depend on external services, e.g. Slack or Moco. Please consult the individual documentation (below) for the required setup and further information. Local scripts load environment variables from `.env.local`.
 
-To then invoke the function locally you have to use
+To start the HTTP service locally, use
 
 ```
-npm run invoke --function=<function-name>
+npm run build
+npm start
 ```
 
-If you want to invoke your function with a payload create a json file in the payloads directory and invoke your function with
+The health endpoint is available at `http://localhost:3000/healthz`. Scheduled bots can be run locally through the CLI:
 
 ```
-npm run invoke --function=<function-name> -- -p ./payloads/<your-json-file.json>
+npm run build
+npm run start:cli -- birthday
+npm run start:cli -- book-issue-reminder
+npm run start:cli -- vacation-handover
 ```
-
-For more information on that
-visit [serverless invoke local](https://www.serverless.com/framework/docs/providers/aws/cli-reference/invoke-local/)
 
 ## Deployment
 
-For a development deployment, use:
-
-```
-npm run deploy:dev
-```
-
-For a production deployment from your local machine, use:
-
-```
-npm run deploy:prod
-```
-
-The regular production deployment is handled by GitLab CI. The `deploy` job runs on `main`, assumes the AWS role `arn:aws:iam::931595285256:role/GitlabCi`, and deploys the Serverless stack to the `production` stage in `eu-central-1`.
-
-If you want to get more information about the deployment click [here](https://www.serverless.com/framework/docs/providers/aws/guide/deploying).
+GitLab CI builds the container image and deploys it from `main` through Pulumi to Hubertus. The target domain is `microbots.hubertus.newcubator.com`. Required tokens and IDs are set as protected GitLab CI variables and stored as Pulumi secrets in the Kubernetes deployment.
 
 ## Bots :robot:
 

@@ -18,9 +18,7 @@ describe("MailSignatureGenerator", () => {
       },
     }));
 
-    const result = await handler({
-      queryStringParameters: { user_id: "U0113HJ8N2Z", user_name: "jan.sauer" },
-    } as any);
+    const result = await handler({ query: { user_id: "U0113HJ8N2Z", user_name: "jan.sauer" } });
 
     expect(result.statusCode).toBe(200);
     expect(result.headers).toEqual({
@@ -41,9 +39,7 @@ describe("MailSignatureGenerator", () => {
       },
     }));
 
-    const result = await handler({
-      queryStringParameters: { user_id: "U0113HJ8N2Z", user_name: "jan.sauer" },
-    } as any);
+    const result = await handler({ query: { user_id: "U0113HJ8N2Z", user_name: "jan.sauer" } });
 
     expect(result.statusCode).toBe(200);
     expect(result.headers).toEqual({
@@ -56,9 +52,7 @@ describe("MailSignatureGenerator", () => {
     mockGetUsers.mockResolvedValue([]);
     mockFindUserBySlackCommand.mockReturnValueOnce(() => null);
 
-    const result = await handler({
-      queryStringParameters: { user_id: "U0113HJ8N2Z", user_name: "jan.sauer" },
-    } as any);
+    const result = await handler({ query: { user_id: "U0113HJ8N2Z", user_name: "jan.sauer" } });
 
     expect(result.statusCode).toBe(200);
     expect(result.body).toEqual("Ich konnte dich leider keinem Moco User zuordnen.");

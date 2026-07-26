@@ -1,5 +1,4 @@
 import { PrivateChannelRequestedEvent } from "../slack/interaction-handler";
-import { EventBridgeEvent } from "aws-lambda";
 import axios from "axios";
 import {
   getSlackUserProfile,
@@ -9,27 +8,27 @@ import {
   getSlackUsers,
 } from "../slack/slack";
 
-export const eventHandler = async (event: EventBridgeEvent<string, PrivateChannelRequestedEvent>) => {
-  console.log(`Handling event ${JSON.stringify(event.detail)}`);
+export const eventHandler = async (event: PrivateChannelRequestedEvent) => {
+  console.log(`Handling event ${JSON.stringify(event)}`);
 
-  if (event.detail.channelName === null) {
+  if (event.channelName === null) {
     console.error("aborting because channel would have no name");
-    await axios.post(event.detail.responseUrl, {
+    await axios.post(event.responseUrl, {
       replace_original: "true",
       text: `Es wurde kein Channel erstellt, da kein Name angegeben wurde.`,
     });
     return;
   }
 
-  const excludedUsers = event.detail.personId;
+  const excludedUsers = event.personId;
   const excludedUsersNames = await Promise.all(
     excludedUsers.map((id) => getSlackUserProfile(id).then((user) => user.profile?.real_name ?? id)),
   );
 
-  const channelName = event.detail.channelName;
+  const channelName = event.channelName;
 
   if (channelName.includes(".")) {
-    await axios.post(event.detail.responseUrl, {
+    await axios.post(event.responseUrl, {
       replace_original: "true",
       text: `Der Channel Name darf keinen Punkt enthalten.`,
     });
@@ -41,7 +40,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, PrivateChanne
   const channelsResponse = await slackConversationsList();
   if (channelsResponse.channels.map((c) => c.name).includes(channelName)) {
     console.error("aborting because channel already exists");
-    await axios.post(event.detail.responseUrl, {
+    await axios.post(event.responseUrl, {
       replace_original: "true",
       text: `Diese Channel existiert bereits.`,
     });
@@ -52,7 +51,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, PrivateChanne
 
   if (excludedUsers.some((user) => !users.members.map((m) => m.id).includes(user))) {
     console.error("aborting because a specified user was not found");
-    await axios.post(event.detail.responseUrl, {
+    await axios.post(event.responseUrl, {
       replace_original: "true",
       text: `Mindestens einer der angegebenen User wurde nicht gefunden.`,
     });
@@ -68,7 +67,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, PrivateChanne
 
   if (invites.length <= 0) {
     console.error("aborting because channel would have no members");
-    await axios.post(event.detail.responseUrl, {
+    await axios.post(event.responseUrl, {
       replace_original: "true",
       text: `Es wurde kein Channel erstellt, da er keine Mitglieder hätte`,
     });
@@ -79,7 +78,7 @@ export const eventHandler = async (event: EventBridgeEvent<string, PrivateChanne
   await slackConversationsInvite(channelResponse.channel.id, invites.join(","));
 
   console.log(
-    await axios.post(event.detail.responseUrl, {
+    await axios.post(event.responseUrl, {
       replace_original: "true",
       text: `Der Channel ${channelName} ohne ${excludedUsersNames.join(", ")} erstellt!`,
     }),

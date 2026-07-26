@@ -44,13 +44,11 @@ test("handle event", async () => {
   renderCompletionNoticePdfMock.mockResolvedValueOnce(Buffer.from("pdf"));
 
   await eventHandler({
-    detail: {
-      responseUrl: "https://slack.com/response_url",
-      projectId: "project-01",
-      projectName: "Mars Cultivation Season Manager",
-      messageTs: "1633540187.000600",
-      channelId: "C02BBA8DWVD",
-    },
+    responseUrl: "https://slack.com/response_url",
+    projectId: "project-01",
+    projectName: "Mars Cultivation Season Manager",
+    messageTs: "1633540187.000600",
+    channelId: "C02BBA8DWVD",
   } as any);
 
   expect(getProjectMock).toHaveBeenCalledWith("project-01");

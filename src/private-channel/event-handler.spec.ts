@@ -28,14 +28,12 @@ describe("Private Channel Bot", () => {
     slackConversationsCreateMock.mockResolvedValueOnce({ channel: { id: 1337 } });
 
     await eventHandler({
-      detail: {
-        personId: ["1"],
-        channelName: "Gleicher_Testchannel",
-        responseUrl: "https://slack.com/response_url",
-        messageTs: "1633540187.000600",
-        channelId: "C02BBA8DWVD",
-        actionId: "PRIVATE_CHANNEL",
-      },
+      personId: ["1"],
+      channelName: "Gleicher_Testchannel",
+      responseUrl: "https://slack.com/response_url",
+      messageTs: "1633540187.000600",
+      channelId: "C02BBA8DWVD",
+      actionId: "PRIVATE_CHANNEL",
     } as any);
 
     expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
@@ -50,14 +48,12 @@ describe("Private Channel Bot", () => {
     slackConversationsCreateMock.mockResolvedValueOnce({ channel: { id: 1337 } });
 
     await eventHandler({
-      detail: {
-        personId: ["1"],
-        channelName: "Testchannel",
-        responseUrl: "https://slack.com/response_url",
-        messageTs: "1633540187.000600",
-        channelId: "C02BBA8DWVD",
-        actionId: "PRIVATE_CHANNEL",
-      },
+      personId: ["1"],
+      channelName: "Testchannel",
+      responseUrl: "https://slack.com/response_url",
+      messageTs: "1633540187.000600",
+      channelId: "C02BBA8DWVD",
+      actionId: "PRIVATE_CHANNEL",
     } as any);
 
     expect(slackUserProfileMock).toHaveBeenCalledWith("1");
@@ -76,14 +72,12 @@ describe("Private Channel Bot", () => {
     slackConversationsCreateMock.mockResolvedValueOnce({ channel: { id: 1337 } });
 
     await eventHandler({
-      detail: {
-        personId: ["1"],
-        channelName: null,
-        responseUrl: "https://slack.com/response_url",
-        messageTs: "1633540187.000600",
-        channelId: "C02BBA8DWVD",
-        actionId: "PRIVATE_CHANNEL",
-      },
+      personId: ["1"],
+      channelName: null,
+      responseUrl: "https://slack.com/response_url",
+      messageTs: "1633540187.000600",
+      channelId: "C02BBA8DWVD",
+      actionId: "PRIVATE_CHANNEL",
     } as any);
 
     expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
@@ -98,14 +92,12 @@ describe("Private Channel Bot", () => {
     slackConversationsCreateMock.mockResolvedValueOnce({ channel: { id: 1337 } });
 
     await eventHandler({
-      detail: {
-        personId: ["1"],
-        channelName: "test.channel",
-        responseUrl: "https://slack.com/response_url",
-        messageTs: "1633540187.000600",
-        channelId: "C02BBA8DWVD",
-        actionId: "PRIVATE_CHANNEL",
-      },
+      personId: ["1"],
+      channelName: "test.channel",
+      responseUrl: "https://slack.com/response_url",
+      messageTs: "1633540187.000600",
+      channelId: "C02BBA8DWVD",
+      actionId: "PRIVATE_CHANNEL",
     } as any);
 
     expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
@@ -121,14 +113,12 @@ describe("Private Channel Bot", () => {
     slackConversationsCreateMock.mockResolvedValueOnce({ channel: { id: 1337 } });
 
     await eventHandler({
-      detail: {
-        personId: ["1", "2"],
-        channelName: "Neuer_Testchannel",
-        responseUrl: "https://slack.com/response_url",
-        messageTs: "1633540187.000600",
-        channelId: "C02BBA8DWVD",
-        actionId: "PRIVATE_CHANNEL",
-      },
+      personId: ["1", "2"],
+      channelName: "Neuer_Testchannel",
+      responseUrl: "https://slack.com/response_url",
+      messageTs: "1633540187.000600",
+      channelId: "C02BBA8DWVD",
+      actionId: "PRIVATE_CHANNEL",
     } as any);
 
     expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {

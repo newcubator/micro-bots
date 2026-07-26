@@ -10,9 +10,12 @@
     "strict": true,
     "esModuleInterop": true,
     "skipLibCheck": true,
+    "isolatedModules": true,
     "moduleResolution": "node16",
 
-    "inlineSourceMap": true
+    "inlineSourceMap": true,
+    "rootDir": "src",
+    "outDir": "dist"
   },
   "include": ["src/**/*.ts"],
   "exclude": ["node_modules", "**/*.spec.ts"]

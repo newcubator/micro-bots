@@ -1,10 +1,10 @@
-import { APIGatewayEvent } from "aws-lambda";
 import axios from "axios";
 import { decode } from "querystring";
-import { eventBridgeSend } from "../clients/event-bridge";
+import { dispatchBackgroundTask } from "../background/dispatch";
+import { HttpRequest, HttpResponse } from "../http/types";
 import { ActionType, BlockAction } from "./types/slack-types";
 
-export const interactionHandler = async (event: APIGatewayEvent) => {
+export const interactionHandler = async (event: HttpRequest): Promise<HttpResponse> => {
   const blockAction: BlockAction = JSON.parse(decode(event.body ?? "").payload as string) as BlockAction;
 
   const actionType: string = blockAction.actions[0].action_id;
@@ -70,11 +70,13 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
 
       return {
         statusCode: 200,
+        body: "",
       };
     default:
       console.log("No handle registered for this type of action.");
       return {
         statusCode: 200,
+        body: "",
       };
   }
   if (
@@ -88,10 +90,11 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
 
     return {
       statusCode: 200,
+      body: "",
     };
   }
 
-  await eventBridgeSend(requestedEvent);
+  dispatchBackgroundTask(requestedEvent);
 
   await axios.post(blockAction.response_url, {
     replace_original: "true",
@@ -100,6 +103,7 @@ export const interactionHandler = async (event: APIGatewayEvent) => {
 
   return {
     statusCode: 200,
+    body: "",
   };
 };
 
@@ -179,7 +183,7 @@ export class ShortMailRequestedEvent {
 
 export class PrivateChannelRequestedEvent {
   personId: string[];
-  channelName: string;
+  channelName: string | null;
   responseUrl: string;
   messageTs: string;
   channelId: string;
@@ -229,7 +233,7 @@ type ShortMailEvent = {
 
 type PrivateChannelEvent = {
   personId: string[];
-  channelName: string;
+  channelName: string | null;
   responseUrl: string;
   messageTs: string;
   channelId: string;

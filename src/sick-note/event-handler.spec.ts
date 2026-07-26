@@ -47,16 +47,14 @@ describe("SicknoteEventHandler", () => {
     removeUserPresencesMock.mockReturnValueOnce(Promise.resolve());
 
     await eventHandler({
-      detail: {
-        channelId: "C02BBA8DWVD",
-        responseUrl: "https://slack.com/response_url",
-        actionType: ActionType.SICK_NOTE,
-        forSingleDay: true,
-        startDay: null,
-        endDay: null,
-        userId: "1337",
-        userName: "Max",
-      },
+      channelId: "C02BBA8DWVD",
+      responseUrl: "https://slack.com/response_url",
+      actionType: ActionType.SICK_NOTE,
+      forSingleDay: true,
+      startDay: null,
+      endDay: null,
+      userId: "1337",
+      userName: "Max",
     } as any);
 
     expect(getUsersMock).toHaveBeenCalledTimes(1);
@@ -100,16 +98,14 @@ describe("SicknoteEventHandler", () => {
     removeUserPresencesMock.mockReturnValueOnce(Promise.resolve());
 
     await eventHandler({
-      detail: {
-        channelId: "C02BBA8DWVD",
-        responseUrl: "https://slack.com/response_url",
-        actionType: ActionType.SICK_NOTE,
-        forSingleDay: false,
-        startDay: "2024-01-01",
-        endDay: "2024-01-04",
-        userId: "1337",
-        userName: "Max",
-      },
+      channelId: "C02BBA8DWVD",
+      responseUrl: "https://slack.com/response_url",
+      actionType: ActionType.SICK_NOTE,
+      forSingleDay: false,
+      startDay: "2024-01-01",
+      endDay: "2024-01-04",
+      userId: "1337",
+      userName: "Max",
     } as any);
 
     expect(getUsersMock).toHaveBeenCalledTimes(1);
@@ -148,16 +144,14 @@ describe("SicknoteEventHandler", () => {
     mocoScheduleMock.mockImplementationOnce(() => Promise.resolve());
 
     await eventHandler({
-      detail: {
-        channelId: "C02BBA8DWVD",
-        responseUrl: "https://slack.com/response_url",
-        actionType: ActionType.SICK_NOTE,
-        forSingleDay: false,
-        startDay: "2024-01-02",
-        endDay: "2024-01-01",
-        userId: "1337",
-        userName: "Max",
-      },
+      channelId: "C02BBA8DWVD",
+      responseUrl: "https://slack.com/response_url",
+      actionType: ActionType.SICK_NOTE,
+      forSingleDay: false,
+      startDay: "2024-01-02",
+      endDay: "2024-01-01",
+      userId: "1337",
+      userName: "Max",
     } as any);
 
     expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {

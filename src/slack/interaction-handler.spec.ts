@@ -1,11 +1,11 @@
 import { encode } from "querystring";
-import { eventBridgeSend } from "../clients/event-bridge";
+import { dispatchBackgroundTask } from "../background/dispatch";
 import { interactionHandler } from "./interaction-handler";
 import axios from "axios";
 import { ActionType } from "./types/slack-types";
 
-jest.mock("../clients/event-bridge");
-const eventBridgeSendMock = eventBridgeSend as jest.Mock;
+jest.mock("../background/dispatch");
+const dispatchBackgroundTaskMock = dispatchBackgroundTask as jest.Mock;
 const axiosPostMock = axios.post as jest.Mock;
 
 const samplePayload1 = {
@@ -356,13 +356,13 @@ const samplePayload12 = {
 
 it("handle interaction with wrong action type", async () => {
   const result = await interactionHandler(samplePayload5);
-  expect(eventBridgeSendMock).toHaveBeenCalledTimes(0);
+  expect(dispatchBackgroundTaskMock).toHaveBeenCalledTimes(0);
   expect(result.statusCode).toBe(200);
 });
 
 it("handle upload command in private channel", async () => {
   const result = await interactionHandler(samplePayload6);
-  expect(eventBridgeSendMock).toHaveBeenCalledTimes(0);
+  expect(dispatchBackgroundTaskMock).toHaveBeenCalledTimes(0);
   expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
     replace_original: "true",
     text: "Vielen Dank für deine Anfrage, ich kann das leider nicht in einem privaten Channel tun, bitte gehe dazu in einen öffentlichen Channel.",
@@ -371,11 +371,9 @@ it("handle upload command in private channel", async () => {
 });
 
 it("handle interaction", async () => {
-  eventBridgeSendMock.mockResolvedValueOnce({});
-
   const result = await interactionHandler(samplePayload1);
 
-  expect(eventBridgeSendMock).toHaveBeenCalledWith({
+  expect(dispatchBackgroundTaskMock).toHaveBeenCalledWith({
     projectId: "project-01",
     projectName: "Mars Cultivation Season Manager",
     responseUrl: "https://slack.com/response_url",
@@ -391,11 +389,9 @@ it("handle interaction", async () => {
 });
 
 it("handle interaction for sick note for single day", async () => {
-  eventBridgeSendMock.mockResolvedValueOnce({});
-
   const result = await interactionHandler(samplePayload11);
 
-  expect(eventBridgeSendMock).toHaveBeenCalledWith({
+  expect(dispatchBackgroundTaskMock).toHaveBeenCalledWith({
     channelId: "C02BBA8DWVD",
     actionType: ActionType.SICK_NOTE,
     responseUrl: "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
@@ -416,11 +412,9 @@ it("handle interaction for sick note for single day", async () => {
 });
 
 it("handle interaction for sick note for multiple days", async () => {
-  eventBridgeSendMock.mockResolvedValueOnce({});
-
   const result = await interactionHandler(samplePayload12);
 
-  expect(eventBridgeSendMock).toHaveBeenCalledWith({
+  expect(dispatchBackgroundTaskMock).toHaveBeenCalledWith({
     channelId: "C02BBA8DWVD",
     actionType: ActionType.SICK_NOTE,
     responseUrl: "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX",
@@ -441,11 +435,9 @@ it("handle interaction for sick note for multiple days", async () => {
 });
 
 it("handle interaction short mail with text", async () => {
-  eventBridgeSendMock.mockResolvedValueOnce({});
-
   const result = await interactionHandler(samplePayload4);
 
-  expect(eventBridgeSendMock).toHaveBeenCalledWith({
+  expect(dispatchBackgroundTaskMock).toHaveBeenCalledWith({
     channelId: "C02BBA8DWVD",
     messageTs: "1633540187.000600",
     responseUrl: "https://slack.com/response_url",
@@ -474,11 +466,9 @@ it("should cancel interaction", async () => {
 });
 
 it("handle interaction private channel", async () => {
-  eventBridgeSendMock.mockResolvedValueOnce({});
-
   const result = await interactionHandler(samplePayload7);
 
-  expect(eventBridgeSendMock).toHaveBeenCalledWith({
+  expect(dispatchBackgroundTaskMock).toHaveBeenCalledWith({
     channelId: "C02BBA8DWVD",
     messageTs: "1633540187.000600",
     responseUrl: "https://slack.com/response_url",
@@ -493,14 +483,7 @@ it("handle interaction private channel", async () => {
   expect(result.statusCode).toBe(200);
 });
 
-it("throw error when unable to send event", async () => {
-  eventBridgeSendMock.mockRejectedValueOnce(new Error("some error"));
-
-  await expect(interactionHandler(samplePayload1)).rejects.toThrow("some error");
-});
-
 it("throw error when unable to respond in slack", async () => {
-  eventBridgeSendMock.mockResolvedValueOnce({});
   axiosPostMock.mockRejectedValueOnce(new Error("some error"));
 
   await expect(interactionHandler(samplePayload1)).rejects.toThrow("some error");
