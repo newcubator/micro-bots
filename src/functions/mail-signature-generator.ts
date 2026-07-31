@@ -70,7 +70,7 @@ function replaceUmlauts(str: string): string {
 
 function createMailSignature(user: MocoUserType): string {
   const addressHannover = `Bödekerstraße 22, 30161 Hannover`;
-  const addressDortmund = `Westenhellweg 85-89, 44137 Dortmund`;
+  const addressDortmund = `Ruhrallee 9, 44139 Dortmund`;
   const phoneNumber = user.mobile_phone?.trim() || user.work_phone?.trim() || "+49 511 95731300";
 
   // prettier-ignore

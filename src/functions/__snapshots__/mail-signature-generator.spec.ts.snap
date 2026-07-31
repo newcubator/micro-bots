@@ -165,7 +165,7 @@ exports[`MailSignatureGenerator should generate a mail signature with dortmund a
                       </td>
                       <td style="padding: 0px;">
                         <span color="#50505e" style="font-size: 12px; color: rgb(80, 80, 94);">
-                          <span>Westenhellweg 85-89, 44137 Dortmund, Amtsgericht Hannover HRB 221930</span>
+                          <span>Ruhrallee 9, 44139 Dortmund, Amtsgericht Hannover HRB 221930</span>
                         </span>
                       </td>
                     </tr>
