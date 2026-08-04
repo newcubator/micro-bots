@@ -11,7 +11,7 @@ workflow:
     - if: "$CI_COMMIT_BRANCH"
 
 default:
-  image: node:24.15.0-alpine
+  image: node:24.19.0-alpine
   cache:
     key:
       files:
