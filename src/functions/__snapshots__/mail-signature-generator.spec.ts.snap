@@ -104,8 +104,8 @@ exports[`MailSignatureGenerator should generate a mail signature with dortmund a
                         </table>
                       </td>
                       <td style="padding: 0px; color: rgb(80, 80, 94);">
-                        <a href="tel:+49 231 58687380" color="#50505e" style="text-decoration: none; color: rgb(80, 80, 94); font-size: 12px;">
-                          <span>+49 231 58687380</span>
+                        <a href="tel:+49 511 95731300" color="#50505e" style="text-decoration: none; color: rgb(80, 80, 94); font-size: 12px;">
+                          <span>+49 511 95731300</span>
                         </a>
                       </td>
                     </tr>
@@ -165,7 +165,7 @@ exports[`MailSignatureGenerator should generate a mail signature with dortmund a
                       </td>
                       <td style="padding: 0px;">
                         <span color="#50505e" style="font-size: 12px; color: rgb(80, 80, 94);">
-                          <span>Westenhellweg 85-89, 44137 Dortmund, Amtsgericht Hannover HRB 221930</span>
+                          <span>Ruhrallee 9, 44139 Dortmund, Amtsgericht Hannover HRB 221930</span>
                         </span>
                       </td>
                     </tr>
