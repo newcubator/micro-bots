@@ -2,7 +2,7 @@ import { encode } from "querystring";
 import { dispatchBackgroundTask } from "../background/dispatch";
 import { interactionHandler } from "./interaction-handler";
 import axios from "axios";
-import { ActionType } from "./types/slack-types";
+import { ActionType, MailSignatureFields } from "./types/slack-types";
 
 jest.mock("../background/dispatch");
 const dispatchBackgroundTaskMock = dispatchBackgroundTask as jest.Mock;
@@ -79,6 +79,61 @@ const samplePayload4 = {
       actions: [
         {
           action_id: "SHORT_MAIL",
+          block_id: "confirmationButton",
+          text: [Object],
+          value: "Confirmation",
+          style: "primary",
+          type: "button",
+        },
+      ],
+    }),
+  }),
+} as any;
+
+const mailSignaturePayload = {
+  body: encode({
+    payload: JSON.stringify({
+      type: "block_actions",
+      user: {
+        id: "U0113HJ8N2Z",
+        username: "max.mustermann",
+        name: "max.mustermann",
+      },
+      container: {
+        message_ts: "1633540187.000600",
+        channel_id: "C02BBA8DWVD",
+      },
+      state: {
+        values: {
+          [MailSignatureFields.MAIL_SIGNATURE_TYPE]: {
+            [MailSignatureFields.MAIL_SIGNATURE_TYPE]: {
+              type: "static_select",
+              selected_option: {
+                value: "StadtQUEST",
+                text: {
+                  text: "StadtQUEST",
+                },
+              },
+            },
+          },
+          [MailSignatureFields.MAIL_SIGNATURE_JOB_TITLE]: {
+            [MailSignatureFields.MAIL_SIGNATURE_JOB_TITLE]: {
+              type: "static_select",
+              selected_option: {
+                value: "Product Owner",
+                text: {
+                  text: "Product Owner",
+                },
+              },
+            },
+          },
+        },
+      },
+      channel: { id: "C02BBA8DWVD", name: "testchannel" },
+      response_url: "https://slack.com/response_url",
+      actions: [
+        {
+          action_id: ActionType.MAIL_SIGNATURE,
           block_id: "confirmationButton",
           text: [Object],
           value: "Confirmation",
@@ -384,6 +439,20 @@ it("handle interaction", async () => {
   expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
     replace_original: "true",
     text: "Vielen Dank für deine Anfrage, ich werde mich sofort darum kümmern. ⏳",
+  });
+  expect(result.statusCode).toBe(200);
+});
+
+it("returns a configured mail signature link", async () => {
+  dispatchBackgroundTaskMock.mockClear();
+  axiosPostMock.mockClear();
+
+  const result = await interactionHandler(mailSignaturePayload);
+
+  expect(dispatchBackgroundTaskMock).toHaveBeenCalledTimes(0);
+  expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
+    replace_original: "true",
+    text: "Du kannst deine Mail-Signatur unter https://microbots.hubertus.newcubator.com/mailSignatureGenerator?user_id=U0113HJ8N2Z&user_name=max.mustermann&signature_type=StadtQUEST&job_title=Product+Owner abrufen.",
   });
   expect(result.statusCode).toBe(200);
 });

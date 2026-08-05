@@ -2,7 +2,7 @@ import axios from "axios";
 import { decode } from "querystring";
 import { dispatchBackgroundTask } from "../background/dispatch";
 import { HttpRequest, HttpResponse } from "../http/types";
-import { ActionType, BlockAction } from "./types/slack-types";
+import { ActionType, BlockAction, MailSignatureFields } from "./types/slack-types";
 
 export const interactionHandler = async (event: HttpRequest): Promise<HttpResponse> => {
   const blockAction: BlockAction = JSON.parse(decode(event.body ?? "").payload as string) as BlockAction;
@@ -39,6 +39,29 @@ export const interactionHandler = async (event: HttpRequest): Promise<HttpRespon
         actionType,
       });
       break;
+    case ActionType.MAIL_SIGNATURE: {
+      const params = new URLSearchParams({
+        user_id: blockAction.user.id,
+        user_name: blockAction.user.username || blockAction.user.name,
+        signature_type:
+          blockAction.state.values[MailSignatureFields.MAIL_SIGNATURE_TYPE][MailSignatureFields.MAIL_SIGNATURE_TYPE]
+            .selected_option.value,
+        job_title:
+          blockAction.state.values[MailSignatureFields.MAIL_SIGNATURE_JOB_TITLE][
+            MailSignatureFields.MAIL_SIGNATURE_JOB_TITLE
+          ].selected_option.value,
+      });
+
+      await axios.post(blockAction.response_url, {
+        replace_original: "true",
+        text: `Du kannst deine Mail-Signatur unter https://microbots.hubertus.newcubator.com/mailSignatureGenerator?${params.toString()} abrufen.`,
+      });
+
+      return {
+        statusCode: 200,
+        body: "",
+      };
+    }
     case ActionType.SHORT_MAIL:
       requestedEvent = new ShortMailRequestedEvent({
         personId: blockAction.state.values.SHORT_MAIL_RECIPIENT.SHORT_MAIL_RECIPIENT.selected_option.value,

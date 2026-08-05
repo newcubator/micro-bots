@@ -3,10 +3,16 @@ import { ParsedUrlQuery } from "querystring";
 
 export enum ActionType {
   COMPLETION_NOTICE = "COMPLETION_NOTICE",
+  MAIL_SIGNATURE = "MAIL_SIGNATURE",
   SHORT_MAIL = "SHORT_MAIL",
   PRIVATE_CHANNEL = "PRIVATE_CHANNEL",
   CANCEL = "CANCEL",
   SICK_NOTE = "SICK_NOTE",
+}
+
+export enum MailSignatureFields {
+  MAIL_SIGNATURE_TYPE = "MAIL_SIGNATURE_TYPE",
+  MAIL_SIGNATURE_JOB_TITLE = "MAIL_SIGNATURE_JOB_TITLE",
 }
 
 export enum ShortMailFields {

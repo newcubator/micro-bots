@@ -88,6 +88,40 @@ describe("MailSignatureGenerator", () => {
     expect(result.body).toContain("<span>+49 511 7654321</span>");
   });
 
+  it("should use the selected job title and signature type", async () => {
+    mockGetUsers.mockResolvedValue([]);
+    mockFindUserBySlackCommand.mockReturnValueOnce(() => ({
+      firstname: "Jörg",
+      lastname: "Görisch",
+      email: "joerg.goerisch@newcubator.com",
+      custom_properties: {
+        ["Job Bezeichnung"]: "Testsubject",
+        Standort: "Hannover",
+      },
+    }));
+
+    const result = await handler({
+      query: {
+        user_id: "U0113HJ8N2Z",
+        user_name: "jan.sauer",
+        signature_type: "StadtQUEST",
+        job_title: "Product Owner",
+      },
+    });
+
+    expect(result.body).toContain('data-signature-type="StadtQUEST"');
+    expect(result.body).toContain("<span>Product Owner</span>");
+    expect(result.body).toContain("https://stadtquest.de/mailsignature/stadtquest-logo.png");
+    expect(result.body).toContain("<span>StadtQUEST ein Produkt der Newcubator GmbH</span>");
+    expect(result.body).toContain('href="https://stadtquest.de/praxisimpulse/#newsletter"');
+    expect(result.body).toContain("<span>Unser Newsletter</span>");
+    expect(result.body).toContain('href="https://stadtquest.de"');
+    expect(result.body).toContain("<span>stadtquest.de</span>");
+    expect(result.body).toContain('href="https://stadtquest.de/email-marketing-banner"');
+    expect(result.body).toContain("https://stadtquest.de/mailsignature/mail-footer-image.jpg");
+    expect(result.body).not.toContain("mailto:joerg.goerisch@newcubator.com");
+  });
+
   it("should return a useful message if the user was not found", async () => {
     mockGetUsers.mockResolvedValue([]);
     mockFindUserBySlackCommand.mockReturnValueOnce(() => null);
