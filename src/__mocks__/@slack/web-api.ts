@@ -5,6 +5,7 @@ WebClient.mockImplementation(() => {
     conversations: {
       join: jest.fn().mockResolvedValue({ ok: true }),
       history: jest.fn().mockResolvedValue({ ok: true, messages: [] }),
+      replies: jest.fn().mockResolvedValue({ ok: true, messages: [] }),
     },
     files: {
       upload: jest.fn().mockResolvedValue({ ok: true }),

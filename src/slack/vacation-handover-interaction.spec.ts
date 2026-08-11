@@ -2,8 +2,8 @@ import axios from "axios";
 import { encode } from "querystring";
 import { interactionHandler } from "./interaction-handler";
 import {
+  createVacationHandoverChecklistActionId,
   createVacationHandoverChecklistBlocks,
-  VACATION_HANDOVER_CHECKLIST_ACTION,
 } from "../vacation-handover/checklist";
 
 jest.mock("axios");
@@ -16,6 +16,14 @@ describe("vacation-handover checklist interaction", () => {
     jest.clearAllMocks();
   });
 
+  it("creates unique action IDs for Slack checklist buttons", () => {
+    const actionsBlock = createVacationHandoverChecklistBlocks().find((block) => block.type === "actions");
+    const elements = actionsBlock?.elements as Array<{ action_id: string }>;
+    const actionIds = elements.map((element) => element.action_id);
+
+    expect(new Set(actionIds).size).toBe(actionIds.length);
+  });
+
   it("checks a checklist item in the Slack thread", async () => {
     const result = await interactionHandler({
       body: encode({
@@ -25,7 +33,7 @@ describe("vacation-handover checklist interaction", () => {
           channel: { id: "C0123456789", name: "urlaubsübergaben" },
           response_url: "https://slack.com/response_url",
           message: { blocks: createVacationHandoverChecklistBlocks() },
-          actions: [{ action_id: VACATION_HANDOVER_CHECKLIST_ACTION, value: "open-tasks" }],
+          actions: [{ action_id: createVacationHandoverChecklistActionId("open-tasks"), value: "open-tasks" }],
         }),
       }),
     });

@@ -14,6 +14,9 @@ export const VACATION_HANDOVER_CHECKLIST_ITEMS = [
   { id: "next-steps", label: "Nächste Schritte nach der Rückkehr festhalten" },
 ] as const;
 
+export const createVacationHandoverChecklistActionId = (itemId: string) =>
+  `${VACATION_HANDOVER_CHECKLIST_ACTION}:${itemId}`;
+
 export const createVacationHandoverChecklistBlocks = (
   completedItemIds: ReadonlySet<string> = new Set(),
 ): SlackBlock[] => [
@@ -29,7 +32,7 @@ export const createVacationHandoverChecklistBlocks = (
     block_id: VACATION_HANDOVER_CHECKLIST_BLOCK,
     elements: VACATION_HANDOVER_CHECKLIST_ITEMS.map((item) => ({
       type: "button",
-      action_id: VACATION_HANDOVER_CHECKLIST_ACTION,
+      action_id: createVacationHandoverChecklistActionId(item.id),
       value: item.id,
       text: {
         type: "plain_text",
@@ -50,7 +53,11 @@ export const getCompletedVacationHandoverItemIds = (blocks: unknown[] | undefine
     }
 
     for (const element of block.elements) {
-      if (!isRecord(element) || element.action_id !== VACATION_HANDOVER_CHECKLIST_ACTION) {
+      if (
+        !isRecord(element) ||
+        typeof element.action_id !== "string" ||
+        !element.action_id.startsWith(`${VACATION_HANDOVER_CHECKLIST_ACTION}:`)
+      ) {
         continue;
       }
 
