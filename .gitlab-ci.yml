@@ -166,14 +166,18 @@ teardown:aws:
     - TEARDOWN_DELETED=0
     - |
       if aws cloudformation describe-stacks --stack-name "$AWS_STACK_NAME" >/dev/null 2>&1; then
-        DEPLOYMENT_BUCKET="$(aws cloudformation describe-stack-resource
-        --stack-name "$AWS_STACK_NAME"
-        --logical-resource-id ServerlessDeploymentBucket
-        --query 'StackResourceDetail.PhysicalResourceId'
-        --output text 2>/dev/null || true)";
+        DEPLOYMENT_BUCKET="$(aws cloudformation describe-stack-resource --stack-name "$AWS_STACK_NAME" --logical-resource-id ServerlessDeploymentBucket --query 'StackResourceDetail.PhysicalResourceId' --output text 2>/dev/null || true)";
         if [ -n "$DEPLOYMENT_BUCKET" ] && [ "$DEPLOYMENT_BUCKET" != "None" ]; then
           if aws s3api head-bucket --bucket "$DEPLOYMENT_BUCKET" >/dev/null 2>&1; then
             aws s3 rm "s3://${DEPLOYMENT_BUCKET}" --recursive;
+            OBJECT_VERSIONS="$(aws s3api list-object-versions --bucket "$DEPLOYMENT_BUCKET" --query 'Versions[].{Key:Key,VersionId:VersionId}' --output json)";
+            if [ "$OBJECT_VERSIONS" != "[]" ] && [ "$OBJECT_VERSIONS" != "null" ]; then
+              aws s3api delete-objects --bucket "$DEPLOYMENT_BUCKET" --delete "{\"Objects\":${OBJECT_VERSIONS},\"Quiet\":true}";
+            fi;
+            DELETE_MARKERS="$(aws s3api list-object-versions --bucket "$DEPLOYMENT_BUCKET" --query 'DeleteMarkers[].{Key:Key,VersionId:VersionId}' --output json)";
+            if [ "$DELETE_MARKERS" != "[]" ] && [ "$DELETE_MARKERS" != "null" ]; then
+              aws s3api delete-objects --bucket "$DEPLOYMENT_BUCKET" --delete "{\"Objects\":${DELETE_MARKERS},\"Quiet\":true}";
+            fi;
           else
             echo "Deployment bucket $DEPLOYMENT_BUCKET does not exist; skipping bucket cleanup.";
           fi;
@@ -199,11 +203,7 @@ teardown:aws:
           echo "EventBridge rule default/$RULE_NAME does not exist; skipping.";
           continue;
         fi;
-        TARGET_IDS="$(aws events list-targets-by-rule
-        --event-bus-name default
-        --rule "$RULE_NAME"
-        --query 'Targets[].Id'
-        --output text 2>/dev/null || true)";
+        TARGET_IDS="$(aws events list-targets-by-rule --event-bus-name default --rule "$RULE_NAME" --query 'Targets[].Id' --output text 2>/dev/null || true)";
         if [ -n "$TARGET_IDS" ]; then
           aws events remove-targets --event-bus-name default --rule "$RULE_NAME" --ids $TARGET_IDS;
         fi;
@@ -213,19 +213,12 @@ teardown:aws:
       done
     - |
       if aws events describe-event-bus --name micro-bots-alf >/dev/null 2>&1; then
-        RULE_NAMES="$(aws events list-rules
-        --event-bus-name micro-bots-alf
-        --query 'Rules[].Name'
-        --output text)";
+        RULE_NAMES="$(aws events list-rules --event-bus-name micro-bots-alf --query 'Rules[].Name' --output text)";
         if [ -z "$RULE_NAMES" ]; then
           echo "EventBridge bus micro-bots-alf has no rules.";
         fi;
         for RULE_NAME in $RULE_NAMES; do
-          TARGET_IDS="$(aws events list-targets-by-rule
-          --event-bus-name micro-bots-alf
-          --rule "$RULE_NAME"
-          --query 'Targets[].Id'
-          --output text 2>/dev/null || true)";
+          TARGET_IDS="$(aws events list-targets-by-rule --event-bus-name micro-bots-alf --rule "$RULE_NAME" --query 'Targets[].Id' --output text 2>/dev/null || true)";
           if [ -n "$TARGET_IDS" ]; then
             aws events remove-targets --event-bus-name micro-bots-alf --rule "$RULE_NAME" --ids $TARGET_IDS;
           fi;
