@@ -190,15 +190,8 @@ teardown:aws:
         echo "CloudFormation stack $AWS_STACK_NAME does not exist; continuing with orphan cleanup.";
       fi
     - |
-      for RULE_NAME in
-      micro-bots-production-BirthdayEventsRuleSchedule1-122PCPU44PH95
-      micro-bots-production-BirthdayEventsRuleSchedule1-3LMKY1W2V2YD
-      micro-bots-production-CoronaHannoverEventsRuleSche-1WLRITILTQ6WG
-      micro-bots-production-CoronaHannoverEventsRuleSche-1X8TRPP2EXQ3R
-      micro-bots-production-VacationHandoverEventsRuleSc-11I1WXQMUK4CG
-      micro-bots-production-VacationHandoverEventsRuleSc-JF74SGXV5LFS
-      micro-bots-production-WorkloadAllEventsRuleSchedul-4T08E49BW9EA
-      micro-bots-production-WorkloadAllEventsRuleSchedul-USTD6TWUDIVA; do
+      ORPHAN_DEFAULT_RULES="micro-bots-production-BirthdayEventsRuleSchedule1-122PCPU44PH95 micro-bots-production-BirthdayEventsRuleSchedule1-3LMKY1W2V2YD micro-bots-production-CoronaHannoverEventsRuleSche-1WLRITILTQ6WG micro-bots-production-CoronaHannoverEventsRuleSche-1X8TRPP2EXQ3R micro-bots-production-VacationHandoverEventsRuleSc-11I1WXQMUK4CG micro-bots-production-VacationHandoverEventsRuleSc-JF74SGXV5LFS micro-bots-production-WorkloadAllEventsRuleSchedul-4T08E49BW9EA micro-bots-production-WorkloadAllEventsRuleSchedul-USTD6TWUDIVA";
+      for RULE_NAME in $ORPHAN_DEFAULT_RULES; do
         if ! aws events describe-rule --event-bus-name default --name "$RULE_NAME" >/dev/null 2>&1; then
           echo "EventBridge rule default/$RULE_NAME does not exist; skipping.";
           continue;
