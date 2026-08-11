@@ -1,7 +1,12 @@
 import axios from "axios";
 import dayjs from "dayjs";
 import MockDate from "mockdate";
-import { slackChatPostMessage, slackConversationsHistory, slackConversationsReplies } from "../slack/slack";
+import {
+  getSlackUsers,
+  slackChatPostMessage,
+  slackConversationsHistory,
+  slackConversationsReplies,
+} from "../slack/slack";
 import { MocoEmployment, MocoUserType } from "../moco/types/moco-types";
 import { calculateDueDate } from "./calculate-due-date";
 import { VACATION_HANDOVER_CHECKLIST_BLOCK } from "./checklist";
@@ -15,11 +20,13 @@ MockDate.set("2021-08-24");
 const slackChatPostMessageMock = slackChatPostMessage as jest.Mock;
 const slackConversationsHistoryMock = slackConversationsHistory as jest.Mock;
 const slackConversationsRepliesMock = slackConversationsReplies as jest.Mock;
+const getSlackUsersMock = getSlackUsers as jest.Mock;
 
 const exampleUser = {
   id: "444555666",
   firstname: "Peter",
   lastname: "Silie",
+  email: "peter.silie@newcubator.com",
   custom_properties: {},
 } as MocoUserType;
 
@@ -68,6 +75,7 @@ describe("vacation-handover", () => {
     jest.clearAllMocks();
     slackConversationsHistoryMock.mockResolvedValue([]);
     slackConversationsRepliesMock.mockResolvedValue([]);
+    getSlackUsersMock.mockResolvedValue({ members: [] });
     slackChatPostMessageMock
       .mockResolvedValueOnce({ ts: "1633540187.000600" })
       .mockResolvedValueOnce({ ts: "1633540187.000601" });
@@ -90,6 +98,45 @@ describe("vacation-handover", () => {
       threadTs: "1633540187.000600",
     });
     expect(axios.post).not.toHaveBeenCalled();
+  });
+
+  it("mentions the vacation user by the Slack ID stored in Moco", async () => {
+    const userWithSlackId = {
+      ...exampleUser,
+      custom_properties: { SlackId: " U1234567890 " },
+    };
+    (axios.get as jest.Mock)
+      .mockResolvedValueOnce({
+        ...exampleSchedulesResponse,
+        data: [{ ...exampleSchedulesResponse.data[0], user: userWithSlackId }],
+      })
+      .mockResolvedValueOnce(exampleUserSchedulesResponse)
+      .mockResolvedValueOnce(exampleUserEmploymentResponse);
+
+    await createVacationHandoverMessages("C0123456789");
+
+    expect(getSlackUsersMock).not.toHaveBeenCalled();
+    expect(slackChatPostMessageMock.mock.calls[0][4].blocks[1].text.text).toContain("<@U1234567890>");
+  });
+
+  it("mentions the vacation user by matching the Moco email to a Slack profile email", async () => {
+    getSlackUsersMock.mockResolvedValueOnce({
+      members: [
+        {
+          id: "U0987654321",
+          profile: { email: " PETER.SILIE@newcubator.com " },
+        },
+      ],
+    });
+    (axios.get as jest.Mock)
+      .mockResolvedValueOnce(exampleSchedulesResponse)
+      .mockResolvedValueOnce(exampleUserSchedulesResponse)
+      .mockResolvedValueOnce(exampleUserEmploymentResponse);
+
+    await createVacationHandoverMessages("C0123456789");
+
+    expect(getSlackUsersMock).toHaveBeenCalledTimes(1);
+    expect(slackChatPostMessageMock.mock.calls[0][4].blocks[1].text.text).toContain("<@U0987654321>");
   });
 
   it("does not create a duplicate for an existing handover with a checklist thread", async () => {

@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
-import { slackChatPostMessage, slackConversationsReplies } from "../slack/slack";
-import { SlackHistoryMessage } from "../slack/types/slack-types";
+import { getSlackUsers, slackChatPostMessage, slackConversationsReplies } from "../slack/slack";
+import { Member, SlackHistoryMessage } from "../slack/types/slack-types";
+import { MocoUserType } from "../moco/types/moco-types";
 import { UserWithVacations } from "./get-users-with-start-and-end-date";
 import { createVacationHandoverChecklistBlocks, VACATION_HANDOVER_CHECKLIST_BLOCK } from "./checklist";
 
@@ -9,6 +10,12 @@ export const createMessagesForUsers = async (
   users: UserWithVacations[],
   existingMessages: SlackHistoryMessage[],
 ) => {
+  let slackUsersByEmail: Map<string, Member> | undefined;
+  const getSlackUsersByEmail = async () => {
+    slackUsersByEmail = slackUsersByEmail ?? (await createSlackUsersByEmail());
+    return slackUsersByEmail;
+  };
+
   for (const user of users) {
     const startDate = dayjs(user.dates[0]);
     const endDate = dayjs(user.dates[1]);
@@ -30,8 +37,7 @@ export const createMessagesForUsers = async (
     }
 
     const employeeName = `${user.user.firstname} ${user.user.lastname}`;
-    const slackId = user.user.custom_properties?.SlackId;
-    const employeeMention = typeof slackId === "string" ? `<@${slackId}>` : employeeName;
+    const employeeMention = await createEmployeeMention(user.user, employeeName, getSlackUsersByEmail);
     const mainMessage = await slackChatPostMessage(
       `${handoverId} Urlaubsübergabe ${employeeName} (${startDateFormatted} – ${endDateFormatted})`,
       channelId,
@@ -88,3 +94,35 @@ const createChecklistThreadMessage = async (channelId: string, messageTs: string
 
 const hasVacationHandoverChecklist = (message: SlackHistoryMessage) =>
   message.blocks?.some((block) => block.block_id === VACATION_HANDOVER_CHECKLIST_BLOCK) ?? false;
+
+const createEmployeeMention = async (
+  user: MocoUserType,
+  fallbackName: string,
+  getSlackUsersByEmail: () => Promise<ReadonlyMap<string, Member>>,
+) => {
+  const slackId = trimString(user.custom_properties?.SlackId);
+  if (slackId) return `<@${slackId}>`;
+
+  const slackUsersByEmail = await getSlackUsersByEmail();
+  const slackUser = slackUsersByEmail.get(normalizeEmail(user.email) ?? "");
+  return slackUser ? `<@${slackUser.id}>` : fallbackName;
+};
+
+const createSlackUsersByEmail = async () => {
+  try {
+    const slackUsers = await getSlackUsers();
+    return new Map<string, Member>(
+      slackUsers.members.flatMap((member) => {
+        const email = normalizeEmail(member.profile.email);
+        return email ? [[email, member]] : [];
+      }),
+    );
+  } catch (error) {
+    console.error("Could not load Slack users for vacation handover mentions", error);
+    return new Map<string, Member>();
+  }
+};
+
+const trimString = (value: unknown) => (typeof value === "string" ? value.trim() : undefined);
+
+const normalizeEmail = (value: unknown) => trimString(value)?.toLowerCase();
