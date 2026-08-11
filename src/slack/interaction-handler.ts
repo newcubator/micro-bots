@@ -3,6 +3,11 @@ import { decode } from "querystring";
 import { dispatchBackgroundTask } from "../background/dispatch";
 import { HttpRequest, HttpResponse } from "../http/types";
 import { ActionType, BlockAction, MailSignatureFields } from "./types/slack-types";
+import {
+  createVacationHandoverChecklistBlocks,
+  getCompletedVacationHandoverItemIds,
+  VACATION_HANDOVER_CHECKLIST_ACTION,
+} from "../vacation-handover/checklist";
 
 export const interactionHandler = async (event: HttpRequest): Promise<HttpResponse> => {
   const blockAction: BlockAction = JSON.parse(decode(event.body ?? "").payload as string) as BlockAction;
@@ -14,6 +19,33 @@ export const interactionHandler = async (event: HttpRequest): Promise<HttpRespon
   let requestedEvent;
 
   switch (actionType) {
+    case VACATION_HANDOVER_CHECKLIST_ACTION: {
+      const itemId = blockAction.actions[0].value;
+      if (typeof itemId !== "string") {
+        return {
+          statusCode: 200,
+          body: "",
+        };
+      }
+
+      const completedItemIds = getCompletedVacationHandoverItemIds(blockAction.message?.blocks);
+      if (completedItemIds.has(itemId)) {
+        completedItemIds.delete(itemId);
+      } else {
+        completedItemIds.add(itemId);
+      }
+
+      await axios.post(blockAction.response_url, {
+        replace_original: "true",
+        text: "Urlaubsübergabe-Checkliste aktualisiert",
+        blocks: createVacationHandoverChecklistBlocks(completedItemIds),
+      });
+
+      return {
+        statusCode: 200,
+        body: "",
+      };
+    }
     case ActionType.SICK_NOTE: {
       const forSingleDay =
         blockAction.state.values.radio_buttons_days.radio_buttons_action.selected_option.value === "single-day";

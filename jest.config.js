@@ -6,8 +6,7 @@ process.env.GITLAB_TOKEN = "not a real gitlab token";
 process.env.GITLAB_PROJECT = "1111111";
 process.env.SLACK_CHANNEL = "1111111";
 process.env.GENERAL_CHANNEL = "1111111";
-process.env.GITLAB_BOOK_PROJECT_ID = "11111111";
-process.env.GITLAB_NEWCUBATOR_GROUP_ID = "1234567";
+process.env.VACATION_HANDOVER_CHANNEL_ID = "C0123456789";
 
 module.exports = {
   preset: "ts-jest",

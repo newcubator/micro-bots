@@ -78,11 +78,6 @@ interface TimeStats {
   human_total_time_spent: string;
 }
 
-export interface GitlabIssueTemplate {
-  name: string;
-  content: string;
-}
-
 export interface GitlabProject {
   id?: number;
   description?: string;
