@@ -48,7 +48,7 @@ describe("vacation-handover checklist interaction", () => {
           elements: expect.arrayContaining([
             expect.objectContaining({
               value: "open-tasks",
-              text: expect.objectContaining({ text: "☑ Offene Aufgaben und Fristen klären" }),
+              text: expect.objectContaining({ text: "☑ Aufgaben und Fristen geklärt" }),
             }),
           ]),
         }),

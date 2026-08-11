@@ -4,14 +4,14 @@ export const VACATION_HANDOVER_CHECKLIST_ACTION = "VACATION_HANDOVER_CHECKLIST";
 export const VACATION_HANDOVER_CHECKLIST_BLOCK = "vacation-handover-checklist";
 
 export const VACATION_HANDOVER_CHECKLIST_ITEMS = [
-  { id: "open-tasks", label: "Offene Aufgaben und Fristen klären" },
-  { id: "representation", label: "Vertretung und Zuständigkeiten klären" },
-  { id: "appointments", label: "Termine und wichtige Kontakte übergeben" },
-  { id: "documents", label: "Relevante Dokumente und Links teilen" },
-  { id: "pliant-invoices", label: "Rechnungen in Pliant hochgeladen" },
-  { id: "working-times", label: "Arbeitszeiten vollständig erfasst" },
+  { id: "open-tasks", label: "Aufgaben und Fristen geklärt" },
+  { id: "representation", label: "Vertretung geklärt" },
+  { id: "appointments", label: "Termine und Kontakte übergeben" },
+  { id: "documents", label: "Dokumente und Links geteilt" },
+  { id: "pliant-invoices", label: "Pliant-Rechnungen hochgeladen" },
+  { id: "working-times", label: "Arbeitszeiten erfasst" },
   { id: "email-absence", label: "E-Mail-Abwesenheit eingetragen" },
-  { id: "next-steps", label: "Nächste Schritte nach der Rückkehr festhalten" },
+  { id: "next-steps", label: "Rückkehr-Schritte festgehalten" },
 ] as const;
 
 export const createVacationHandoverChecklistActionId = (itemId: string) =>
