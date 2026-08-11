@@ -4,6 +4,7 @@ import { interactionHandler } from "./interaction-handler";
 import {
   createVacationHandoverChecklistActionId,
   createVacationHandoverChecklistBlocks,
+  VACATION_HANDOVER_THREAD_TEXT,
 } from "../vacation-handover/checklist";
 
 jest.mock("axios");
@@ -54,5 +55,48 @@ describe("vacation-handover checklist interaction", () => {
         }),
       ]),
     });
+  });
+
+  it("removes a check from a checked checklist item in the Slack thread", async () => {
+    const result = await interactionHandler({
+      body: encode({
+        payload: JSON.stringify({
+          type: "block_actions",
+          container: { message_ts: "1633540187.000601", channel_id: "C0123456789" },
+          channel: { id: "C0123456789", name: "vacation-handover" },
+          response_url: "https://slack.com/response_url",
+          message: { blocks: createVacationHandoverChecklistBlocks(new Set(["open-tasks"])) },
+          actions: [{ action_id: createVacationHandoverChecklistActionId("open-tasks"), value: "open-tasks" }],
+        }),
+      }),
+    });
+
+    expect(result.statusCode).toBe(200);
+    expect(axiosPostMock).toHaveBeenCalledWith("https://slack.com/response_url", {
+      replace_original: "true",
+      text: "Urlaubsübergabe-Checkliste aktualisiert",
+      blocks: expect.arrayContaining([
+        expect.objectContaining({
+          type: "actions",
+          elements: expect.arrayContaining([
+            expect.objectContaining({
+              value: "open-tasks",
+              text: expect.objectContaining({ text: "☐ Aufgaben und Fristen geklärt" }),
+            }),
+          ]),
+        }),
+      ]),
+    });
+  });
+
+  it("uses the vacation handover goal as checklist intro text", () => {
+    expect(createVacationHandoverChecklistBlocks()).toEqual(
+      expect.arrayContaining([
+        expect.objectContaining({
+          type: "section",
+          text: expect.objectContaining({ text: VACATION_HANDOVER_THREAD_TEXT }),
+        }),
+      ]),
+    );
   });
 });

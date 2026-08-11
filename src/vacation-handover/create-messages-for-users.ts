@@ -2,7 +2,13 @@ import dayjs from "dayjs";
 import { slackChatPostMessage, slackConversationsReplies } from "../slack/slack";
 import { SlackHistoryMessage } from "../slack/types/slack-types";
 import { UserWithVacations } from "./get-users-with-start-and-end-date";
-import { createVacationHandoverChecklistBlocks, VACATION_HANDOVER_CHECKLIST_BLOCK } from "./checklist";
+import {
+  createVacationHandoverChecklistBlocks,
+  VACATION_HANDOVER_CHECKLIST_BLOCK,
+  VACATION_HANDOVER_THREAD_TEXT,
+} from "./checklist";
+
+const VACATION_HANDOVER_ICON = ":desert_island:";
 
 export const createMessagesForUsers = async (
   channelId: string,
@@ -36,7 +42,7 @@ export const createMessagesForUsers = async (
       `${handoverId} Urlaubsübergabe ${employeeName} (${startDateFormatted} – ${endDateFormatted})`,
       channelId,
       "Urlaubsübergabe",
-      ":palm_tree:",
+      VACATION_HANDOVER_ICON,
       {
         blocks: [
           {
@@ -75,16 +81,10 @@ export const createMessagesForUsers = async (
 };
 
 const createChecklistThreadMessage = async (channelId: string, messageTs: string) =>
-  slackChatPostMessage(
-    "Bitte kurz im Thread ergänzen, was zu klären ist. Die Punkte können nach der Klärung direkt abgehakt werden.",
-    channelId,
-    "Urlaubsübergabe",
-    ":palm_tree:",
-    {
-      blocks: createVacationHandoverChecklistBlocks(),
-      threadTs: messageTs,
-    },
-  );
+  slackChatPostMessage(VACATION_HANDOVER_THREAD_TEXT, channelId, "Urlaubsübergabe", VACATION_HANDOVER_ICON, {
+    blocks: createVacationHandoverChecklistBlocks(),
+    threadTs: messageTs,
+  });
 
 const hasVacationHandoverChecklist = (message: SlackHistoryMessage) =>
   message.blocks?.some((block) => block.block_id === VACATION_HANDOVER_CHECKLIST_BLOCK) ?? false;
