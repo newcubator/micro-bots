@@ -18,34 +18,35 @@ export const interactionHandler = async (event: HttpRequest): Promise<HttpRespon
 
   let requestedEvent;
 
-  switch (actionType) {
-    case VACATION_HANDOVER_CHECKLIST_ACTION: {
-      const itemId = blockAction.actions[0].value;
-      if (typeof itemId !== "string") {
-        return {
-          statusCode: 200,
-          body: "",
-        };
-      }
-
-      const completedItemIds = getCompletedVacationHandoverItemIds(blockAction.message?.blocks);
-      if (completedItemIds.has(itemId)) {
-        completedItemIds.delete(itemId);
-      } else {
-        completedItemIds.add(itemId);
-      }
-
-      await axios.post(blockAction.response_url, {
-        replace_original: "true",
-        text: "Urlaubsübergabe-Checkliste aktualisiert",
-        blocks: createVacationHandoverChecklistBlocks(completedItemIds),
-      });
-
+  if (actionType.startsWith(`${VACATION_HANDOVER_CHECKLIST_ACTION}:`)) {
+    const itemId = blockAction.actions[0].value;
+    if (typeof itemId !== "string") {
       return {
         statusCode: 200,
         body: "",
       };
     }
+
+    const completedItemIds = getCompletedVacationHandoverItemIds(blockAction.message?.blocks);
+    if (completedItemIds.has(itemId)) {
+      completedItemIds.delete(itemId);
+    } else {
+      completedItemIds.add(itemId);
+    }
+
+    await axios.post(blockAction.response_url, {
+      replace_original: "true",
+      text: "Urlaubsübergabe-Checkliste aktualisiert",
+      blocks: createVacationHandoverChecklistBlocks(completedItemIds),
+    });
+
+    return {
+      statusCode: 200,
+      body: "",
+    };
+  }
+
+  switch (actionType) {
     case ActionType.SICK_NOTE: {
       const forSingleDay =
         blockAction.state.values.radio_buttons_days.radio_buttons_action.selected_option.value === "single-day";

@@ -75,6 +75,16 @@ export const slackConversationsHistory = async (channelId: string) => {
   return messages;
 };
 
+export const slackConversationsReplies = async (channelId: string, ts: string) => {
+  const response = (await slack.conversations.replies({
+    channel: channelId,
+    ts,
+    limit: 100,
+  })) as SlackConversationsHistoryResponse;
+
+  return response.messages;
+};
+
 export const getSlackUsers = async () => {
   return (await slack.users.list()) as unknown as SlackUsersListResponse;
 };

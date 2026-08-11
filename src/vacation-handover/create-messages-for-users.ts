@@ -1,8 +1,8 @@
 import dayjs from "dayjs";
-import { slackChatPostMessage } from "../slack/slack";
+import { slackChatPostMessage, slackConversationsReplies } from "../slack/slack";
 import { SlackHistoryMessage } from "../slack/types/slack-types";
 import { UserWithVacations } from "./get-users-with-start-and-end-date";
-import { createVacationHandoverChecklistBlocks } from "./checklist";
+import { createVacationHandoverChecklistBlocks, VACATION_HANDOVER_CHECKLIST_BLOCK } from "./checklist";
 
 export const createMessagesForUsers = async (
   channelId: string,
@@ -15,9 +15,17 @@ export const createMessagesForUsers = async (
     const startDateFormatted = startDate.format("DD.MM.YYYY");
     const endDateFormatted = endDate.format("DD.MM.YYYY");
     const handoverId = `Urlaubsübergabe-ID:${user.user.id}:${user.dates[0]}:${user.dates[1]}`;
+    const existingMessage = existingMessages.find((message) => message.text?.includes(handoverId));
 
-    if (existingMessages.some((message) => message.text?.includes(handoverId))) {
-      console.log(`Urlaubsübergabe für ${user.user.firstname} wurde bereits erstellt`);
+    if (existingMessage) {
+      const replies = await slackConversationsReplies(channelId, existingMessage.ts);
+      if (replies.some(hasVacationHandoverChecklist)) {
+        console.log(`Urlaubsübergabe für ${user.user.firstname} wurde bereits erstellt`);
+        continue;
+      }
+
+      await createChecklistThreadMessage(channelId, existingMessage.ts);
+      console.log(`Checkliste für bestehende Urlaubsübergabe von ${user.user.firstname} wurde in Slack erstellt`);
       continue;
     }
 
@@ -59,18 +67,24 @@ export const createMessagesForUsers = async (
       throw new Error(`Slack-Nachricht für die Urlaubsübergabe von ${employeeName} enthält keinen Zeitstempel`);
     }
 
-    await slackChatPostMessage(
-      "Bitte kurz im Thread ergänzen, was zu klären ist. Die Punkte können nach der Klärung direkt abgehakt werden.",
-      channelId,
-      "Urlaubsübergabe",
-      ":palm_tree:",
-      {
-        blocks: createVacationHandoverChecklistBlocks(),
-        threadTs: messageTs,
-      },
-    );
+    await createChecklistThreadMessage(channelId, messageTs);
 
     existingMessages.push({ text: `${handoverId} Urlaubsübergabe ${employeeName}`, ts: messageTs });
     console.log(`Urlaubsübergabe für ${employeeName} wurde in Slack erstellt`);
   }
 };
+
+const createChecklistThreadMessage = async (channelId: string, messageTs: string) =>
+  slackChatPostMessage(
+    "Bitte kurz im Thread ergänzen, was zu klären ist. Die Punkte können nach der Klärung direkt abgehakt werden.",
+    channelId,
+    "Urlaubsübergabe",
+    ":palm_tree:",
+    {
+      blocks: createVacationHandoverChecklistBlocks(),
+      threadTs: messageTs,
+    },
+  );
+
+const hasVacationHandoverChecklist = (message: SlackHistoryMessage) =>
+  message.blocks?.some((block) => block.block_id === VACATION_HANDOVER_CHECKLIST_BLOCK) ?? false;
