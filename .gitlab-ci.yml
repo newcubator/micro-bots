@@ -141,7 +141,7 @@ deploy:
 teardown:aws:
   stage: teardown
   image:
-    name: amazon/aws-cli:2
+    name: amazon/aws-cli:latest
     entrypoint: [""]
   before_script: []
   variables:
