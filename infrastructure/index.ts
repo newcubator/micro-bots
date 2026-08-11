@@ -30,8 +30,7 @@ const applicationSecret = new Secret("application-secret", {
     MOCO_TOKEN: config.requireSecret("mocoToken"),
     GITLAB_TOKEN: config.requireSecret("gitlabToken"),
     GENERAL_CHANNEL: config.requireSecret("generalChannel"),
-    GITLAB_BOOK_PROJECT_ID: config.requireSecret("gitlabBookProjectId"),
-    GITLAB_NEWCUBATOR_GROUP_ID: config.requireSecret("gitlabNewcubatorGroupId"),
+    VACATION_HANDOVER_CHANNEL_ID: config.requireSecret("vacationHandoverChannelId"),
   },
 });
 
@@ -58,8 +57,7 @@ const environment = [
   "MOCO_TOKEN",
   "GITLAB_TOKEN",
   "GENERAL_CHANNEL",
-  "GITLAB_BOOK_PROJECT_ID",
-  "GITLAB_NEWCUBATOR_GROUP_ID",
+  "VACATION_HANDOVER_CHANNEL_ID",
 ].map((name) => ({
   name,
   valueFrom: { secretKeyRef: { name: applicationSecret.metadata.name, key: name } },

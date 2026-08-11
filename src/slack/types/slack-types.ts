@@ -3,10 +3,17 @@ import { ParsedUrlQuery } from "querystring";
 
 export enum ActionType {
   COMPLETION_NOTICE = "COMPLETION_NOTICE",
+  MAIL_SIGNATURE = "MAIL_SIGNATURE",
   SHORT_MAIL = "SHORT_MAIL",
   PRIVATE_CHANNEL = "PRIVATE_CHANNEL",
   CANCEL = "CANCEL",
   SICK_NOTE = "SICK_NOTE",
+  VACATION_HANDOVER_CHECKLIST = "VACATION_HANDOVER_CHECKLIST",
+}
+
+export enum MailSignatureFields {
+  MAIL_SIGNATURE_TYPE = "MAIL_SIGNATURE_TYPE",
+  MAIL_SIGNATURE_JOB_TITLE = "MAIL_SIGNATURE_JOB_TITLE",
 }
 
 export enum ShortMailFields {
@@ -45,6 +52,10 @@ export interface BlockAction {
   container: Container;
   response_url: string;
   actions: ElementAction[];
+  message?: {
+    blocks?: SlackBlock[];
+    text?: string;
+  };
 }
 
 export interface BlockSuggestion {
@@ -185,9 +196,20 @@ export interface Message {
   subtype: string;
   text: string;
   ts: string;
+  thread_ts?: string;
+  blocks?: SlackBlock[];
   username: string;
   icons: Icons;
   bot_id: string;
+}
+
+export type SlackBlock = Record<string, unknown>;
+
+export interface SlackHistoryMessage {
+  ts: string;
+  text?: string;
+  thread_ts?: string;
+  blocks?: SlackBlock[];
 }
 
 export interface Icons {
@@ -218,6 +240,14 @@ export interface SlackUsersListResponse extends WebAPICallResult {
 export interface SlackChatPostMessageResponse extends WebAPICallResult {
   channel: string;
   message: Message;
+  ts?: string;
+}
+
+export interface SlackConversationsHistoryResponse extends WebAPICallResult {
+  messages: SlackHistoryMessage[];
+  response_metadata?: {
+    next_cursor?: string;
+  };
 }
 export interface SlackChatPostEphemeralResponse extends WebAPICallResult {
   channel: string;

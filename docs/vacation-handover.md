@@ -1,28 +1,33 @@
-## About the Vacation Handover Bot
+## Urlaubsübergabe-Microbot
 
-To help us keep things running smoothly, the vacation handover bot always reminds us when a colleague goes on vacation by automatically opening an issue in gitlab.
-This could look like this:
-![Vacation-Handover](vacation-handover-image.png)
+Der Urlaubsübergabe-Microbot prüft täglich die in MOCO geplanten Urlaube. Sieben Tage vor dem Urlaub erstellt er im Slack-Hauptchannel `#urlaubsübergaben` eine Hauptnachricht mit dem Zeitraum.
 
-Currently, it runs at 4:05 AM (UTC) every day and always lets us know 7 days before the vacation. You can simply adjust that [here](https://gitlab.com/newcubator/micro-bots/-/blob/main/src/vacation-handover/create-vacation-handover-issues.ts) by changing the day value.
-The execution time is defined as the `micro-bots-vacation-handover` Kubernetes CronJob in [`infrastructure/index.ts`](../infrastructure/index.ts).
+Im Thread der Nachricht steht eine kurze Checkliste. Die einzelnen Punkte können direkt in Slack abgehakt werden:
 
-### Prerequisites
+- offene Aufgaben und Fristen
+- Vertretung und Zuständigkeiten
+- Termine und wichtige Kontakte
+- relevante Dokumente und Links
+- nächste Schritte nach der Rückkehr
 
-- get your [MOCO_TOKEN](https://www.mocoapp.com/funktionen/20-connect/inhalt/52-schnittstellen)
-- get your [GITLAB_TOKEN](https://docs.gitlab.com/ee/user/profile/personal_access_tokens.html)
-- add the keys to the environment variables in Gitlab (Settings > CI/CD > Variables).
-- add the id of the project in which you want to create the issues as GITLAB_BOOK_PROJECT_ID to GitLab (Settings > CI/CD > Variables).
+Der Microbot erstellt keine GitLab-Tickets mehr. Bereits erstellte Slack-Nachrichten werden anhand einer eindeutigen Übergabe-ID erkannt, damit der tägliche Cronjob keine Duplikate erstellt.
 
-### How it works
+### Voraussetzungen
 
-The bot checks the moco API for scheduled vacations and calculates the whole vacation duration. It then checks the current open Gitlab issues whether the detected vacation already has an open issue. If not it creates a new one.
+- ein Slack-Bot-Token als `SLACK_TOKEN`
+- eine Slack-App mit den Berechtigungen `chat:write` und `channels:history`
+- bei einem privaten Channel zusätzlich `groups:history`
+- der Bot muss Mitglied von `#urlaubsübergaben` sein
+- die ID des Channels als GitLab-CI-Variable `VACATION_HANDOVER_CHANNEL_ID`
+- ein `MOCO_TOKEN`
 
-### Local Development
+Die Channel-ID ist die Kennung aus der Slack-Channel-URL oder aus den Channel-Details, zum Beispiel `C0123456789`. Der sichtbare Name `#urlaubsübergaben` wird nicht als Konfiguration verwendet, weil die Slack-API für zuverlässige Zugriffe die ID erwartet.
 
-To run the vacation handover bot locally, run the following command:
+### Lokale Entwicklung
 
-```
+```text
 npm run build
 npm run start:cli -- vacation-handover
 ```
+
+Die Ausführungszeit ist weiterhin im Kubernetes-CronJob `micro-bots-vacation-handover` in [`infrastructure/index.ts`](../infrastructure/index.ts) definiert.

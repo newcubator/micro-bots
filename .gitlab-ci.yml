@@ -89,8 +89,7 @@ deploy:
         $MOCO_TOKEN &&
         $GITLAB_TOKEN &&
         $GENERAL_CHANNEL &&
-        $GITLAB_BOOK_PROJECT_ID &&
-        $GITLAB_NEWCUBATOR_GROUP_ID
+        $VACATION_HANDOVER_CHANNEL_ID
       when: on_success
     - if: '$CI_COMMIT_BRANCH == "main"'
       when: manual
@@ -106,8 +105,7 @@ deploy:
     - test -n "$MOCO_TOKEN" || (echo "MOCO_TOKEN is required" && exit 1)
     - test -n "$GITLAB_TOKEN" || (echo "GITLAB_TOKEN is required" && exit 1)
     - test -n "$GENERAL_CHANNEL" || (echo "GENERAL_CHANNEL is required" && exit 1)
-    - test -n "$GITLAB_BOOK_PROJECT_ID" || (echo "GITLAB_BOOK_PROJECT_ID is required" && exit 1)
-    - test -n "$GITLAB_NEWCUBATOR_GROUP_ID" || (echo "GITLAB_NEWCUBATOR_GROUP_ID is required" && exit 1)
+    - test -n "$VACATION_HANDOVER_CHANNEL_ID" || (echo "VACATION_HANDOVER_CHANNEL_ID is required" && exit 1)
     - echo "$GITLAB_OIDC_TOKEN" > "$CI_PROJECT_DIR/.ci_job_jwt_file"
     - >
       gcloud --quiet iam workload-identity-pools create-cred-config "$GCP_WORKLOAD_IDENTITY_PROVIDER"
@@ -133,6 +131,5 @@ deploy:
     - pulumi config set --secret mocoToken "$MOCO_TOKEN"
     - pulumi config set --secret gitlabToken "$GITLAB_TOKEN"
     - pulumi config set --secret generalChannel "$GENERAL_CHANNEL"
-    - pulumi config set --secret gitlabBookProjectId "$GITLAB_BOOK_PROJECT_ID"
-    - pulumi config set --secret gitlabNewcubatorGroupId "$GITLAB_NEWCUBATOR_GROUP_ID"
+    - pulumi config set --secret vacationHandoverChannelId "$VACATION_HANDOVER_CHANNEL_ID"
     - pulumi up --yes --refresh --diff

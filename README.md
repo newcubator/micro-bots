@@ -53,7 +53,7 @@ To get a more detailed description of each bot, click on one of them below :arro
 | [Gitlab Issue Reminder](./docs/gitlab-issue-reminder.md) | reminds you of the open issues of a specific project |
 | [Mail Signature Bot](./docs/mail-signature.md)           | generates a personalized mail signature              |
 | [Private Channel](./docs/private-channel.md)             | opens a private Slack channel                        |
-| [Vacation Handover](./docs/vacation-handover.md)         | opens Gitlab issues for oncoming vacations           |
+| [Vacation Handover](./docs/vacation-handover.md)         | posts vacation handovers to Slack                    |
 | [Short Mail](./docs/shortmail.md)                        | helps you create a short letter faster               |
 
 ## Testing
