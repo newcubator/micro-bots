@@ -8,7 +8,7 @@ import {
   VACATION_HANDOVER_THREAD_TEXT,
 } from "./checklist";
 
-const VACATION_HANDOVER_ICON = ":desert_island:";
+const VACATION_HANDOVER_ICON = ":vacation:";
 
 export const createMessagesForUsers = async (
   channelId: string,

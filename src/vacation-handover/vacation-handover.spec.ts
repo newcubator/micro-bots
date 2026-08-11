@@ -86,9 +86,9 @@ describe("vacation-handover", () => {
     expect(slackChatPostMessageMock.mock.calls[0][0]).toContain(
       "Urlaubsübergabe Peter Silie (19.08.2021 – 01.09.2021)",
     );
-    expect(slackChatPostMessageMock.mock.calls[0][3]).toBe(":desert_island:");
+    expect(slackChatPostMessageMock.mock.calls[0][3]).toBe(":vacation:");
     expect(slackChatPostMessageMock.mock.calls[1][0]).toBe(VACATION_HANDOVER_THREAD_TEXT);
-    expect(slackChatPostMessageMock.mock.calls[1][3]).toBe(":desert_island:");
+    expect(slackChatPostMessageMock.mock.calls[1][3]).toBe(":vacation:");
     expect(slackChatPostMessageMock.mock.calls[1][4]).toMatchObject({
       threadTs: "1633540187.000600",
     });
