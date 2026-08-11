@@ -30,6 +30,10 @@ const exampleUser = {
   custom_properties: {},
 } as MocoUserType;
 
+const exampleUsersResponse = {
+  data: [exampleUser],
+};
+
 const exampleSchedulesResponse = {
   data: [
     {
@@ -84,6 +88,7 @@ describe("vacation-handover", () => {
   it("creates a Slack main message and a checklist thread", async () => {
     (axios.get as jest.Mock)
       .mockResolvedValueOnce(exampleSchedulesResponse)
+      .mockResolvedValueOnce(exampleUsersResponse)
       .mockResolvedValueOnce(exampleUserSchedulesResponse)
       .mockResolvedValueOnce(exampleUserEmploymentResponse);
 
@@ -109,10 +114,8 @@ describe("vacation-handover", () => {
       custom_properties: { SlackId: " U1234567890 " },
     };
     (axios.get as jest.Mock)
-      .mockResolvedValueOnce({
-        ...exampleSchedulesResponse,
-        data: [{ ...exampleSchedulesResponse.data[0], user: userWithSlackId }],
-      })
+      .mockResolvedValueOnce(exampleSchedulesResponse)
+      .mockResolvedValueOnce({ data: [userWithSlackId] })
       .mockResolvedValueOnce(exampleUserSchedulesResponse)
       .mockResolvedValueOnce(exampleUserEmploymentResponse);
 
@@ -133,6 +136,7 @@ describe("vacation-handover", () => {
     });
     (axios.get as jest.Mock)
       .mockResolvedValueOnce(exampleSchedulesResponse)
+      .mockResolvedValueOnce(exampleUsersResponse)
       .mockResolvedValueOnce(exampleUserSchedulesResponse)
       .mockResolvedValueOnce(exampleUserEmploymentResponse);
 
@@ -157,6 +161,7 @@ describe("vacation-handover", () => {
     ]);
     (axios.get as jest.Mock)
       .mockResolvedValueOnce(exampleSchedulesResponse)
+      .mockResolvedValueOnce(exampleUsersResponse)
       .mockResolvedValueOnce(exampleUserSchedulesResponse)
       .mockResolvedValueOnce(exampleUserEmploymentResponse);
 
@@ -180,6 +185,7 @@ describe("vacation-handover", () => {
     ]);
     (axios.get as jest.Mock)
       .mockResolvedValueOnce(exampleSchedulesResponse)
+      .mockResolvedValueOnce(exampleUsersResponse)
       .mockResolvedValueOnce(exampleUserSchedulesResponse)
       .mockResolvedValueOnce(exampleUserEmploymentResponse);
 
@@ -201,6 +207,7 @@ describe("vacation-handover", () => {
     ]);
     (axios.get as jest.Mock)
       .mockResolvedValueOnce(exampleSchedulesResponse)
+      .mockResolvedValueOnce(exampleUsersResponse)
       .mockResolvedValueOnce(exampleUserSchedulesResponse)
       .mockResolvedValueOnce(exampleUserEmploymentResponse);
 
@@ -218,6 +225,7 @@ describe("vacation-handover", () => {
     ]);
     (axios.get as jest.Mock)
       .mockResolvedValueOnce(exampleSchedulesResponse)
+      .mockResolvedValueOnce(exampleUsersResponse)
       .mockResolvedValueOnce(exampleUserSchedulesResponse)
       .mockResolvedValueOnce(exampleUserEmploymentResponse);
 
@@ -229,6 +237,7 @@ describe("vacation-handover", () => {
   it("does not create a handover for a vacation shorter than three days", async () => {
     (axios.get as jest.Mock)
       .mockResolvedValueOnce(exampleSchedulesResponse)
+      .mockResolvedValueOnce(exampleUsersResponse)
       .mockResolvedValueOnce({
         data: [
           { date: "2021-08-23", assignment: { name: "Urlaub" } },

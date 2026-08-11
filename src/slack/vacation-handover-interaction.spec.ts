@@ -58,6 +58,13 @@ describe("vacation-handover checklist interaction", () => {
   });
 
   it("removes a check from a checked checklist item in the Slack thread", async () => {
+    const slackNormalizedCheckedBlocks = createVacationHandoverChecklistBlocks(new Set(["open-tasks"]));
+    const actionsBlock = slackNormalizedCheckedBlocks.find((block) => block.type === "actions") as {
+      elements: Array<{ value: string; text: { text: string } }>;
+    };
+    actionsBlock.elements.find((element) => element.value === "open-tasks")!.text.text =
+      ":ballot_box_with_check: Aufgaben und Fristen geklärt";
+
     const result = await interactionHandler({
       body: encode({
         payload: JSON.stringify({
@@ -65,7 +72,7 @@ describe("vacation-handover checklist interaction", () => {
           container: { message_ts: "1633540187.000601", channel_id: "C0123456789" },
           channel: { id: "C0123456789", name: "vacation-handover" },
           response_url: "https://slack.com/response_url",
-          message: { blocks: createVacationHandoverChecklistBlocks(new Set(["open-tasks"])) },
+          message: { blocks: slackNormalizedCheckedBlocks },
           actions: [{ action_id: createVacationHandoverChecklistActionId("open-tasks"), value: "open-tasks" }],
         }),
       }),
