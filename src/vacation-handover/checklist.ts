@@ -2,6 +2,8 @@ import { SlackBlock } from "../slack/types/slack-types";
 
 export const VACATION_HANDOVER_CHECKLIST_ACTION = "VACATION_HANDOVER_CHECKLIST";
 export const VACATION_HANDOVER_CHECKLIST_BLOCK = "vacation-handover-checklist";
+export const VACATION_HANDOVER_THREAD_TEXT =
+  "Ziel ist, dass dich möglichst niemand im Urlaub stören muss und auch ohne dich alles reibungslos läuft. Die Aufgaben helfen dir, das bis zum Urlaub vorzubereiten:";
 
 export const VACATION_HANDOVER_CHECKLIST_ITEMS = [
   { id: "open-tasks", label: "Aufgaben und Fristen geklärt" },
@@ -24,7 +26,7 @@ export const createVacationHandoverChecklistBlocks = (
     type: "section",
     text: {
       type: "mrkdwn",
-      text: "*Bitte im Thread kurz klären und anschließend abhaken:*",
+      text: VACATION_HANDOVER_THREAD_TEXT,
     },
   },
   {
