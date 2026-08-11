@@ -106,6 +106,40 @@ describe("vacation-handover", () => {
     expect(slackChatPostMessageMock).not.toHaveBeenCalled();
   });
 
+  it("creates a handover when the same person has an existing handover for another period", async () => {
+    slackConversationsHistoryMock.mockResolvedValueOnce([
+      {
+        ts: "1633540187.000600",
+        text: "Urlaubsübergabe-ID:444555666:2021-08-16:2021-08-18 Urlaubsübergabe Peter",
+      },
+    ]);
+    (axios.get as jest.Mock)
+      .mockResolvedValueOnce(exampleSchedulesResponse)
+      .mockResolvedValueOnce(exampleUserSchedulesResponse)
+      .mockResolvedValueOnce(exampleUserEmploymentResponse);
+
+    await createVacationHandoverMessages("C0123456789");
+
+    expect(slackChatPostMessageMock).toHaveBeenCalledTimes(2);
+  });
+
+  it("creates a handover when another person has an existing handover for the same period", async () => {
+    slackConversationsHistoryMock.mockResolvedValueOnce([
+      {
+        ts: "1633540187.000600",
+        text: "Urlaubsübergabe-ID:111222333:2021-08-19:2021-09-01 Urlaubsübergabe Maria",
+      },
+    ]);
+    (axios.get as jest.Mock)
+      .mockResolvedValueOnce(exampleSchedulesResponse)
+      .mockResolvedValueOnce(exampleUserSchedulesResponse)
+      .mockResolvedValueOnce(exampleUserEmploymentResponse);
+
+    await createVacationHandoverMessages("C0123456789");
+
+    expect(slackChatPostMessageMock).toHaveBeenCalledTimes(2);
+  });
+
   it("does not create a handover for a vacation shorter than three days", async () => {
     (axios.get as jest.Mock)
       .mockResolvedValueOnce(exampleSchedulesResponse)

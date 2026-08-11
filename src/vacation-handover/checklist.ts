@@ -8,6 +8,9 @@ export const VACATION_HANDOVER_CHECKLIST_ITEMS = [
   { id: "representation", label: "Vertretung und Zuständigkeiten klären" },
   { id: "appointments", label: "Termine und wichtige Kontakte übergeben" },
   { id: "documents", label: "Relevante Dokumente und Links teilen" },
+  { id: "pliant-invoices", label: "Rechnungen in Pliant hochgeladen" },
+  { id: "working-times", label: "Arbeitszeiten vollständig erfasst" },
+  { id: "email-absence", label: "E-Mail-Abwesenheit eingetragen" },
   { id: "next-steps", label: "Nächste Schritte nach der Rückkehr festhalten" },
 ] as const;
 
