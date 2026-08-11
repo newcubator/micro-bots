@@ -18,6 +18,7 @@ const imageTag = config.require("imageTag");
 const registryUsername = config.require("gitlabRegistryUsername");
 const registryPassword = config.requireSecret("gitlabRegistryPassword");
 const suspendCronJobs = config.getBoolean("suspendCronJobs") ?? true;
+const suspendVacationHandoverCronJob = config.getBoolean("suspendVacationHandoverCronJob") ?? false;
 const namespace = new Namespace("namespace", {
   metadata: { name: namespaceName, labels },
 });
@@ -127,13 +128,13 @@ new CustomResource("ingress", {
   },
 });
 
-const createCronJob = (name: string, command: string) =>
+const createCronJob = (name: string, command: string, suspend: boolean) =>
   new CronJob(name, {
     metadata: { name: `${appName}-${name}`, namespace: namespace.metadata.name, labels },
     spec: {
       schedule: "5 4 * * *",
       timeZone: "Etc/UTC",
-      suspend: suspendCronJobs,
+      suspend,
       concurrencyPolicy: "Forbid",
       successfulJobsHistoryLimit: 3,
       failedJobsHistoryLimit: 3,
@@ -166,6 +167,6 @@ const createCronJob = (name: string, command: string) =>
     },
   });
 
-createCronJob("birthday", "birthday");
-createCronJob("book-issue-reminder", "book-issue-reminder");
-createCronJob("vacation-handover", "vacation-handover");
+createCronJob("birthday", "birthday", suspendCronJobs);
+createCronJob("book-issue-reminder", "book-issue-reminder", suspendCronJobs);
+createCronJob("vacation-handover", "vacation-handover", suspendVacationHandoverCronJob);

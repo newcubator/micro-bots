@@ -1,6 +1,6 @@
 ## Urlaubsübergabe-Microbot
 
-Der Urlaubsübergabe-Microbot prüft täglich die in MOCO geplanten Urlaube. Sieben Tage vor dem Urlaub erstellt er im Slack-Hauptchannel `#urlaubsübergaben` eine Hauptnachricht mit dem Zeitraum.
+Der Urlaubsübergabe-Microbot prüft täglich die in MOCO geplanten Urlaube. Sieben Tage vor dem Urlaub erstellt er im Slack-Hauptchannel `#vacation-handover` eine Hauptnachricht mit dem Zeitraum.
 
 Im Thread der Nachricht steht eine kurze Checkliste. Die einzelnen Punkte können direkt in Slack abgehakt werden:
 
@@ -8,6 +8,9 @@ Im Thread der Nachricht steht eine kurze Checkliste. Die einzelnen Punkte könne
 - Vertretung und Zuständigkeiten
 - Termine und wichtige Kontakte
 - relevante Dokumente und Links
+- Rechnungen in Pliant
+- Arbeitszeiten
+- E-Mail-Abwesenheit
 - nächste Schritte nach der Rückkehr
 
 Der Microbot erstellt keine GitLab-Tickets mehr. Bereits erstellte Slack-Nachrichten werden anhand einer eindeutigen Übergabe-ID erkannt, damit der tägliche Cronjob keine Duplikate erstellt.
@@ -17,11 +20,17 @@ Der Microbot erstellt keine GitLab-Tickets mehr. Bereits erstellte Slack-Nachric
 - ein Slack-Bot-Token als `SLACK_TOKEN`
 - eine Slack-App mit den Berechtigungen `chat:write` und `channels:history`
 - bei einem privaten Channel zusätzlich `groups:history`
-- der Bot muss Mitglied von `#urlaubsübergaben` sein
+- der Bot muss Mitglied von `#vacation-handover` sein
 - die ID des Channels als GitLab-CI-Variable `VACATION_HANDOVER_CHANNEL_ID`
 - ein `MOCO_TOKEN`
 
-Die Channel-ID ist die Kennung aus der Slack-Channel-URL oder aus den Channel-Details, zum Beispiel `C0123456789`. Der sichtbare Name `#urlaubsübergaben` wird nicht als Konfiguration verwendet, weil die Slack-API für zuverlässige Zugriffe die ID erwartet.
+Die Channel-ID ist die Kennung aus der Slack-Channel-URL oder aus den Channel-Details, zum Beispiel `C0123456789`. Der sichtbare Name `#vacation-handover` wird nicht als Konfiguration verwendet, weil die Slack-API für zuverlässige Zugriffe die ID erwartet.
+
+### Deployment
+
+Der CronJob `micro-bots-vacation-handover` wird nach dem Deployment standardmäßig aktiviert. Bestehende andere CronJobs bleiben weiterhin über `SUSPEND_CRON_JOBS` geschützt und standardmäßig suspendiert.
+
+Bei Bedarf kann der Urlaubsübergabe-CronJob separat über `SUSPEND_VACATION_HANDOVER_CRON_JOB=true` suspendiert werden.
 
 ### Lokale Entwicklung
 
