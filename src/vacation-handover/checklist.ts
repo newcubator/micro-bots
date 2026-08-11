@@ -19,6 +19,8 @@ export const VACATION_HANDOVER_CHECKLIST_ITEMS = [
 export const createVacationHandoverChecklistActionId = (itemId: string) =>
   `${VACATION_HANDOVER_CHECKLIST_ACTION}:${itemId}`;
 
+const CHECKED_CHECKBOX_PREFIXES = ["☑", ":ballot_box_with_check:"];
+
 export const createVacationHandoverChecklistBlocks = (
   completedItemIds: ReadonlySet<string> = new Set(),
 ): SlackBlock[] => [
@@ -64,7 +66,7 @@ export const getCompletedVacationHandoverItemIds = (blocks: unknown[] | undefine
       }
 
       const text = isRecord(element.text) && typeof element.text.text === "string" ? element.text.text : "";
-      if (text.startsWith("☑") && typeof element.value === "string") {
+      if (isCheckedChecklistText(text) && typeof element.value === "string") {
         completedItemIds.add(element.value);
       }
     }
@@ -72,5 +74,7 @@ export const getCompletedVacationHandoverItemIds = (blocks: unknown[] | undefine
 
   return completedItemIds;
 };
+
+const isCheckedChecklistText = (text: string) => CHECKED_CHECKBOX_PREFIXES.some((prefix) => text.startsWith(prefix));
 
 const isRecord = (value: unknown): value is Record<string, any> => typeof value === "object" && value !== null;
