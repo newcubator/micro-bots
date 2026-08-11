@@ -2,6 +2,7 @@ stages:
   - test
   - build
   - deploy
+  - teardown
 
 workflow:
   rules:
@@ -136,3 +137,110 @@ deploy:
     - pulumi config set --secret gitlabBookProjectId "$GITLAB_BOOK_PROJECT_ID"
     - pulumi config set --secret gitlabNewcubatorGroupId "$GITLAB_NEWCUBATOR_GROUP_ID"
     - pulumi up --yes --refresh --diff
+
+teardown:aws:
+  stage: teardown
+  image:
+    name: amazon/aws-cli:2
+    entrypoint: [""]
+  before_script: []
+  variables:
+    AWS_REGION: eu-central-1
+    AWS_ROLE_ARN: arn:aws:iam::931595285256:role/GitlabCi
+    AWS_STACK_NAME: micro-bots-production
+  id_tokens:
+    GITLAB_OIDC_TOKEN:
+      aud: https://gitlab.com
+  when: manual
+  script:
+    - >
+      export $(printf "AWS_ACCESS_KEY_ID=%s AWS_SECRET_ACCESS_KEY=%s AWS_SESSION_TOKEN=%s"
+      $(aws sts assume-role-with-web-identity
+      --role-arn "$AWS_ROLE_ARN"
+      --role-session-name "GitLabRunner-${CI_PROJECT_ID}-${CI_PIPELINE_ID}-teardown"
+      --web-identity-token "$GITLAB_OIDC_TOKEN"
+      --duration-seconds 3600
+      --query 'Credentials.[AccessKeyId,SecretAccessKey,SessionToken]'
+      --output text))
+    - aws sts get-caller-identity
+    - TEARDOWN_DELETED=0
+    - |
+      if aws cloudformation describe-stacks --stack-name "$AWS_STACK_NAME" >/dev/null 2>&1; then
+        DEPLOYMENT_BUCKET="$(aws cloudformation describe-stack-resource
+        --stack-name "$AWS_STACK_NAME"
+        --logical-resource-id ServerlessDeploymentBucket
+        --query 'StackResourceDetail.PhysicalResourceId'
+        --output text 2>/dev/null || true)";
+        if [ -n "$DEPLOYMENT_BUCKET" ] && [ "$DEPLOYMENT_BUCKET" != "None" ]; then
+          if aws s3api head-bucket --bucket "$DEPLOYMENT_BUCKET" >/dev/null 2>&1; then
+            aws s3 rm "s3://${DEPLOYMENT_BUCKET}" --recursive;
+          else
+            echo "Deployment bucket $DEPLOYMENT_BUCKET does not exist; skipping bucket cleanup.";
+          fi;
+        fi;
+        echo "Deleting CloudFormation stack $AWS_STACK_NAME.";
+        aws cloudformation delete-stack --stack-name "$AWS_STACK_NAME";
+        aws cloudformation wait stack-delete-complete --stack-name "$AWS_STACK_NAME";
+        TEARDOWN_DELETED=1;
+      else
+        echo "CloudFormation stack $AWS_STACK_NAME does not exist; continuing with orphan cleanup.";
+      fi
+    - |
+      for RULE_NAME in
+      micro-bots-production-BirthdayEventsRuleSchedule1-122PCPU44PH95
+      micro-bots-production-BirthdayEventsRuleSchedule1-3LMKY1W2V2YD
+      micro-bots-production-CoronaHannoverEventsRuleSche-1WLRITILTQ6WG
+      micro-bots-production-CoronaHannoverEventsRuleSche-1X8TRPP2EXQ3R
+      micro-bots-production-VacationHandoverEventsRuleSc-11I1WXQMUK4CG
+      micro-bots-production-VacationHandoverEventsRuleSc-JF74SGXV5LFS
+      micro-bots-production-WorkloadAllEventsRuleSchedul-4T08E49BW9EA
+      micro-bots-production-WorkloadAllEventsRuleSchedul-USTD6TWUDIVA; do
+        if ! aws events describe-rule --event-bus-name default --name "$RULE_NAME" >/dev/null 2>&1; then
+          echo "EventBridge rule default/$RULE_NAME does not exist; skipping.";
+          continue;
+        fi;
+        TARGET_IDS="$(aws events list-targets-by-rule
+        --event-bus-name default
+        --rule "$RULE_NAME"
+        --query 'Targets[].Id'
+        --output text 2>/dev/null || true)";
+        if [ -n "$TARGET_IDS" ]; then
+          aws events remove-targets --event-bus-name default --rule "$RULE_NAME" --ids $TARGET_IDS;
+        fi;
+        echo "Deleting orphaned EventBridge rule default/$RULE_NAME.";
+        aws events delete-rule --event-bus-name default --name "$RULE_NAME";
+        TEARDOWN_DELETED=1;
+      done
+    - |
+      if aws events describe-event-bus --name micro-bots-alf >/dev/null 2>&1; then
+        RULE_NAMES="$(aws events list-rules
+        --event-bus-name micro-bots-alf
+        --query 'Rules[].Name'
+        --output text)";
+        if [ -z "$RULE_NAMES" ]; then
+          echo "EventBridge bus micro-bots-alf has no rules.";
+        fi;
+        for RULE_NAME in $RULE_NAMES; do
+          TARGET_IDS="$(aws events list-targets-by-rule
+          --event-bus-name micro-bots-alf
+          --rule "$RULE_NAME"
+          --query 'Targets[].Id'
+          --output text 2>/dev/null || true)";
+          if [ -n "$TARGET_IDS" ]; then
+            aws events remove-targets --event-bus-name micro-bots-alf --rule "$RULE_NAME" --ids $TARGET_IDS;
+          fi;
+          echo "Deleting orphaned EventBridge rule micro-bots-alf/$RULE_NAME.";
+          aws events delete-rule --event-bus-name micro-bots-alf --name "$RULE_NAME";
+        done;
+        echo "Deleting orphaned EventBridge bus micro-bots-alf.";
+        aws events delete-event-bus --name micro-bots-alf;
+        TEARDOWN_DELETED=1;
+      else
+        echo "EventBridge bus micro-bots-alf does not exist; skipping.";
+      fi
+    - |
+      if [ "$TEARDOWN_DELETED" = "0" ]; then
+        echo "AWS teardown found nothing left to delete.";
+      else
+        echo "AWS teardown completed.";
+      fi

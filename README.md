@@ -39,6 +39,10 @@ npm run start:cli -- vacation-handover
 
 GitLab CI builds the container image and deploys it from `main` through Pulumi to Hubertus. The target domain is `microbots.hubertus.newcubator.com`. Required tokens and IDs are set as protected GitLab CI variables and stored as Pulumi secrets in the Kubernetes deployment.
 
+AWS and Serverless deployments are no longer supported. Runtime infrastructure for this service must be changed through the Pulumi Kubernetes stack in [`infrastructure`](./infrastructure).
+
+The legacy AWS Serverless stack `micro-bots-production` and known orphaned EventBridge resources can be removed through the manual `teardown:aws` GitLab CI job after the Pulumi deployment on Hubertus has been verified.
+
 ## Bots :robot:
 
 To get a more detailed description of each bot, click on one of them below :arrow_down:
