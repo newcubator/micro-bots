@@ -18,6 +18,8 @@ const getSignatureConfig = (signatureType: SignatureType, user: MocoUserType) =>
       contactText: "Unser Newsletter",
       websiteHref: "https://stadtquest.de",
       websiteText: "stadtquest.de",
+      linkedInHref: "https://www.linkedin.com/company/stadtquest/",
+      instagramHref: "https://www.instagram.com/stadtquest/",
       footerHref: "https://stadtquest.de/email-marketing-banner",
       footerImageUrl: "https://stadtquest.de/mailsignature/mail-footer-image.jpg",
       footerImageAlt: "StadtQUEST banner",
@@ -31,6 +33,8 @@ const getSignatureConfig = (signatureType: SignatureType, user: MocoUserType) =>
     contactText: user.email,
     websiteHref: "https://newcubator.com",
     websiteText: "newcubator.com",
+    linkedInHref: "https://www.linkedin.com/company/newcubator/",
+    instagramHref: "https://www.instagram.com/newcubator/?hl=de",
     footerHref: "https://newcubator.com/email-marketing-banner",
     footerImageUrl: "https://newcubator.com/images/email-marketing-banner/email-footer-image.jpg",
     footerImageAlt: "newcubator banner",
@@ -149,7 +153,7 @@ function createMailSignature(user: MocoUserType, jobTitle: string, signatureType
                                 <div></div>
                               </td>
                               <td>
-                                <a href="https://www.linkedin.com/company/newcubator/" color="#50505E" style="display: inline-block; padding: 0px; background-color: rgba(255, 255, 255, 0);">
+                                <a href="${signatureConfig.linkedInHref}" color="#50505E" style="display: inline-block; padding: 0px; background-color: rgba(255, 255, 255, 0);">
                                   <img src="https://newcubator.com/images/mailsignature/linkedin-icon-2x.png" alt="linkedin" color="#50505E" height="24" style="background-color: rgba(255, 255, 255, 0); max-width: 135px; display: block;">
                                 </a>
                               </td>
@@ -157,7 +161,7 @@ function createMailSignature(user: MocoUserType, jobTitle: string, signatureType
                                 <div></div>
                               </td>
                               <td>
-                                <a href="https://www.instagram.com/newcubator/?hl=de" color="#50505E" style="display: inline-block; padding: 0px; background-color: rgba(255, 255, 255, 0);">
+                                <a href="${signatureConfig.instagramHref}" color="#50505E" style="display: inline-block; padding: 0px; background-color: rgba(255, 255, 255, 0);">
                                   <img src="https://newcubator.com/images/mailsignature/instagram-icon-2x.png" alt="instagram" color="#50505E" height="24" style="background-color: rgba(255, 255, 255, 0); max-width: 135px; display: block;">
                                 </a>
                               </td>
