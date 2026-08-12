@@ -113,6 +113,8 @@ describe("MailSignatureGenerator", () => {
     expect(result.body).toContain("<span>Product Owner</span>");
     expect(result.body).toContain("https://stadtquest.de/mailsignature/stadtquest-logo.png");
     expect(result.body).toContain("<span>StadtQUEST ein Produkt der Newcubator GmbH</span>");
+    expect(result.body).toContain('href="https://www.linkedin.com/company/stadtquest/"');
+    expect(result.body).toContain('href="https://www.instagram.com/stadtquest/"');
     expect(result.body).toContain('href="https://stadtquest.de/praxisimpulse/#newsletter"');
     expect(result.body).toContain("<span>Unser Newsletter</span>");
     expect(result.body).toContain('href="https://stadtquest.de"');
