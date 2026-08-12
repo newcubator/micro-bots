@@ -82,7 +82,7 @@ export const interactionHandler = async (event: HttpRequest): Promise<HttpRespon
         job_title:
           blockAction.state.values[MailSignatureFields.MAIL_SIGNATURE_JOB_TITLE][
             MailSignatureFields.MAIL_SIGNATURE_JOB_TITLE
-          ].selected_option.value,
+          ].value ?? "",
       });
 
       await axios.post(blockAction.response_url, {

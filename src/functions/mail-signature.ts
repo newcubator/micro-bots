@@ -32,35 +32,20 @@ const getJobTitle = (user: { custom_properties?: Record<string, unknown> }) => {
   return typeof value === "string" ? value.trim() : "";
 };
 
-const toPlainTextOption = (value: string) => ({
-  value,
-  text: {
-    type: "plain_text" as const,
-    text: value,
-    emoji: true,
-  },
-});
-
 export const handler = async (event: HttpRequest): Promise<HttpResponse> => {
   const command: SlackCommandType = decode(event.body ?? "") as SlackCommandType;
-  const users = await getUsers();
+  const users = await getUsers().catch((error) => {
+    console.error(
+      JSON.stringify({
+        service: "micro-bots",
+        status: "mail_signature_user_load_failed",
+        error: error instanceof Error ? error.message : String(error),
+      }),
+    );
+    return [];
+  });
   const currentUser = findUserBySlackCommand(command)(users);
   const currentJobTitle = currentUser ? getJobTitle(currentUser) : "";
-  const jobTitles = [
-    ...new Set([currentJobTitle, ...users.map(getJobTitle)].filter((jobTitle) => jobTitle.length > 0)),
-  ].slice(0, 100);
-
-  if (!jobTitles.length) {
-    return {
-      statusCode: 200,
-      body: JSON.stringify({
-        response_type: "ephemeral",
-        text: "Ich konnte keine MOCO-Jobtitel für die Mail-Signatur finden.",
-      }),
-    };
-  }
-
-  const jobTitleOptions = jobTitles.map(toPlainTextOption);
 
   const responseBody = {
     response_type: "ephemeral",
@@ -88,10 +73,9 @@ export const handler = async (event: HttpRequest): Promise<HttpResponse> => {
           text: "Wähle deinen Jobtitel aus:",
         },
         element: {
-          type: "static_select",
+          type: "plain_text_input",
           action_id: MailSignatureFields.MAIL_SIGNATURE_JOB_TITLE,
-          initial_option: jobTitleOptions[0],
-          options: jobTitleOptions,
+          ...(currentJobTitle ? { initial_value: currentJobTitle } : {}),
         },
       },
       {

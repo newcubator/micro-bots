@@ -118,13 +118,8 @@ const mailSignaturePayload = {
           },
           [MailSignatureFields.MAIL_SIGNATURE_JOB_TITLE]: {
             [MailSignatureFields.MAIL_SIGNATURE_JOB_TITLE]: {
-              type: "static_select",
-              selected_option: {
-                value: "Product Owner",
-                text: {
-                  text: "Product Owner",
-                },
-              },
+              type: "plain_text_input",
+              value: "Product Owner",
             },
           },
         },

@@ -10,7 +10,7 @@ jest.mock("../moco/users", () => ({
 
 const getUsersMock = getUsers as jest.Mock;
 
-test("returns selectors for signature type and job title", async () => {
+test("returns selectors for signature type and an editable job title", async () => {
   getUsersMock.mockResolvedValueOnce([
     {
       firstname: "Max",
@@ -45,10 +45,30 @@ test("returns selectors for signature type and job title", async () => {
     SignatureType.STADTQUEST,
   ]);
   expect(body.blocks[1].block_id).toBe(MailSignatureFields.MAIL_SIGNATURE_JOB_TITLE);
-  expect(body.blocks[1].element.initial_option.value).toBe("Software Engineer");
-  expect(body.blocks[1].element.options.map((option: { value: string }) => option.value)).toEqual([
-    "Software Engineer",
-    "Product Owner",
+  expect(body.blocks[1].element.type).toBe("plain_text_input");
+  expect(body.blocks[1].element.initial_value).toBe("Software Engineer");
+  expect(body.blocks[2].elements[0].action_id).toBe(ActionType.MAIL_SIGNATURE);
+});
+
+test("allows entering a job title when none is maintained in MOCO", async () => {
+  getUsersMock.mockResolvedValueOnce([
+    {
+      firstname: "Max",
+      lastname: "Mustermann",
+      email: "max.mustermann@newcubator.com",
+      custom_properties: {
+        SlackId: "U0113HJ8N2Z",
+      },
+    },
   ]);
+
+  const result = await handler({
+    body: encode({ user_id: "U0113HJ8N2Z", user_name: "max.mustermann" }),
+  });
+  const body = JSON.parse(result.body);
+
+  expect(result.statusCode).toBe(200);
+  expect(body.blocks[1].element.type).toBe("plain_text_input");
+  expect(body.blocks[1].element.initial_value).toBeUndefined();
   expect(body.blocks[2].elements[0].action_id).toBe(ActionType.MAIL_SIGNATURE);
 });
