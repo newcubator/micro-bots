@@ -7,9 +7,9 @@ import { base64Dortmund } from "./templates/dortmund";
 export async function renderShortMailPdf(content: PdfContent) {
   const { sender, location, recipient, date, text } = content;
 
-  const dortmundAddressHeader = "newcubator GmbH | Westenhellweg 85-89 | 44137 Dortmund";
+  const dortmundAddressHeader = "Newcubator GmbH | Ruhrallee 9 | 44139 Dortmund";
 
-  const hannoverAddressHeader = "newcubator GmbH | Bödekerstraße 22 | 30161 Hannover";
+  const hannoverAddressHeader = "Newcubator GmbH | Bödekerstraße 22 | 30161 Hannover";
   const senderAddressHeader = location === "D" ? dortmundAddressHeader : hannoverAddressHeader;
   const pdfDoc = await PDFDocument.load(location === "D" ? base64Dortmund : base64Hannover);
 
@@ -45,7 +45,7 @@ export async function renderShortMailPdf(content: PdfContent) {
     size: 10,
     font: helveticaFont,
   });
-  pages[0].drawText(`${text}\n \nmit freundlichen Grüßen\nnewcubator GmbH\n \n${sender}`, {
+  pages[0].drawText(`${text}\n \nmit freundlichen Grüßen\nNewcubator GmbH\n \n${sender}`, {
     x: 68,
     y: height - 325,
     size: 10,
