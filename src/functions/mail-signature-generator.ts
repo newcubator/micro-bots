@@ -19,7 +19,13 @@ const getSignatureConfig = (signatureType: SignatureType, user: MocoUserType) =>
       websiteHref: "https://stadtquest.de",
       websiteText: "stadtquest.de",
       linkedInHref: "https://www.linkedin.com/company/stadtquest/",
+      linkedInIconUrl: "https://stadtquest.de/mailsignature/linkedin-icon-2x.png",
       instagramHref: "https://www.instagram.com/stadtquest/",
+      instagramIconUrl: "https://stadtquest.de/mailsignature/instagram-icon-2x.png",
+      phoneIconUrl: "https://stadtquest.de/mailsignature/phone.png",
+      emailIconUrl: "https://stadtquest.de/mailsignature/email-outline.png",
+      linkIconUrl: "https://stadtquest.de/mailsignature/web.png",
+      addressIconUrl: "https://stadtquest.de/mailsignature/map-marker.png",
       footerHref: "https://stadtquest.de/email-marketing-banner",
       footerImageUrl: "https://stadtquest.de/mailsignature/mail-footer-image.jpg",
       footerImageAlt: "StadtQUEST banner",
@@ -34,7 +40,13 @@ const getSignatureConfig = (signatureType: SignatureType, user: MocoUserType) =>
     websiteHref: "https://newcubator.com",
     websiteText: "newcubator.com",
     linkedInHref: "https://www.linkedin.com/company/newcubator/",
+    linkedInIconUrl: "https://newcubator.com/images/mailsignature/linkedin-icon-2x.png",
     instagramHref: "https://www.instagram.com/newcubator/?hl=de",
+    instagramIconUrl: "https://newcubator.com/images/mailsignature/instagram-icon-2x.png",
+    phoneIconUrl: "https://newcubator.com/images/mailsignature/phone-icon-2x.png",
+    emailIconUrl: "https://newcubator.com/images/mailsignature/email-icon-2x.png",
+    linkIconUrl: "https://newcubator.com/images/mailsignature/link-icon-2x.png",
+    addressIconUrl: "https://newcubator.com/images/mailsignature/address-icon-2x.png",
     footerHref: "https://newcubator.com/email-marketing-banner",
     footerImageUrl: "https://newcubator.com/images/email-marketing-banner/email-footer-image.jpg",
     footerImageAlt: "newcubator banner",
@@ -154,7 +166,7 @@ function createMailSignature(user: MocoUserType, jobTitle: string, signatureType
                               </td>
                               <td>
                                 <a href="${signatureConfig.linkedInHref}" color="#50505E" style="display: inline-block; padding: 0px; background-color: rgba(255, 255, 255, 0);">
-                                  <img src="https://newcubator.com/images/mailsignature/linkedin-icon-2x.png" alt="linkedin" color="#50505E" height="24" style="background-color: rgba(255, 255, 255, 0); max-width: 135px; display: block;">
+                                  <img src="${signatureConfig.linkedInIconUrl}" alt="linkedin" color="#50505E" height="24" style="background-color: rgba(255, 255, 255, 0); max-width: 135px; display: block;">
                                 </a>
                               </td>
                               <td width="5">
@@ -162,7 +174,7 @@ function createMailSignature(user: MocoUserType, jobTitle: string, signatureType
                               </td>
                               <td>
                                 <a href="${signatureConfig.instagramHref}" color="#50505E" style="display: inline-block; padding: 0px; background-color: rgba(255, 255, 255, 0);">
-                                  <img src="https://newcubator.com/images/mailsignature/instagram-icon-2x.png" alt="instagram" color="#50505E" height="24" style="background-color: rgba(255, 255, 255, 0); max-width: 135px; display: block;">
+                                  <img src="${signatureConfig.instagramIconUrl}" alt="instagram" color="#50505E" height="24" style="background-color: rgba(255, 255, 255, 0); max-width: 135px; display: block;">
                                 </a>
                               </td>
                               <td width="5">
@@ -211,7 +223,7 @@ function createMailSignature(user: MocoUserType, jobTitle: string, signatureType
                             <tr>
                               <td style="vertical-align: bottom;">
                                 <span color="#405780" width="11" style="display: block; background-color: rgba(255, 255, 255, 0);">
-                                  <img src="https://newcubator.com/images/mailsignature/phone-icon-2x.png" color="#405780" width="13" style="display: block; background-color: rgba(255, 255, 255, 0);">
+                                  <img src="${signatureConfig.phoneIconUrl}" color="#405780" width="13" style="display: block; background-color: rgba(255, 255, 255, 0);">
                                 </span>
                               </td>
                             </tr>
@@ -231,7 +243,7 @@ function createMailSignature(user: MocoUserType, jobTitle: string, signatureType
                             <tr>
                               <td style="vertical-align: bottom;">
                                 <span color="#405780" width="11" style="display: block; background-color: rgba(255, 255, 255, 0);">
-                                  <img src="https://newcubator.com/images/mailsignature/email-icon-2x.png" color="#405780" width="13" style="display: block; background-color: rgba(255, 255, 255, 0);">
+                                  <img src="${signatureConfig.emailIconUrl}" color="#405780" width="13" style="display: block; background-color: rgba(255, 255, 255, 0);">
                                 </span>
                               </td>
                             </tr>
@@ -251,7 +263,7 @@ function createMailSignature(user: MocoUserType, jobTitle: string, signatureType
                             <tr>
                               <td style="vertical-align: bottom;">
                                 <span color="#405780" width="11" style="display: block; background-color: rgba(255, 255, 255, 0);">
-                                  <img src="https://newcubator.com/images/mailsignature/link-icon-2x.png" color="#405780" width="13" style="display: block; background-color: rgba(255, 255, 255, 0);">
+                                  <img src="${signatureConfig.linkIconUrl}" color="#405780" width="13" style="display: block; background-color: rgba(255, 255, 255, 0);">
                                 </span>
                               </td>
                             </tr>
@@ -271,7 +283,7 @@ function createMailSignature(user: MocoUserType, jobTitle: string, signatureType
                             <tr>
                               <td style="vertical-align: bottom;">
                                 <span color="#405780" width="11" style="display: block; background-color: rgba(255, 255, 255, 0);">
-                                  <img src="https://newcubator.com/images/mailsignature/address-icon-2x.png" color="#405780" width="13" style="display: block; background-color: rgba(255, 255, 255, 0);">
+                                  <img src="${signatureConfig.addressIconUrl}" color="#405780" width="13" style="display: block; background-color: rgba(255, 255, 255, 0);">
                                 </span>
                               </td>
                             </tr>
