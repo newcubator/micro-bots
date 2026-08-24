@@ -1,4 +1,4 @@
-FROM node:24.15.0-alpine AS build
+FROM node:24.19.0-alpine AS build
 
 WORKDIR /app
 
@@ -9,7 +9,7 @@ COPY tsconfig.json ./
 COPY src ./src
 RUN npm run build
 
-FROM node:24.15.0-alpine AS runtime
+FROM node:24.19.0-alpine AS runtime
 
 ENV NODE_ENV=production
 ENV NODE_OPTIONS=--enable-source-maps
