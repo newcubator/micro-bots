@@ -7,6 +7,8 @@ process.env.GITLAB_PROJECT = "1111111";
 process.env.SLACK_CHANNEL = "1111111";
 process.env.GENERAL_CHANNEL = "1111111";
 process.env.VACATION_HANDOVER_CHANNEL_ID = "C0123456789";
+process.env.BREVO_API_KEY = "not a real brevo api key";
+process.env.SALES_CHANNEL = "C0123456789";
 
 module.exports = {
   preset: "ts-jest",

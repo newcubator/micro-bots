@@ -32,6 +32,8 @@ const applicationSecret = new Secret("application-secret", {
     GITLAB_TOKEN: config.requireSecret("gitlabToken"),
     GENERAL_CHANNEL: config.requireSecret("generalChannel"),
     VACATION_HANDOVER_CHANNEL_ID: config.requireSecret("vacationHandoverChannelId"),
+    BREVO_API_KEY: config.requireSecret("brevoApiKey"),
+    SALES_CHANNEL: config.requireSecret("salesChannel"),
   },
 });
 
@@ -59,6 +61,8 @@ const environment = [
   "GITLAB_TOKEN",
   "GENERAL_CHANNEL",
   "VACATION_HANDOVER_CHANNEL_ID",
+  "BREVO_API_KEY",
+  "SALES_CHANNEL",
 ].map((name) => ({
   name,
   valueFrom: { secretKeyRef: { name: applicationSecret.metadata.name, key: name } },

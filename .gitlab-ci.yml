@@ -89,7 +89,9 @@ deploy:
         $MOCO_TOKEN &&
         $GITLAB_TOKEN &&
         $GENERAL_CHANNEL &&
-        $VACATION_HANDOVER_CHANNEL_ID
+        $VACATION_HANDOVER_CHANNEL_ID &&
+        $BREVO_API_KEY &&
+        $SALES_CHANNEL
       when: on_success
     - if: '$CI_COMMIT_BRANCH == "main"'
       when: manual
@@ -106,6 +108,8 @@ deploy:
     - test -n "$GITLAB_TOKEN" || (echo "GITLAB_TOKEN is required" && exit 1)
     - test -n "$GENERAL_CHANNEL" || (echo "GENERAL_CHANNEL is required" && exit 1)
     - test -n "$VACATION_HANDOVER_CHANNEL_ID" || (echo "VACATION_HANDOVER_CHANNEL_ID is required" && exit 1)
+    - test -n "$BREVO_API_KEY" || (echo "BREVO_API_KEY is required" && exit 1)
+    - test -n "$SALES_CHANNEL" || (echo "SALES_CHANNEL is required" && exit 1)
     - echo "$GITLAB_OIDC_TOKEN" > "$CI_PROJECT_DIR/.ci_job_jwt_file"
     - >
       gcloud --quiet iam workload-identity-pools create-cred-config "$GCP_WORKLOAD_IDENTITY_PROVIDER"
@@ -133,4 +137,6 @@ deploy:
     - pulumi config set --secret gitlabToken "$GITLAB_TOKEN"
     - pulumi config set --secret generalChannel "$GENERAL_CHANNEL"
     - pulumi config set --secret vacationHandoverChannelId "$VACATION_HANDOVER_CHANNEL_ID"
+    - pulumi config set --secret brevoApiKey "$BREVO_API_KEY"
+    - pulumi config set --secret salesChannel "$SALES_CHANNEL"
     - pulumi up --yes --refresh --diff

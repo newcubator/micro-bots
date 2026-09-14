@@ -49,6 +49,7 @@ To get a more detailed description of each bot, click on one of them below :arro
 | -------------------------------------------------------- | ---------------------------------------------------- |
 | [Birthday](./docs/birthday.md)                           | reminds us when its someone's birthday               |
 | [Completion Notice](./docs/completionNotice.md)          | facilitates the preparation of a completion notice   |
+| [Contact Request](./docs/contact-request.md)             | forwards website inquiries to Moco and Slack         |
 | [Event Application](./docs/event-application.md)         | automated forwarding of a event application          |
 | [Gitlab Issue Reminder](./docs/gitlab-issue-reminder.md) | reminds you of the open issues of a specific project |
 | [Mail Signature Bot](./docs/mail-signature.md)           | generates a personalized mail signature              |
