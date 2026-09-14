@@ -2,14 +2,15 @@ import { createServer, IncomingMessage, ServerResponse } from "http";
 import { commandHandler as completionNoticeCommandHandler } from "./completion-notice/command-handler";
 import { handler as mailSignatureHandler } from "./functions/mail-signature";
 import { handler as mailSignatureGeneratorHandler } from "./functions/mail-signature-generator";
+import { handler as contactRequestHandler } from "./functions/contact-request";
 import { commandHandler as privateChannelCommandHandler } from "./private-channel/command-handler";
 import { commandHandler as shortMailCommandHandler } from "./short-mail/command-handler";
 import { interactionHandler } from "./slack/interaction-handler";
 import { selectMenuHandler } from "./slack/select-menu-handler";
 import { commandHandler as sickNoteCommandHandler } from "./sick-note/command-handler";
-import { HttpResponse } from "./http/types";
+import { HttpRequest, HttpResponse } from "./http/types";
 
-type RouteHandler = (request: { body?: string; query?: Record<string, string | undefined> }) => Promise<HttpResponse>;
+type RouteHandler = (request: HttpRequest) => Promise<HttpResponse>;
 
 const routes: Record<string, RouteHandler> = {
   "/completion-notice-command": completionNoticeCommandHandler,
@@ -20,6 +21,7 @@ const routes: Record<string, RouteHandler> = {
   "/slack-interaction": interactionHandler,
   "/mailSignature": mailSignatureHandler,
   "/mailSignatureGenerator": mailSignatureGeneratorHandler,
+  "/contactRequest": contactRequestHandler,
 };
 
 const readBody = (request: IncomingMessage): Promise<string> =>
@@ -72,7 +74,14 @@ export const createApp = () =>
 
     try {
       const body = request.method === "POST" ? await readBody(request) : undefined;
-      send(response, await handler({ body, query: toQuery(url) }));
+      send(
+        response,
+        await handler({
+          body,
+          query: toQuery(url),
+          origin: typeof request.headers.origin === "string" ? request.headers.origin : undefined,
+        }),
+      );
     } catch (error) {
       console.error(
         JSON.stringify({
