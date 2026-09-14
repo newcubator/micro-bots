@@ -16,6 +16,7 @@ export async function getBrevoContactByEmail(email: string, attempts = 5): Promi
       return await axios
         .get<BrevoContact>(`https://api.brevo.com/v3/contacts/${encodeURIComponent(email)}`, {
           headers: { "api-key": apiKey },
+          params: { identifierType: "email_id" },
         })
         .then((response) => response.data);
     } catch (error) {
