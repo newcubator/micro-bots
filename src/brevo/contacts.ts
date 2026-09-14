@@ -20,7 +20,7 @@ const findBrevoContactInList = async (email: string, apiKey: string) => {
 };
 
 export async function getBrevoContactByEmail(email: string, attempts = 5): Promise<BrevoContact> {
-  const apiKey = process.env.BREVO_API_KEY;
+  const apiKey = process.env.BREVO_API_KEY?.trim();
   if (!apiKey) throw new Error("BREVO_API_KEY is missing");
 
   for (let attempt = 1; attempt <= attempts; attempt += 1) {
