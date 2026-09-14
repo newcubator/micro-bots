@@ -67,6 +67,16 @@ const corsHeaders = (origin: string) => ({
 });
 
 const integrationError = (origin: string, step: string, error: unknown): HttpResponse => {
+  const upstreamStatus =
+    error &&
+    typeof error === "object" &&
+    "response" in error &&
+    error.response &&
+    typeof error.response === "object" &&
+    "status" in error.response &&
+    typeof error.response.status === "number"
+      ? error.response.status
+      : undefined;
   console.error(
     JSON.stringify({
       service: "micro-bots",
@@ -77,7 +87,7 @@ const integrationError = (origin: string, step: string, error: unknown): HttpRes
   );
   return {
     statusCode: 502,
-    body: JSON.stringify({ error: `${step}_failed` }),
+    body: JSON.stringify({ error: `${step}_failed`, ...(upstreamStatus ? { upstreamStatus } : {}) }),
     headers: corsHeaders(origin),
   };
 };

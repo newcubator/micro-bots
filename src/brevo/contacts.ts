@@ -5,7 +5,19 @@ export type BrevoContact = {
   email: string;
 };
 
+type BrevoContactsResponse = {
+  contacts: BrevoContact[];
+};
+
 const wait = (milliseconds: number) => new Promise((resolve) => setTimeout(resolve, milliseconds));
+
+const findBrevoContactInList = async (email: string, apiKey: string) => {
+  const response = await axios.get<BrevoContactsResponse>("https://api.brevo.com/v3/contacts", {
+    headers: { "api-key": apiKey },
+    params: { limit: 1000, offset: 0 },
+  });
+  return response.data.contacts.find((contact) => contact.email.toLowerCase() === email.toLowerCase());
+};
 
 export async function getBrevoContactByEmail(email: string, attempts = 5): Promise<BrevoContact> {
   const apiKey = process.env.BREVO_API_KEY;
@@ -21,6 +33,10 @@ export async function getBrevoContactByEmail(email: string, attempts = 5): Promi
         .then((response) => response.data);
     } catch (error) {
       const canRetry = axios.isAxiosError(error) && error.response?.status === 404 && attempt < attempts;
+      if (!axios.isAxiosError(error) || error.response?.status !== 404) throw error;
+
+      const listedContact = await findBrevoContactInList(email, apiKey);
+      if (listedContact) return listedContact;
       if (!canRetry) throw error;
       await wait(attempt * 500);
     }
