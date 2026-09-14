@@ -66,6 +66,22 @@ const corsHeaders = (origin: string) => ({
   Vary: "Origin",
 });
 
+const integrationError = (origin: string, step: string, error: unknown): HttpResponse => {
+  console.error(
+    JSON.stringify({
+      service: "micro-bots",
+      status: "contact_request_failed",
+      step,
+      error: error instanceof Error ? error.message : String(error),
+    }),
+  );
+  return {
+    statusCode: 502,
+    body: JSON.stringify({ error: `${step}_failed` }),
+    headers: corsHeaders(origin),
+  };
+};
+
 export const handler = async (event: HttpRequest): Promise<HttpResponse> => {
   const origin = event.origin ?? "";
   if (!ALLOWED_ORIGINS.has(origin)) {
@@ -84,18 +100,29 @@ export const handler = async (event: HttpRequest): Promise<HttpResponse> => {
     };
   }
 
-  const brevoContact = await getBrevoContactByEmail(email);
-  const existingMocoContact = await findContactByEmail(email);
-  const mocoContact =
-    existingMocoContact ??
-    (await createContact({
-      firstname,
-      lastname,
-      gender: "U",
-      work_email: email,
-      work_phone: formatPhone(request),
-      info: inquiryInfo(request),
-    }));
+  let brevoContact;
+  try {
+    brevoContact = await getBrevoContactByEmail(email);
+  } catch (error) {
+    return integrationError(origin, "brevo_contact_lookup", error);
+  }
+
+  let mocoContact;
+  try {
+    const existingMocoContact = await findContactByEmail(email);
+    mocoContact =
+      existingMocoContact ??
+      (await createContact({
+        firstname,
+        lastname,
+        gender: "U",
+        work_email: email,
+        work_phone: formatPhone(request),
+        info: inquiryInfo(request),
+      }));
+  } catch (error) {
+    return integrationError(origin, "moco_contact", error);
+  }
 
   const salesChannel = process.env.SALES_CHANNEL;
   if (!salesChannel) throw new Error("SALES_CHANNEL is missing");
@@ -108,20 +135,24 @@ export const handler = async (event: HttpRequest): Promise<HttpResponse> => {
   const planning = value(request, "PLANUNG_ZEITHORIZONT");
   const budget = value(request, "BUDGET");
 
-  await slackClient.chat.postMessage({
-    channel: salesChannel,
-    text: [
-      `Neue Website-Anfrage von ${firstname} ${lastname}${organization ? ` (${organization})` : ""}`,
-      `E-Mail: ${email}`,
-      topic ? `Thema: ${topic}` : "",
-      projectRequest ? `Projekt: ${projectRequest}` : "",
-      planning ? `Planung: ${planning}` : "",
-      budget ? `Budget: ${budget}` : "",
-      `<${mocoUrl}|Kontakt in Moco> · <${brevoUrl}|Kontakt in Brevo>`,
-    ]
-      .filter(Boolean)
-      .join("\n"),
-  });
+  try {
+    await slackClient.chat.postMessage({
+      channel: salesChannel,
+      text: [
+        `Neue Website-Anfrage von ${firstname} ${lastname}${organization ? ` (${organization})` : ""}`,
+        `E-Mail: ${email}`,
+        topic ? `Thema: ${topic}` : "",
+        projectRequest ? `Projekt: ${projectRequest}` : "",
+        planning ? `Planung: ${planning}` : "",
+        budget ? `Budget: ${budget}` : "",
+        `<${mocoUrl}|Kontakt in Moco> · <${brevoUrl}|Kontakt in Brevo>`,
+      ]
+        .filter(Boolean)
+        .join("\n"),
+    });
+  } catch (error) {
+    return integrationError(origin, "slack_notification", error);
+  }
 
   return {
     statusCode: 201,

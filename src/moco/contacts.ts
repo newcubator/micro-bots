@@ -31,7 +31,7 @@ export async function findContactByEmail(email: string) {
       },
       params: { term: email },
     })
-    .then((response) => response.data.find((contact) => contact.work_email.toLowerCase() === email.toLowerCase()));
+    .then((response) => response.data.find((contact) => contact.work_email?.toLowerCase() === email.toLowerCase()));
 }
 
 export async function createContact(contact: {
