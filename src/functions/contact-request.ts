@@ -79,7 +79,7 @@ const integrationError = (origin: string, step: string, error: unknown): HttpRes
       : undefined;
   console.error(
     JSON.stringify({
-      service: "micro-bots",
+      service: "otto",
       status: "contact_request_failed",
       step,
       error: error instanceof Error ? error.message : String(error),

@@ -85,7 +85,7 @@ export const createApp = () =>
     } catch (error) {
       console.error(
         JSON.stringify({
-          service: "micro-bots",
+          service: "otto",
           status: "request_failed",
           path: url.pathname,
           error: error instanceof Error ? { message: error.message, stack: error.stack } : { message: String(error) },
@@ -97,9 +97,7 @@ export const createApp = () =>
 
 export const startServer = (port = Number(process.env.PORT ?? 3000)) => {
   const server = createApp();
-  server.listen(port, "0.0.0.0", () =>
-    console.log(JSON.stringify({ service: "micro-bots", status: "listening", port })),
-  );
+  server.listen(port, "0.0.0.0", () => console.log(JSON.stringify({ service: "otto", status: "listening", port })));
   return server;
 };
 

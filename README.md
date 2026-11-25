@@ -1,4 +1,4 @@
-# newcubator micro bots
+# Otto
 
 This project hosts a collection of our internal bots which are little useful tools which should make our work easier or automate repeating tasks.
 
@@ -17,7 +17,7 @@ To run the bots locally you first have to install all dependencies:
 npm install
 ```
 
-Some Microbot functions depend on external services, e.g. Slack or Moco. Please consult the individual documentation (below) for the required setup and further information. Local scripts load environment variables from `.env.local`.
+Some Otto functions depend on external services, e.g. Slack or Moco. Please consult the individual documentation (below) for the required setup and further information. Local scripts load environment variables from `.env.local`.
 
 To start the HTTP service locally, use
 
@@ -37,7 +37,9 @@ npm run start:cli -- vacation-handover
 
 ## Deployment
 
-GitLab CI builds the container image and deploys it from `main` through Pulumi to Hubertus. The target domain is `microbots.hubertus.newcubator.com`. Required tokens and IDs are set as protected GitLab CI variables and stored as Pulumi secrets in the Kubernetes deployment.
+All GitLab CI jobs (test, container build and deployment) run on the `watto` runner. GitLab CI builds the container image and deploys it from `main` through Pulumi to Hubertus. The target domain is `microbots.hubertus.newcubator.com`. Required tokens and IDs are set as protected GitLab CI variables and stored as Pulumi secrets in the Kubernetes deployment.
+
+The Pulumi project name, Kubernetes namespace and resource names remain `micro-bots` to preserve the existing production stack. The public bot URL remains unchanged so existing Slack integrations continue working. Container images use the renamed GitLab project path via `CI_REGISTRY_IMAGE`.
 
 AWS and Serverless deployments are no longer supported. Runtime infrastructure for this service must be changed through the Pulumi Kubernetes stack in [`infrastructure`](./infrastructure).
 

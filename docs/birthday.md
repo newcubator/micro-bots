@@ -13,7 +13,7 @@ This can look like this, for example:
 - create a [slack app](https://api.slack.com/authentication/basics) and get the SLACK_TOKEN
 - get your [MOCO_TOKEN](https://www.mocoapp.com/funktionen/20-connect/inhalt/52-schnittstellen)
 - add the tokens to the environment variables in Gitlab (Settings > CI/CD > Variables).
-- change the [MOCO_URL](https://gitlab.com/newcubator/micro-bots/-/blob/main/src/functions/birthday.ts) to the URL of your company.
+- change the [MOCO_URL](https://gitlab.com/newcubator/newcubator/otto/-/blob/main/src/functions/birthday.ts) to the URL of your company.
 
 ## How it works
 

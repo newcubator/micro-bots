@@ -8,7 +8,7 @@ type BackgroundTask = {
   onError?: (operationId: string) => Promise<void>;
 };
 
-const log = (entry: Record<string, unknown>) => console.log(JSON.stringify({ service: "micro-bots", ...entry }));
+const log = (entry: Record<string, unknown>) => console.log(JSON.stringify({ service: "otto", ...entry }));
 
 export const runBackgroundTask = ({ eventType, operationId = randomUUID(), context, run, onError }: BackgroundTask) => {
   void (async () => {

@@ -1,5 +1,5 @@
 {
-  "name": "micro-bots-infrastructure",
+  "name": "otto-infrastructure",
   "private": true,
   "scripts": {
     "check": "tsc --noEmit"
