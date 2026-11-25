@@ -11,6 +11,8 @@ workflow:
     - if: "$CI_COMMIT_BRANCH"
 
 default:
+  tags:
+    - watto
   image: node:24.19.0-alpine
   cache:
     key:

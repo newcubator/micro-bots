@@ -14,7 +14,7 @@ const loadAllRecipients = () => {
       recipients = undefined;
       console.error(
         JSON.stringify({
-          service: "micro-bots",
+          service: "otto",
           status: "recipient_load_failed",
           error: error instanceof Error ? error.message : String(error),
         }),

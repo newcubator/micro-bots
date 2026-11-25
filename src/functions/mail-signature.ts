@@ -37,7 +37,7 @@ export const handler = async (event: HttpRequest): Promise<HttpResponse> => {
   const users = await getUsers().catch((error) => {
     console.error(
       JSON.stringify({
-        service: "micro-bots",
+        service: "otto",
         status: "mail_signature_user_load_failed",
         error: error instanceof Error ? error.message : String(error),
       }),

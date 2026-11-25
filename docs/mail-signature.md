@@ -24,7 +24,7 @@ This could look like this, for example:
 
 ### How it works
 
-The mail signature bot is divided into two functions. The first is the [mail-signature](https://gitlab.com/newcubator/micro-bots/-/blob/main/src/functions/mail-signature.ts), which is basically just the slack command to create a link to the generated signature.
-The second function is the [mail-signature-generator](https://gitlab.com/newcubator/micro-bots/-/blob/main/src/functions/mail-signature-generator.ts). This function takes the information about the user from Slack, then queries the corresponding data from MOCO, and processes it into a mail signature.
+The mail signature bot is divided into two functions. The first is the [mail-signature](https://gitlab.com/newcubator/newcubator/otto/-/blob/main/src/functions/mail-signature.ts), which is basically just the slack command to create a link to the generated signature.
+The second function is the [mail-signature-generator](https://gitlab.com/newcubator/newcubator/otto/-/blob/main/src/functions/mail-signature-generator.ts). This function takes the information about the user from Slack, then queries the corresponding data from MOCO, and processes it into a mail signature.
 
-If you want to use the bot for your own company, you must of course change the corresponding data, such as the address or the logo in the [mail-signature-generator](https://gitlab.com/newcubator/micro-bots/-/blob/main/src/functions/mail-signature-generator.ts) function.
+If you want to use the bot for your own company, you must of course change the corresponding data, such as the address or the logo in the [mail-signature-generator](https://gitlab.com/newcubator/newcubator/otto/-/blob/main/src/functions/mail-signature-generator.ts) function.
